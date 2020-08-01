@@ -1,0 +1,202 @@
+.TC {
+    background: red !important;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+}
+
+.TR {
+    background: orange !important;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+}
+
+.TL {
+    background: yellow !important;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+}
+
+.TY {
+    background-color: yellowgreen !important;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    font-size: 32%;
+}
+
+.J {
+    background-color: deepskyblue !important;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    font-size: 0%;
+}
+
+.VAT-16 {
+    background-color: grey !important;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+}
+
+.SELECTED {
+    background-color: #2D436A !important;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    opacity: 1;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+}
+
+.Window {
+    background: repeating-linear-gradient( 45deg, white, white 10px, lightseagreen 10px, lightseagreen 20px ) !important;
+    color: blueviolet !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+}
+
+.Corner {
+    background: white;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    font-size: 75%;
+}
+
+.BigDiv {
+    background: white;
+    color: black !important;
+    border: 0.1px white;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    font-size: 75%;
+}
+
+.CornerDiv {
+        position: absolute;
+        bottom: 0;
+        height: 50px;
+        width: 30px;
+        right: -45px;
+        background-color: midnightblue;
+        content: "";
+        z-index: 1000;
+        transform: skew(-45deg);
+ }
+.CornerDivBottomRight {
+    position: absolute;
+    bottom: 0;
+    height: 50px;
+    width: 30px;
+    left: -45px;
+    background-color: midnightblue;
+    content: "";
+    z-index: 1000;
+    transform: skew(45deg);
+}
+.CornerDivTopRight1 {
+    position: absolute;
+    bottom: 0;
+    height: 50px;
+    width: 30px;
+    right: -40px;
+    background-color: midnightblue;
+    content: "";
+    z-index: 1000;
+    transform: skew(45deg);
+}
+
+.CornerDivTopRight2 {
+    position: absolute;
+    bottom: 0;
+    height: 45px;
+    width: 30px;
+    right: -45px;
+    background-color: blueviolet;
+    content: "";
+    z-index: 1000;
+    transform: skew(45deg);
+}
+
+.CornerDivTopLeft {
+    position: absolute;
+    bottom: 0;
+    height: 50px;
+    width: 30px;
+    left: -40px;
+    background-color: midnightblue;
+    content: "";
+    z-index: 1000;
+    transform: skew(-45deg);
+}
+
+.PDFWindow {
+    background-color: #a5e0dd;
+    color: blueviolet !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+}
+
+.PDFCorner {
+    background-color: #465298;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 75%;
+}
+
+
+.none {
+    background: white !important;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 1px;
+}
+
+.btn-primary:hover {
+    color: white;
+    background-color: lightseagreen;
+    border-color: black; /*set the color you want here*/
+}
+.btn-primary:focus {
+    background-color: lightseagreen;
+}

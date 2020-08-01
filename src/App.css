@@ -2,6 +2,14 @@
   text-align: center;
 }
 
+.outerDivCenter {
+    display: inline-block;
+}
+
+.layout {
+    text-align: center;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

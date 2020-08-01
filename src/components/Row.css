@@ -1,0 +1,12 @@
+.horizontal {
+    display: flex;
+    
+}
+
+.divForHor {
+    display: inline-block;
+}
+
+.layout {
+    text-align: center;
+}
