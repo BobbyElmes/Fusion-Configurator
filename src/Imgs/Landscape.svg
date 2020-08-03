@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.2.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 33.5 27.77" style="enable-background:new 0 0 33.5 27.77;" xml:space="preserve">
+<style type="text/css">
+	.st0{display:none;}
+	.st1{display:inline;}
+	.st2{fill:#FFFFFF;stroke:#000000;stroke-width:0.7299;stroke-miterlimit:10;}
+	.st3{fill:none;stroke:#000000;stroke-width:0.5;stroke-miterlimit:10;}
+	.st4{fill:#FFFFFF;stroke:#000000;stroke-width:0.703;stroke-miterlimit:10;}
+</style>
+<g id="Layer_1" class="st0">
+	<g class="st1">
+		<path class="st2" d="M21.23,5.53v14.22c0,2.53-2.07,4.6-4.6,4.6H8.81c-2.53,0-4.6-2.07-4.6-4.6V5.53c0-2.53,2.07-4.6,4.6-4.6h7.82
+			C19.16,0.93,21.23,3,21.23,5.53z"/>
+		<path d="M7.92,19.75v-3.39c0-2.65,0.87-4.78,2.85-4.78c0,0,0.74,0.64,1.87,0.64c1.09,0,1.73-0.67,1.73-0.67
+			c2.21,0,2.98,2.17,2.98,4.82v3.39"/>
+		<path d="M12.99,11.18h-0.73c-1.58,0-2.87-1.29-2.87-2.87V7.58c0-1.58,1.29-2.87,2.87-2.87h0.73c1.58,0,2.87,1.29,2.87,2.87v0.73
+			C15.86,9.89,14.57,11.18,12.99,11.18z"/>
+		<g>
+			<path class="st3" d="M31.27,4.65"/>
+			<path class="st3" d="M31.63,3.29"/>
+			<path class="st3" d="M24.36,2.27h5.57c1.09,0,1.98,0.89,1.98,1.98v0"/>
+			<path class="st3" d="M27.24,2.14"/>
+			<line class="st3" x1="26.08" y1="3.29" x2="26.08" y2="3.29"/>
+			<path class="st3" d="M31.29,6.58h-5.57c-1.09,0-1.98-0.89-1.98-1.98"/>
+			<polyline class="st3" points="25.54,1.22 24.36,2.27 25.54,3.33 			"/>
+			<polyline class="st3" points="30.11,5.52 31.29,6.58 30.11,7.63 			"/>
+		</g>
+	</g>
+</g>
+<g id="Portrait_x2F_landscape">
+	<path class="st4" d="M21.8,24.8H8.31c-2.4,0-4.36-1.96-4.36-4.36v-7.42c0-2.4,1.96-4.36,4.36-4.36H21.8c2.4,0,4.36,1.96,4.36,4.36
+		v7.42C26.16,22.84,24.2,24.8,21.8,24.8z"/>
+	<polygon points="7.17,22.19 11.61,16 13.75,18.47 13.75,18.47 16.82,13.85 22.65,22.19 	"/>
+	<circle cx="8.55" cy="13" r="1.92"/>
+	<g>
+		<path class="st3" d="M31.4,4.65"/>
+		<path class="st3" d="M31.76,3.3"/>
+		<path class="st3" d="M24.49,2.28h5.57c1.09,0,1.98,0.89,1.98,1.98v0"/>
+		<path class="st3" d="M27.36,2.14"/>
+		<line class="st3" x1="26.21" y1="3.3" x2="26.21" y2="3.3"/>
+		<path class="st3" d="M31.42,6.58h-5.57c-1.09,0-1.98-0.89-1.98-1.98"/>
+		<polyline class="st3" points="25.67,1.22 24.49,2.28 25.67,3.33 		"/>
+		<polyline class="st3" points="30.24,5.52 31.42,6.58 30.24,7.63 		"/>
+	</g>
+</g>
+<g id="Layer_3">
+</g>
+<g id="Isolation_Mode">
+</g>
+</svg>

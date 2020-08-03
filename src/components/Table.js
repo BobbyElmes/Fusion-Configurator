@@ -26,12 +26,13 @@ class FlashingTable extends React.Component {
         var panelComponents = this.props.panelComponents
         var record = []
         var totalPrice = 0
+        var currency = this.props.currency
 
         //calculate flashing table to render
         var flashTab
         if (tableComponents != null) {
             for (var i = 0; i < tableComponents.length; i++) {
-                record.push(<Record items={tableComponents[i]} discount={this.props.discount} landscape={this.props.landscape} />)
+                record.push(<Record currency={currency} items={tableComponents[i]} discount={this.props.discount} landscape={this.props.landscape} />)
                 totalPrice += tableComponents[i][2] * tableComponents[i][1]
             }
             if (this.props.over == 2) {
@@ -61,7 +62,7 @@ class FlashingTable extends React.Component {
             var panels = []
             var panelTotal = 0
             for (var i = 0; i < panelComponents.length; i++) {
-                panels.push(<Record items={panelComponents[i]} discount={this.props.discount} landscape={this.props.landscape} panel={true} />)
+                panels.push(<Record currency={currency} items={panelComponents[i]} discount={this.props.discount} landscape={this.props.landscape} panel={true} />)
                 totalPrice += panelComponents[i][3] * panelComponents[i][1]
             }
 
@@ -69,6 +70,7 @@ class FlashingTable extends React.Component {
                 <thead>
                     <tr>
                         <th>Panel</th>
+                        <th>Description</th>
                         <th>Cost</th>
                         <th>Quantity</th>
                         <th>Total Cost</th>
@@ -90,21 +92,21 @@ class FlashingTable extends React.Component {
             if (width > 25 || width==-1) {
                 var SP = []
                 for (var i = 0; i < 2; i++) {
-                    SP.push(<Record items={packers[i]} discount={this.props.discount} landscape={this.props.landscape} />)
+                    SP.push(<Record currency={currency} items={packers[i]} discount={this.props.discount} landscape={this.props.landscape} />)
                     totalPrice += packers[i][2] * packers[i][1]
                 }
             }
             if (width == 22 || width == -1) {
                 var B = []
                 for (var i = 2; i < 4; i++) {
-                    B.push(<Record items={packers[i]} discount={this.props.discount} landscape={this.props.landscape} />)
+                    B.push(<Record currency={currency} items={packers[i]} discount={this.props.discount} landscape={this.props.landscape} />)
                     totalPrice += packers[i][2] * packers[i][1]
                 }
             }
             if (width == 0 || width == -1) {
                 var SB = []
                     for (var i = 4; i < 11; i++) {
-                        SB.push(<Record items={packers[i]} discount={this.props.discount} landscape={this.props.landscape} />)
+                        SB.push(<Record currency={currency} items={packers[i]} discount={this.props.discount} landscape={this.props.landscape} />)
                         totalPrice += packers[i][2] * packers[i][1]
                     }
             }
@@ -141,7 +143,7 @@ class FlashingTable extends React.Component {
             </thead>
             <tbody>
                 <td>Total Price: </td>
-                <td>{String.fromCharCode('163')}{Math.round(((totalPrice * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100  }</td>
+                <td>{currency[0]}{Math.round(((totalPrice * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100}{currency[1]}</td>
             </tbody>
         </Table>
 

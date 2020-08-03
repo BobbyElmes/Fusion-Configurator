@@ -23,6 +23,7 @@ class DisplayQuote extends React.Component {
     }
 
     render() {
+        var currency = this.props.currency
         var miniFlash = this.props.miniFlashing
         var miniDisplay = []
 
@@ -48,7 +49,7 @@ class DisplayQuote extends React.Component {
                 return (<div className="layout"><div className="layout"><div className="divForHor"><div className="horizontal">
                     <h1>OVERALL</h1>
                     <pre>    </pre>
-                    <h1>Cost: {String.fromCharCode('163')}{Math.round(((this.props.total * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100 } </h1>
+                    <h1>Cost: {currency[0]}{Math.round(((this.props.total * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100}{currency[1]} </h1>
 
                 </div></div>
                 </div> <Button variant="outline-info" onClick={this.handleClick}>{x}</Button> </div>)
@@ -58,14 +59,14 @@ class DisplayQuote extends React.Component {
                     <div className="layout"><div className="layout"><div className="divForHor"><div className="horizontal">
                         <h1>OVERALL</h1>
                         <pre>    </pre>
-                        <h1>Cost: {String.fromCharCode('163')}{Math.round(((this.props.total * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100 } </h1>
+                        <h1>Cost: {currency[0]}{Math.round(((this.props.total * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100} {currency[1]}</h1>
 
                     </div></div></div>
                         <Button variant="outline-info" onClick={this.handleClick}>{x}</Button>
                     </div>
-                    <FlashingTable components={this.props.flashings[0]} discount={this.props.discount} landscape={false} over={1} />
-                    <FlashingTable components={this.props.flashings[1]} packers={this.props.flashings[2]} width={-1} discount={this.props.discount} landscape={true} over={1}  />
-                    <FlashingTable panelComponents={this.props.panels} discount={this.props.discount} landscape={false} over={2} total={this.props.total} />
+                    <FlashingTable currency={currency} components={this.props.flashings[0]} discount={this.props.discount} landscape={false} over={1} />
+                    <FlashingTable currency={currency} components={this.props.flashings[1]} packers={this.props.flashings[2]} width={-1} discount={this.props.discount} landscape={true} over={1}  />
+                    <FlashingTable currency={currency} panelComponents={this.props.panels} discount={this.props.discount} landscape={false} over={2} total={this.props.total} />
                 </div>)
             }
         }
@@ -76,7 +77,7 @@ class DisplayQuote extends React.Component {
             return (<div className="layout"><div className="layout"><div className="divForHor"><div className="horizontal">
                 <h1>Quote {this.props.id} </h1>
                 <pre>    </pre>
-                <h1>Cost: {String.fromCharCode('163')}{Math.round((((this.props.total + this.props.panelTotal) * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100  } </h1>
+                <h1>Cost: {currency[0]}{Math.round((((this.props.total + this.props.panelTotal) * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100}{currency[1]} </h1>
                 <pre>    </pre>
                 <Button variant="outline-info" onClick={this.removeClick}>Remove</Button>
             </div></div>
@@ -93,12 +94,12 @@ class DisplayQuote extends React.Component {
                 <div className="layout"><div className="layout"><div className="divForHor"><div className="horizontal">
                 <h1>Quote: {this.props.id} </h1>
                 <pre>    </pre>
-                    <h1>Cost: {String.fromCharCode('163')}{Math.round((((this.props.total + this.props.panelTotal) * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100 } </h1>
+                    <h1>Cost: {currency[0]}{Math.round((((this.props.total + this.props.panelTotal) * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100}{currency[1]} </h1>
                 
                 </div></div></div>
                     <Button variant="outline-info" onClick={this.handleClick}>{x}</Button>
                 </div>
-                <FlashingTable components={this.props.flashings} discount={this.props.discount} landscape={this.props.landscape} panelComponents={this.props.panels} packers={this.props.packers} width={this.props.width} />
+                <FlashingTable currency={currency} components={this.props.flashings} discount={this.props.discount} landscape={this.props.landscape} panelComponents={this.props.panels} packers={this.props.packers} width={this.props.width} />
                 </div>)
         }
 

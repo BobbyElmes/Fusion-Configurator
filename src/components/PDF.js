@@ -36,8 +36,8 @@ class PDFDownload extends React.Component {
 
     render() {
         var quotes = this.props.Quotes
-        var miniDisplay=[]
-
+        var miniDisplay = []
+        var currency = this.props.currency
         
         for (var i = 0; i < quotes.length; i++) {
             var flashQuotes = quotes[i].miniFlashing
@@ -81,13 +81,13 @@ class PDFDownload extends React.Component {
                 <div>
                     {miniDisplay}
                         <p className="page-break"><b>Section 2 - portrait flashings</b></p>
-                        <FlashingTable components={this.props.flashings[0]} discount={this.props.discount} landscape={false} over={1} />
+                        <FlashingTable currency={currency} components={this.props.flashings[0]} discount={this.props.discount} landscape={false} over={1} />
                         <p className="page-break"><b>Section 3 - landscape flashings</b></p>
-                        <FlashingTable className="pageBreak" components={this.props.flashings[1]} discount={this.props.discount} landscape={true} over={1} />
+                        <FlashingTable className="pageBreak" currency={currency} components={this.props.flashings[1]} discount={this.props.discount} landscape={true} over={1} />
                         <p className="page-break"><b>Section 4 - packers</b></p>
-                        <FlashingTable className="pageBreak" packers={this.props.flashings[2]} width={-1} discount={this.props.discount} over={1} />
+                        <FlashingTable className="pageBreak" currency={currency} packers={this.props.flashings[2]} width={-1} discount={this.props.discount} over={1} />
                         <p className="page-break"><b>Section 5 - panels & summary</b></p>
-                        <FlashingTable className="pageBreak" panelComponents={this.props.panels} discount={this.props.discount} landscape={false} over={2} total={this.props.total} />
+                        <FlashingTable className="pageBreak" currency={currency} panelComponents={this.props.panels} discount={this.props.discount} landscape={false} over={2} total={this.props.total} />
                     </div>
             </div>
         </PDFExport></div>)

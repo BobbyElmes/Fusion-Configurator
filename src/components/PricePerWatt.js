@@ -14,14 +14,14 @@ class PricePerWatt extends React.Component {
         var total = this.props.total
         var watts = 0
         for (var i = 0; i < panels.length; i++) {
-            watts += panels[i][1] * panels[i][3]
+            watts += panels[i][1] * panels[i][2]
         }
         var ppw = 0
         if (watts != 0)
             ppw = (total / watts)
 
         return (
-            <p>PRICE PER WATT: {String.fromCharCode('163')}{Math.round((ppw + Number.EPSILON) * 100) / 100 }</p>
+            <p>PRICE PER WATT: {this.props.currency[0]}{Math.round((ppw + Number.EPSILON) * 100) / 100}{this.props.currency[1]}</p>
         )
     }
 }

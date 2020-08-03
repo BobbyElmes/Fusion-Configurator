@@ -35,6 +35,8 @@ class Form extends React.Component {
         var flash = this.props.flashings[0]
         var flashL = this.props.flashings[1]
         var panels = this.props.panels
+        var packers = this.props.flashings[2]
+        console.log(packers)
         console.log("HIf" + flash)
         console.log("HEY " + flashL)
         data.append("name", JSON.stringify(this.state.name))
@@ -62,11 +64,20 @@ class Form extends React.Component {
             data.append(cost, JSON.stringify(c))
         }
 
+        for (var i = 0; i < packers.length; i++) {
+            var cost = packers[i][0] + "c"
+            var c = Math.round(((packers[i][1] * packers[i][2]) * (1 - (this.props.discount / 100)) + Number.EPSILON) * 100) / 100
+            data.append(packers[i][0], JSON.stringify(packers[i][1]))
+            data.append(cost, JSON.stringify(c))
+        }
+
         fetch('https://www.crazymazy.co.uk/email/', {
             method: 'POST',
             body: data
         })
-        console.log("FETCH")
+
+        event.preventDefault()
+        
         
     }
 

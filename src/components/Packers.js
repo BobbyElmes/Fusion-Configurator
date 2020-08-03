@@ -1,6 +1,5 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button'
-import PanelList from './PanelList.js'
+import './DropDown.css'
 
 //handles the panel drop down menu
 class PackerDropDown extends React.Component {
@@ -26,7 +25,7 @@ class PackerDropDown extends React.Component {
         var options = []
         for (var i = 0; i < widths.length; i++)
             options.push(<option value={i}>{widths[i]}</option>)
-        return (<div><p>Width (mm): </p><select value={this.state.panelId}
+        return (<div style={{ display: "flex", flexDirection: "row" }}><p className="DropDown">Batten Thickness (mm):&nbsp; </p><select value={this.state.panelId}
             onChange={this.handleChange} >
             {options}
         </select></div>)

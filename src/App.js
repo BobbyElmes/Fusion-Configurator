@@ -1,15 +1,10 @@
 import React from 'react';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import './App.css';
 import Row from './components/Row.js'
 import Button from 'react-bootstrap/Button';
 import './components/Row.css';
 import Expand from './components/Expand.js'
 import FlashingTable from './components/Table.js'
-import flashings from './components/FlashingList'
-import Lflashings from './components/LandscapeFlashingList'
-import PanelList from './components/PanelList'
 import Window from './components/Window.js'
 import Clear from './components/Clear.js'
 import Orientation from './components/Orientation.js'
@@ -20,12 +15,15 @@ import Form from './components/Form.js'
 import PanelDropDown from './components/PanelDropDown.js'
 import PDF from './components/PDF.js'
 import Discount from './components/Discount.js'
-import products from './Products/ProductsCSV.csv';
+import VUKPrices from './Products/ViridianUKPrices.csv';
+import VNLPrices from './Products/ViridianNLPrices.csv';
+import VNOPrices from './Products/ViridianNOPrices.csv';
+import VDEPrices from './Products/ViridianDEPrices.csv';
 import languages from './Products/Languages.csv';
-import queryString from 'query-string'
 import PricePerWatt from './components/PricePerWatt.js'
 import PackerDropDown from './components/Packers.js'
 import ArraySize from './components/ArraySize'
+import './components/DropDown.css'
 
 class App extends React.Component {
 
@@ -124,9 +122,25 @@ class App extends React.Component {
 
     //loads in the csv files and puts them into the relevent arrays
     getProducts() {
-        var product = this.loadCSV(products, 4, 2)
-        var descriptions = this.loadCSV(languages, 3, 5)
-
+        var csvRoute = ""
+        switch (this.state.language) {
+            case 0:
+                csvRoute = VUKPrices
+                break;
+            case 1:
+                csvRoute = VNLPrices
+                break;
+            case 2:
+                csvRoute = VDEPrices
+                break;
+            case 3:
+                csvRoute = VNOPrices
+                break;
+        }
+        var product = this.loadCSV(csvRoute, 4, 2)
+        var descriptions = this.loadCSV(languages, 4, 5)
+        console.log(product)
+        
         //this array has the portrait, landscape and finally packer flashing
         //values & descriptions loaded into it
         var productArr = [[],[],[]]
@@ -148,11 +162,12 @@ class App extends React.Component {
         for (var i = 0; i < product[3].length; i++) {
             if (product[3][i][0] == "")
                 break;
-            panelArr.push(new Array(4))
+            panelArr.push(new Array(5))
             panelArr[i][0] = product[3][i][0]
             panelArr[i][1] = 0
-            panelArr[i][2] = parseFloat(product[3][i][1])
-            panelArr[i][3] = parseFloat(product[3][i][2])
+            panelArr[i][2] = parseFloat(product[3][i][2])
+            panelArr[i][3] = parseFloat(product[3][i][1])
+            panelArr[i][4] = descriptions[3][i][this.state.language + 1]
         }
 
         //finally, set the values
@@ -177,6 +192,7 @@ class App extends React.Component {
         var product = x
         var first = true
         var s = ""
+        var doubleQuotes = false
         var prev = csv[0]
         for (var i = 0; i < csv.length; i++) {
             var current = csv[i]
@@ -185,30 +201,40 @@ class App extends React.Component {
                     first = false;
             }
             else {
-                if (current == ',' && prev != ',') {
-                    product[itemCount][columnCount][count] = s
-                    s = ""
-                    count += 1
-                    if (count >= columnNum && itemCount < numItems-1) {
-                        itemCount++
-                        count = 0
-                        product[itemCount].push(new Array(["", "", ""]))
-                    }
-                }
+                if (current == '"')
+                    doubleQuotes = !doubleQuotes
                 else {
-                    if (current.charCodeAt(0) == 10) {
-                        product[itemCount][columnCount][count] = s
-                        s = ""
-                        itemCount = 0
-                        count = 0
-                        columnCount++
-                        if (i != csv.length-1)
-                            product[itemCount].push(new Array(["", "", ""]))
+                    if (doubleQuotes == true) {
+                        var x = current
+                        s += x
                     }
                     else {
-                        if (current.charCodeAt(0) != 32 && current != ',' && current.charCodeAt(0) != 13) {
-                            var x = current
-                            s += x
+                        if (current == ',' && prev != ',') {
+                            product[itemCount][columnCount][count] = s
+                            s = ""
+                            count += 1
+                            if (count >= columnNum && itemCount < numItems - 1) {
+                                itemCount++
+                                count = 0
+                                product[itemCount].push(new Array(["", "", ""]))
+                            }
+                        }
+                        else {
+                            if (current.charCodeAt(0) == 10) {
+                                product[itemCount][columnCount][count] = s
+                                s = ""
+                                itemCount = 0
+                                count = 0
+                                columnCount++
+                                if (i != csv.length - 1)
+                                    product[itemCount].push(new Array(["", "", ""]))
+                            }
+                            else {
+                                if (current != ',' && current.charCodeAt(0) != 13) {
+                                    var x = current
+                                    s += x
+                                }
+                            }
                         }
                     }
                 }
@@ -271,7 +297,11 @@ class App extends React.Component {
         if (this.state.window == true) {
             var window = this.checkVeluxValid(temp,x,y)
             if (window) {
+                if (temp[x][y] == 1) {
+                    this.state.panels[this.state.currentPanel][1] -= 1
+                }
                 temp[x][y] = 2
+                
                 this.setState({
                     type: temp
                 })
@@ -418,8 +448,8 @@ class App extends React.Component {
         }
         this.state.flashings = this.state.secondFlashings
         this.state.secondFlashings = temp
+        this.state.landscape = !this.state.landscape
         this.setState({
-            landscape: !this.state.landscape,
             window: false
         })
         //we want to clear the cells after this has been done
@@ -647,11 +677,13 @@ class App extends React.Component {
                         var window = this.checkVeluxValid(tempType, x + i, y + c)
                         flashItem = flashList[11][0]
                         if (window == false || tempFlash[x + i][y + c] == flashItem) {
-                            
                             this.changeFlash(-1, tempFlash[x + i][y + c])
                             tempFlash[x + i][y + c] = "none"
                         }
                         else {
+                            var prevFlash = tempFlash[x + i][y + c]
+                            if (prevFlash != "none")
+                                this.changeFlash(-1, prevFlash)
                             tempFlash[x + i][y + c] = flashItem
                             this.changeFlash(1,flashItem)
                         }
@@ -739,12 +771,13 @@ class App extends React.Component {
         var tempPanels = []
         var panelTotal = 0
         for (var i = 0; i < 3; i++) {
-            tempPanels.push(new Array(4))
+            tempPanels.push(new Array(5))
             tempPanels[i][0] = this.state.panels[i][0]
             tempPanels[i][1] = this.state.panels[i][1]
             panelTotal += this.state.panels[i][1] * this.state.panels[i][3]
             tempPanels[i][2] = this.state.panels[i][2]
             tempPanels[i][3] = this.state.panels[i][3]
+            tempPanels[i][4] = this.state.panels[i][4]
             this.state.panels[i][1] = 0;
         }
 
@@ -789,11 +822,12 @@ class App extends React.Component {
     createEmptyPanels(totalPanels) {
         var temp = this.state.panels
         for (var i = 0; i < temp.length; i++) {
-            totalPanels.push(new Array(4))
+            totalPanels.push(new Array(5))
             totalPanels[i][0] = temp[i][0]
             totalPanels[i][1] = 0
             totalPanels[i][2] = temp[i][2]
             totalPanels[i][3] = temp[i][3]
+            totalPanels[i][4] = temp[i][4]
         }
     }
 
@@ -986,6 +1020,24 @@ class App extends React.Component {
         return null
     }
 
+    calculateCurrency() {
+        var before, after
+        switch (this.state.language) {
+            case 0:
+                before = String.fromCharCode('163')
+                break;
+            case 1:
+            case 2:
+                before = '\u20AC'
+                break;
+            case 3:
+                after = " kr"
+                break;
+
+        }
+        return [before,after]
+    }
+
 
     //renders the whole screen by sending relevent info down to sub components and placing them
     //in the right order
@@ -994,7 +1046,9 @@ class App extends React.Component {
         //create rows
         for (var i = 0; i < this.state.yLen; i++)
             x.push(<div style={{ marginTop: 0, marginBottom: 0, fontSize: 0 }}><Row key={i} xSize={this.state.xLen} type={this.state.type[i]} flashing={this.state.flashing[i]} cellPress={this.cellPress} row={i} down={this.cellDown} up={this.cellUp} landscape={this.state.landscape} cellOver={this.cellOver} marked={this.state.marked[i]} /></div>)
-
+        var currency = this.calculateCurrency()
+        console.log("CURRENCY: " + currency)
+        
         var sum
         var send
         var quotes = []
@@ -1008,7 +1062,7 @@ class App extends React.Component {
             this.createEmptyPanels(totalPanels)
             //loop through quotes, totalling the panel & flashing: costs, totals ect
             for (var i = 0; i < this.state.Quotes.length; i++) {
-                quotes.push(<DisplayQuote id={i + 1} remove={this.removeQuote} discount={this.state.discount} total={this.state.Quotes[i].total} flashings={this.state.Quotes[i].flashingList} landscape={this.state.Quotes[i].landscape} miniFlashing={this.state.Quotes[i].miniFlashing} xSize={this.state.Quotes[i].xSize} panels={this.state.Quotes[i].panels} panelTotal={this.state.Quotes[i].panelTotal} packers={this.state.Quotes[i].packers} width={this.state.Quotes[i].width}/>)
+                quotes.push(<DisplayQuote id={i + 1} currency={currency} remove={this.removeQuote} discount={this.state.discount} total={this.state.Quotes[i].total} flashings={this.state.Quotes[i].flashingList} landscape={this.state.Quotes[i].landscape} miniFlashing={this.state.Quotes[i].miniFlashing} xSize={this.state.Quotes[i].xSize} panels={this.state.Quotes[i].panels} panelTotal={this.state.Quotes[i].panelTotal} packers={this.state.Quotes[i].packers} width={this.state.Quotes[i].width}/>)
                 summary = this.totalQuotes(summary, this.state.Quotes[i], half)
                 overallTotal += this.state.Quotes[i].total
                 overallTotal += this.state.Quotes[i].panelTotal
@@ -1017,29 +1071,47 @@ class App extends React.Component {
                     
                 }
             }
-            sum = <DisplayQuote id={0} total={overallTotal} discount={this.state.discount} flashings={summary} landscape={true} panels={totalPanels} />
-            pdf = <PDF total={overallTotal} flashings={summary} discount={this.state.discount} panels={totalPanels} Quotes={this.state.Quotes} />
+            sum = <DisplayQuote id={0} currency={currency} total={overallTotal} discount={this.state.discount} flashings={summary} landscape={true} panels={totalPanels} />
+            pdf = <PDF currency={currency} total={overallTotal} flashings={summary} discount={this.state.discount} panels={totalPanels} Quotes={this.state.Quotes} />
         }
         
         var priceP = this.pricePer(overallTotal, totalPanels)
         var ppwTotal = priceP[0]
         var ppwPanels = priceP[1]
 
-        
+        var table = <FlashingTable currency={currency} components={this.state.flashings} panelComponents={this.state.panels} landscape={this.state.landscape} discount={this.state.discount} packers={this.state.packers} width={this.state.packerWidth} />
+        table = null
         
         
         //if not displaying the send form, display the configurator
         if (this.state.send == false) {
             if (this.state.pdf == false) {
                 return (
-                    <div id="capture">
-                        <div className="layout">
+                    <div className="app">
+                        
                             <div className="outerDivCenter">
-                                <h1> Fusion Configurator </h1>
-                                <PricePerWatt panels={ppwPanels} total={ppwTotal} />
-                                <ArraySize size={this.arraySize()}/>
+                            <h1> Fusion Configurator </h1>
+                            </div>
+                        <div className="WorkSpace">
+                            <div className="outerDivCenter">
+                            <div style={{ display: "flex", flexDirection: "row" }}>
+                                <Orientation press={this.changeOrientation} landscape={this.state.landscape} />
+                                <div className="DropDown">
+                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                    <PanelDropDown  press={this.panelChange} />
+                                    <PackerDropDown press={this.packerChange} />
+                                    </div>
+                                </div>
+                                </div>
+                                <div className="TableHeader">
+                                    <div style={{ display: "flex", flexDirection: "row" }}>
+                                        <PricePerWatt currency={currency} panels={ppwPanels} total={ppwTotal} />
+                                        <ArraySize size={this.arraySize()} />
+                                        </div>
+                                </div>
                                 {x}
-                                <p> </p>
+                            <p> </p>
+                        </div>
                                 <div className="horizontal">
                                     <Expand expand={0} press={this.expandPress} />
                                     <Expand expand={1} press={this.expandPress} />
@@ -1047,13 +1119,13 @@ class App extends React.Component {
                                     <Expand expand={3} press={this.expandPress} />
                                     <Window press={this.windowPress} />
                                     <Clear press={this.clearPress} />
-                                    <Orientation press={this.changeOrientation} landscape={this.state.landscape} />
-                                    <PanelDropDown press={this.panelChange} />
+                                    
+                                    
                                     <Discount discount={this.discountChange} />
-                                    <PackerDropDown press={this.packerChange} />
-                                </div>
+                                    
                             </div>
-                            <FlashingTable components={this.state.flashings} panelComponents={this.state.panels} landscape={this.state.landscape} discount={this.state.discount} packers={this.state.packers} width={this.state.packerWidth} />
+                        </div>
+                            <table/>
                             <AddQuote press={this.addQuote} />
                             <br></br>
                             {sum}
@@ -1067,7 +1139,6 @@ class App extends React.Component {
                             <br></br>
                         </div>
                         
-                    </div>
                 )
             }
             else {

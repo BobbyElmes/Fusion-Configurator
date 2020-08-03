@@ -99,24 +99,24 @@ class Cell extends React.Component {
         else {
             if (flash != null) {
                 switch (flash) {
-                    case "TC":
-                    case "LC":
+                    case "F16-TC":
+                    case "F16-LC":
                         color = "TC"
                         break;
-                    case "TR":
-                    case "LR":
+                    case "F16-TR":
+                    case "F16-LR":
                         color = "TR"
                         break;
-                    case "TL":
-                    case "LL":
+                    case "F16-TL":
+                    case "F16-LL":
                         color = "TL"
                         break;
-                    case "TY":
-                    case "LY":
+                    case "F16-TY":
+                    case "F16-LY":
                         color = "TY"
                         break;
-                    case "J":
-                    case "LJ":
+                    case "F16-J":
+                    case "F16-LJ":
                         color = "J"
                         break;
                     case "VAT-16":
@@ -138,24 +138,24 @@ class Cell extends React.Component {
                         var flashArr = flash.split(" ");
                         for (var i = 0; i < flashArr.length; i++) {
                             switch (flashArr[i]) {
-                                case "CLT":
-                                case "LCLT":
+                                case "F16-CLT":
+                                case "F16-LCLT":
                                     cornerStyle.push(<div className="CornerDiv"></div>)
                                     break;
-                                case "CRT":
-                                case "LCRT":
+                                case "F16-CRT":
+                                case "F16-LCRT":
                                     cornerStyle.push(<div className="CornerDivBottomRight"></div>)
                                     break;
-                                case "CLB-S":
-                                case "LCLB-S":
+                                case "F16-CLB-S":
+                                case "F16-LCLB-S":
                                     cornerStyle.push(<div className="CornerDivTopRight2"></div>)
                                     break;
-                                case "CLB":
-                                case "LCLB":
+                                case "F16-CLB":
+                                case "F16-LCLB":
                                     cornerStyle.push(<div className="CornerDivTopRight1"></div>)
                                     break;
-                                case "CRB":
-                                case "LCRB":
+                                case "F16-CRB":
+                                case "F16-LCRB":
                                     cornerStyle.push(<div className="CornerDivTopLeft"></div>)
                                     break;
 

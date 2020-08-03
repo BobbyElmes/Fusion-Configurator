@@ -1,5 +1,7 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
+import Portrait from '.././Imgs/Portrait.svg'
+import Landscape from '.././Imgs/Landscape.svg'
 
 class Orientation extends React.Component {
     constructor(props) {
@@ -12,11 +14,13 @@ class Orientation extends React.Component {
     }
 
     render() {
-        var y = "LANDSCAPE"
-        if (this.props.landscape == true)
-            y = "PORTRAIT"
-        var x = "CHANGE LAYOUT TO " + y
-        return (<div><Button variant="outline-info" onClick={this.handleClick}>{x}</Button></div>)
+        var img = Portrait
+        var text = "Portrait"
+        if (this.props.landscape == true) {
+            img = Landscape
+            text = "Landscape"
+        }
+        return (<div style={{ display: "flex", flexDirection: "row" }}><img src={img} width="25%" height="100%" onClick={this.handleClick} /><p style={{ marginTop: "auto", marginBottom:0 }}>{text}</p></div >)
     }
 }
 

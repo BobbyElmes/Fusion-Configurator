@@ -78,7 +78,7 @@
 }
 
 .Corner {
-    background: white;
+    background: #C6EAFA;
     color: black !important;
     border: 0.1px solid black;
     border-radius: 0.1px;
@@ -91,7 +91,7 @@
 }
 
 .BigDiv {
-    background: white;
+    background: #C6EAFA;
     color: black !important;
     border: 0.1px white;
     border-radius: 0.1px;
@@ -183,7 +183,7 @@
 
 
 .none {
-    background: white !important;
+    background-color: #C6EAFA !important;
     color: black !important;
     border: 0.1px solid black;
     border-radius: 0.1px;
