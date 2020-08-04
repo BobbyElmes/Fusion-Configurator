@@ -23,6 +23,7 @@ import languages from './Products/Languages.csv';
 import PricePerWatt from './components/PricePerWatt.js'
 import PackerDropDown from './components/Packers.js'
 import ArraySize from './components/ArraySize'
+import Language from './components/Language.js'
 import KWP from './components/KWP.js'
 import './components/DropDown.css'
 import './components/Fonts.css'
@@ -60,13 +61,16 @@ class App extends React.Component {
             currentPanel: 0,
             pdf: false,
             language: 0,
+            currency:0,
             discount: 0,
-            packerWidth: 25
+            packerWidth: 25,
+            descriptions:[[]]
         }
         //get flashings from file
         this.getLanguage()
         this.getProducts()
 
+        this.changeLanguage = this.changeLanguage.bind(this)
         this.calculatekWp = this.calculatekWp.bind(this)
         this.arraySize = this.arraySize.bind(this)
         this.pricePer = this.pricePer.bind(this)
@@ -113,17 +117,56 @@ class App extends React.Component {
             switch (lang) {
                 case "nl":
                     this.state.language = 1
+                    this.state.currency=1
                     break;
                 case "de":
                     this.state.language = 2
+                    this.state.currency = 2
                     break;
                 case "no":
                     this.state.language = 3
+                    this.state.currency = 3
                     break;
             }
                 
                 
         }
+    }
+
+    changeLanguage(lang) {
+        var descriptions = this.state.descriptions
+        switch (lang) {
+            case "English":
+                this.state.language = 0
+                break;
+            case "Dutch":
+                this.state.language = 1
+                break;
+            case "German":
+                this.state.language = 2
+                break;
+            case "Norwegian":
+                this.state.language = 3
+                break;
+        }
+        var x =0
+        if (this.state.landscape == true)
+            x = 1
+        for (var i = 0; i < this.state.flashings.length; i++) {
+            this.state.flashings[i][3] = descriptions[x][i][this.state.language + 1]
+        }
+        for (var i = 0; i < this.state.secondFlashings.length; i++) {
+            this.state.secondFlashings[i][3] = descriptions[(x+1)%2][i][this.state.language + 1]
+        }
+        for (var i = 0; i < this.state.packers.length; i++) {
+            this.state.packers[i][3] = descriptions[2][i][this.state.language + 1]
+        }
+        for (var i = 0; i < this.state.panels.length; i++) {
+            this.state.panels[i][4] = descriptions[3][i][this.state.language + 1]
+        }
+        this.setState({
+            panels:this.state.panels
+        })
     }
 
     //loads in the csv files and puts them into the relevent arrays
@@ -181,6 +224,7 @@ class App extends React.Component {
         this.state.secondFlashings = productArr[1]
         this.state.panels = panelArr
         this.state.packers = productArr[2]
+        this.state.descriptions = descriptions
     }
 
     //loads the csv file then parses it into an array of values
@@ -1028,7 +1072,7 @@ class App extends React.Component {
 
     calculateCurrency() {
         var before, after
-        switch (this.state.language) {
+        switch (this.state.currency) {
             case 0:
                 before = String.fromCharCode('163')
                 break;
@@ -1115,7 +1159,8 @@ class App extends React.Component {
             if (this.state.pdf == false) {
                 return (
                     <div className="app">
-                        <img style={{ width: "120px", marginLeft: "1%", marginTop: "1%", marginBottom:"-2%" }} src={VLogo} />
+                        <img style={{ width: "120px", marginLeft: "1%", marginTop: "1%", marginBottom: "-2%" }} src={VLogo} />
+                        <Language press={this.changeLanguage} language={this.state.language} />
                         <img style={{ width: "200px", marginLeft: "auto", marginRight: "1%", marginTop: "1%", marginBottom: "-1%" }} src={CLogo} />
                             <div className="outerDivCenter">
                             <h1 className="TitleFont"> Fusion Configurator </h1>
@@ -1123,7 +1168,7 @@ class App extends React.Component {
                             </div>
                         <div className="WorkSpace">
                             <div className="outerDivCenter">
-                            <div style={{ display: "flex", flexDirection: "row" }}>
+                            <div style={{marginTop:"10px", display: "flex", flexDirection: "row" }}>
                                 <Orientation press={this.changeOrientation} landscape={this.state.landscape} />
                                 <div className="DropDown">
                                 <div style={{ display: "flex", flexDirection: "column" }}>
