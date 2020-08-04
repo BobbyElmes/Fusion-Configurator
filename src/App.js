@@ -23,7 +23,12 @@ import languages from './Products/Languages.csv';
 import PricePerWatt from './components/PricePerWatt.js'
 import PackerDropDown from './components/Packers.js'
 import ArraySize from './components/ArraySize'
+import KWP from './components/KWP.js'
 import './components/DropDown.css'
+import './components/Fonts.css'
+import VLogo from './Imgs/ViridianLogo.svg'
+import CLogo from './Imgs/ClearlineLogo.svg'
+import Arrow from './Imgs/Arrow.png'
 
 class App extends React.Component {
 
@@ -43,8 +48,8 @@ class App extends React.Component {
             packers: [[]],
             //array of cells which turn grey when mouse drag
             prevHover: [],
-            xLen: 15,
-            yLen: 9,
+            xLen: 13,
+            yLen: 8,
             window: false,
             downCell: [],
             down: false,
@@ -62,6 +67,7 @@ class App extends React.Component {
         this.getLanguage()
         this.getProducts()
 
+        this.calculatekWp = this.calculatekWp.bind(this)
         this.arraySize = this.arraySize.bind(this)
         this.pricePer = this.pricePer.bind(this)
         this.calculatePackers = this.calculatePackers.bind(this)
@@ -1038,6 +1044,22 @@ class App extends React.Component {
         return [before,after]
     }
 
+    calculatekWp() {
+        var kwp = 0
+        if (this.state.Quotes != null) {
+            for (var i = 0; i < this.state.Quotes.length; i++) {
+                for (var c = 0; c < this.state.Quotes[i].panels.length; c++) {
+                    kwp += this.state.Quotes[i].panels[c][1] * this.state.Quotes[i].panels[c][3]
+                }
+            }
+        }
+        for (var c = 0; c < this.state.panels.length; c++) {
+            kwp += this.state.panels[c][1] * this.state.panels[c][3]
+
+        }
+        return kwp/1000
+    }
+
 
     //renders the whole screen by sending relevent info down to sub components and placing them
     //in the right order
@@ -1045,7 +1067,7 @@ class App extends React.Component {
         var x = []
         //create rows
         for (var i = 0; i < this.state.yLen; i++)
-            x.push(<div style={{ marginTop: 0, marginBottom: 0, fontSize: 0 }}><Row key={i} xSize={this.state.xLen} type={this.state.type[i]} flashing={this.state.flashing[i]} cellPress={this.cellPress} row={i} down={this.cellDown} up={this.cellUp} landscape={this.state.landscape} cellOver={this.cellOver} marked={this.state.marked[i]} /></div>)
+            x.push(<div style={{ marginTop: 0, marginBottom: 0, fontSize: 0 }}><Row key={i} expandPress={this.expandPress} ySize={this.state.yLen} xSize={this.state.xLen} type={this.state.type[i]} flashing={this.state.flashing[i]} cellPress={this.cellPress} row={i} down={this.cellDown} up={this.cellUp} landscape={this.state.landscape} cellOver={this.cellOver} marked={this.state.marked[i]} /></div>)
         var currency = this.calculateCurrency()
         console.log("CURRENCY: " + currency)
         
@@ -1078,9 +1100,14 @@ class App extends React.Component {
         var priceP = this.pricePer(overallTotal, totalPanels)
         var ppwTotal = priceP[0]
         var ppwPanels = priceP[1]
+        var kwp = this.calculatekWp();
 
         var table = <FlashingTable currency={currency} components={this.state.flashings} panelComponents={this.state.panels} landscape={this.state.landscape} discount={this.state.discount} packers={this.state.packers} width={this.state.packerWidth} />
         table = null
+
+        var y = []
+        y.push(<div className="button2" style={{ display: "flex", flexDirection: "row", flexShrink: "0", marginTop: "-10px", marginLeft: "36%", marginRight:"7%" }}> <Button className="button" onClick={() => this.expandPress(2)} style={{ width: "40px", height: "40px" }}><img src={Arrow} className="button2" style={{ transform: "rotate(90deg)", width: "40px", height: "40px", padding: "10px" }} /></Button></div>)
+        y.push(<div className="button2" style={{ display: "flex", flexDirection: "row", flexShrink: "0", marginTop: "-10px" }}> <Button className="button" onClick={() => this.expandPress(3)} style={{  width: "40px", height: "40px" }}><img src={Arrow} className="button2" style={{ transform: "rotate(270deg)", width: "40px", height: "40px", padding: "10px" }} /></Button></div>)
         
         
         //if not displaying the send form, display the configurator
@@ -1088,9 +1115,11 @@ class App extends React.Component {
             if (this.state.pdf == false) {
                 return (
                     <div className="app">
-                        
+                        <img style={{ width: "120px", marginLeft: "1%", marginTop: "1%", marginBottom:"-2%" }} src={VLogo} />
+                        <img style={{ width: "200px", marginLeft: "auto", marginRight: "1%", marginTop: "1%", marginBottom: "-1%" }} src={CLogo} />
                             <div className="outerDivCenter">
-                            <h1> Fusion Configurator </h1>
+                            <h1 className="TitleFont"> Fusion Configurator </h1>
+                            <Discount discount={this.discountChange} />
                             </div>
                         <div className="WorkSpace">
                             <div className="outerDivCenter">
@@ -1103,30 +1132,29 @@ class App extends React.Component {
                                     </div>
                                 </div>
                                 </div>
-                                <div className="TableHeader">
-                                    <div style={{ display: "flex", flexDirection: "row" }}>
+                                <div className="TableHeader" style={{width:"100%"}}>
+                                    <div style={{ display: "flex", flexDirection: "row", flexShrink:"0"}}>
+                                        <KWP kwp={kwp}/>
                                         <PricePerWatt currency={currency} panels={ppwPanels} total={ppwTotal} />
                                         <ArraySize size={this.arraySize()} />
                                         </div>
                                 </div>
                                 {x}
                             <p> </p>
-                        </div>
+                        
                                 <div className="horizontal">
-                                    <Expand expand={0} press={this.expandPress} />
-                                    <Expand expand={1} press={this.expandPress} />
-                                    <Expand expand={2} press={this.expandPress} />
-                                    <Expand expand={3} press={this.expandPress} />
-                                    <Window press={this.windowPress} />
-                                    <Clear press={this.clearPress} />
-                                    
-                                    
-                                    <Discount discount={this.discountChange} />
-                                    
+                                    {y}
+                                </div>
+                                <div className="horizontal">
+                                    <AddQuote press={this.addQuote} />
+                                <Clear press={this.clearPress} />
+                                </div>
+                                <Window press={this.windowPress} />
                             </div>
                         </div>
-                            <table/>
-                            <AddQuote press={this.addQuote} />
+                        <table />
+                        
+                            
                             <br></br>
                             {sum}
                             <br></br>

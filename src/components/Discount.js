@@ -27,9 +27,9 @@ class Discount extends React.Component {
 
     render() {
         return (
-                <label>
-                Discount:
-                    <input type="text" value={this.state.discount + "%"} onChange={this.onDiscountChange} />
+            <label style={{ display: "flex", flexShrink: "0", flexDirection: "row"}}>
+                <input type="text" style={{ width: "50px",height:"80%", fontFamily: "arial", fontSize: "80%", textAlignLast: "right"}} value={this.state.discount + "%"} onChange={this.onDiscountChange} />
+                <p style={{fontFamily: "arial", fontSize: "80%" }}>&nbsp;&nbsp;Your discount</p>
                 </label>
          )
     }

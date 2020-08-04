@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
+import Bin from '.././Imgs/bin.svg'
 
 class Clear extends React.Component {
     constructor(props) {
@@ -13,7 +14,7 @@ class Clear extends React.Component {
 
     render() {
         var x = "CLEAR CELLS"
-        return (<div><Button variant="outline-info" onClick={this.handleClick}>{x}</Button></div>)
+        return (<div style={{ marginTop: "-30px",marginLeft: "-80px", marginRight: "0" }}><img onClick={this.handleClick} style={{ width: "40%" }} src={Bin} /></div>)
     }
 }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
+import Arrow from '.././Imgs/Arrow.png'
 
 class Expand extends React.Component {
     constructor(props) {
@@ -12,10 +13,10 @@ class Expand extends React.Component {
     }
 
     render() {
-        var x = ""
+        var x 
         switch (this.props.expand) {
             case 0:
-                x = "EXPAND X"
+                x = <img src={Arrow} onClick={this.handleClick} style={{ transform:"rotate(90deg)", width:"40%"}}/>
                 break;
             case 1:
                 x = "REDUCE X"
@@ -27,7 +28,7 @@ class Expand extends React.Component {
                 x = "REDUCE Y"
                 break;
         }
-        return (<div><Button variant="outline-info"  onClick={this.handleClick}>{x}</Button></div>)
+        return (<div>{x}</div>)
     }
 }
 

@@ -2,6 +2,7 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Portrait from '.././Imgs/Portrait.svg'
 import Landscape from '.././Imgs/Landscape.svg'
+import './Fonts.css'
 
 class Orientation extends React.Component {
     constructor(props) {
@@ -16,11 +17,15 @@ class Orientation extends React.Component {
     render() {
         var img = Portrait
         var text = "Portrait"
+        var imgMargin = -5;
         if (this.props.landscape == true) {
             img = Landscape
             text = "Landscape"
+            imgMargin = -2;
         }
-        return (<div style={{ display: "flex", flexDirection: "row" }}><img src={img} width="25%" height="100%" onClick={this.handleClick} /><p style={{ marginTop: "auto", marginBottom:0 }}>{text}</p></div >)
+        imgMargin = imgMargin.toString()
+        imgMargin += "%"
+        return (<div style={{ display: "flex", flexDirection: "row" }}><img style={{marginRight:imgMargin}} src={img} width="25%" height="100%" onClick={this.handleClick} /><p className="TitleFont" style={{ fontSize:"140%",marginTop: "auto", marginBottom:0 }}>{text}</p></div >)
     }
 }
 

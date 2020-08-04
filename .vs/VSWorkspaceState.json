@@ -3,8 +3,9 @@
     "",
     "\\public",
     "\\src",
-    "\\src\\components"
+    "\\src\\components",
+    "\\src\\Imgs"
   ],
-  "SelectedNode": "\\src\\App.js",
+  "SelectedNode": "\\src\\components\\KWP.js",
   "PreviewInSolutionExplorer": false
 }

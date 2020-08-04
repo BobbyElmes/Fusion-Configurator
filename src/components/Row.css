@@ -1,6 +1,6 @@
 .horizontal {
     display: flex;
-    
+    flex-direction:row;
 }
 
 .divForHor {
@@ -10,3 +10,43 @@
 .layout {
     text-align: left;
 }
+
+
+
+.button {
+    background: #E6E7E9 !important;
+    color: #E6E7E9 !important;
+    border: 0px solid black;
+    border-radius: 0px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 1px;
+}
+    .button :hover {
+        background-color: #E6E7E9 !important;
+        border: 2px solid deepskyblue;
+        border-radius: 2px;
+    }
+    .button :active {
+        background-color: #E6E7E9 !important;
+        border: 0px solid black;
+        border-radius: 0px;
+    }
+    .button :focus {
+        outline: none;
+        box-shadow: none;
+    }
+.button2 {
+    background: #E6E7E9 !important;
+    color: #E6E7E9 !important;
+    border: 0px solid black;
+    border-radius: 0px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 1px;
+}
+    .button2 :focus {
+        outline: none;
+        box-shadow: none;
+    }
+

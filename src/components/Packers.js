@@ -1,6 +1,7 @@
 import React from 'react';
 import './DropDown.css'
 
+
 //handles the panel drop down menu
 class PackerDropDown extends React.Component {
     constructor(props) {
@@ -24,8 +25,8 @@ class PackerDropDown extends React.Component {
         var widths = this.state.widths
         var options = []
         for (var i = 0; i < widths.length; i++)
-            options.push(<option value={i}>{widths[i]}</option>)
-        return (<div style={{ display: "flex", flexDirection: "row" }}><p className="DropDown">Batten Thickness (mm):&nbsp; </p><select value={this.state.panelId}
+            options.push(<option style={{ direction: "rtl"}} value={i}>{widths[i]}</option>)
+        return (<div style={{ display: "flex", flexDirection: "row", marginTop: "5%" }}><p className="DropDown" style={{ fontFamily: "arial", fontSize: "80%" }}>Batten Thickness (mm)&nbsp;&nbsp; </p><select style={{ fontFamily: "arial", fontSize: "80%", width: "103px", textAlignLast: "right" }} value={this.state.panelId}
             onChange={this.handleChange} >
             {options}
         </select></div>)
