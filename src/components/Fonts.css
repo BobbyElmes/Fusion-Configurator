@@ -2,3 +2,23 @@
     font-family: Segoe UI Light;
 }
 
+.TableEntry {
+    font-family: Arial;
+    font-size: 15px;
+}
+.TableHeader {
+    font-family: Segoe UI Light;
+    font-size: 15px;
+}
+
+.TableSmall {
+    font-family: Arial;
+    font-size:10px;
+}
+
+th {
+    font-weight: normal;
+    font-family: Arial;
+    font-size: 15px;
+    text-align:left;
+}

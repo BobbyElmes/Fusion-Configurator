@@ -24,6 +24,7 @@ import PricePerWatt from './components/PricePerWatt.js'
 import PackerDropDown from './components/Packers.js'
 import ArraySize from './components/ArraySize'
 import Language from './components/Language.js'
+import KitSection from './components/KitSection.js'
 import KWP from './components/KWP.js'
 import './components/DropDown.css'
 import './components/Fonts.css'
@@ -323,6 +324,7 @@ class App extends React.Component {
             for (var c = -1; c < 2; c++)
                 if (temp[x + i][y + c] != 1 && !(i == 0 && c == 0))
                     window = false
+       
         return window
     }
 
@@ -345,17 +347,25 @@ class App extends React.Component {
         var temp = this.state.type
         //if placing a velux window, otherwise
         if (this.state.window == true) {
-            var window = this.checkVeluxValid(temp,x,y)
+            var window = this.checkVeluxValid(temp, x, y)
+            if (temp[x][y] == 2) {
+                temp[x][y] = 0;
+                this.flashingLogic(x, y)
+                this.setState({
+                    type: temp
+                })
+            }
+            else 
             if (window) {
                 if (temp[x][y] == 1) {
                     this.state.panels[this.state.currentPanel][1] -= 1
                 }
                 temp[x][y] = 2
-                
+                this.flashingLogic(x, y)
                 this.setState({
                     type: temp
                 })
-                this.flashingLogic(x, y)
+                
             }
         }
         else {
@@ -656,24 +666,24 @@ class App extends React.Component {
                             var flashItem = ""
                             if (temp[1][0] != 0) {
                                 if (temp[2][1] != 0)
-                                    flashItem = flashList[3][0]
+                                    flashItem = flashList[4][0]
                                 else if (temp[1][2] != 0)
-                                    flashItem = flashList[2][0]
-                                else
                                     flashItem = flashList[1][0]
+                                else
+                                    flashItem = flashList[2][0]
 
                             }
                             else {
                                 //TY, TL
                                 if (temp[1][2] != 0) {
                                     if (temp[2][1] != 0)
-                                        flashItem = flashList[4][0]
+                                        flashItem = flashList[3][0]
                                     else
                                         flashItem = flashList[0][0]
                                 }
                                 else {
                                     if (temp[2][1] != 0)
-                                        flashItem = flashList[4][0]
+                                        flashItem = flashList[3][0]
                                     else
                                         flashItem = flashList[5][0]
                                 }
@@ -700,17 +710,17 @@ class App extends React.Component {
                             if (temp[1][2] != 0 && temp[0][2] != 0 && temp[0][1] != 0 && temp[0][0] == 0) {
                                 if (corners.length > 0)
                                     corners += " "
-                                corners += flashList[8][0]
+                                corners += flashList[10][0]
                             }
                             if (temp[0][0] != 0 && temp[0][1] != 0 && temp[1][0] != 0) {
                                 if (corners.length > 0)
                                     corners += " "
-                                corners += flashList[9][0]
+                                corners += flashList[8][0]
                             }
                             if (temp[0][0] != 0 && temp[0][1] != 0 && temp[0][2] != 0 && temp[1][2] != 0) {
                                 if (corners.length > 0)
                                     corners += " "
-                                corners += flashList[10][0]
+                                corners += flashList[9][0]
                             }
                             if (corners == "")
                                 corners = "none"
@@ -994,12 +1004,12 @@ class App extends React.Component {
             if (width == 0) {
                 var x = 4
                 packers[0 + x][1] = flashing[0][1]
-                packers[1 + x][1] = flashing[2][1]
-                packers[2 + x][1] = flashing[1][1]
-                packers[3 + x][1] = flashing[4][1]
-                packers[4 + x][1] = flashing[3][1]
+                packers[1 + x][1] = flashing[1][1]
+                packers[2 + x][1] = flashing[2][1]
+                packers[3 + x][1] = flashing[3][1]
+                packers[4 + x][1] = flashing[4][1]
                 packers[5 + x][1] = flashing[5][1]
-                packers[6 + x][1] = flashing[10][1]
+                packers[6 + x][1] = flashing[9][1]
 
                 for (var i = 0; i < 4; i++)
                     packers[i][1] = 0
@@ -1093,12 +1103,12 @@ class App extends React.Component {
         if (this.state.Quotes != null) {
             for (var i = 0; i < this.state.Quotes.length; i++) {
                 for (var c = 0; c < this.state.Quotes[i].panels.length; c++) {
-                    kwp += this.state.Quotes[i].panels[c][1] * this.state.Quotes[i].panels[c][3]
+                    kwp += this.state.Quotes[i].panels[c][1] * this.state.Quotes[i].panels[c][2]
                 }
             }
         }
         for (var c = 0; c < this.state.panels.length; c++) {
-            kwp += this.state.panels[c][1] * this.state.panels[c][3]
+            kwp += this.state.panels[c][1] * this.state.panels[c][2]
 
         }
         return kwp/1000
@@ -1128,7 +1138,7 @@ class App extends React.Component {
             this.createEmptyPanels(totalPanels)
             //loop through quotes, totalling the panel & flashing: costs, totals ect
             for (var i = 0; i < this.state.Quotes.length; i++) {
-                quotes.push(<DisplayQuote id={i + 1} currency={currency} remove={this.removeQuote} discount={this.state.discount} total={this.state.Quotes[i].total} flashings={this.state.Quotes[i].flashingList} landscape={this.state.Quotes[i].landscape} miniFlashing={this.state.Quotes[i].miniFlashing} xSize={this.state.Quotes[i].xSize} panels={this.state.Quotes[i].panels} panelTotal={this.state.Quotes[i].panelTotal} packers={this.state.Quotes[i].packers} width={this.state.Quotes[i].width}/>)
+                quotes.push(<DisplayQuote id={i + 1} currency={currency} remove={this.removeQuote} discount={this.state.discount} total={this.state.Quotes[i].total} flashings={this.state.Quotes[i].flashingList} landscape={this.state.Quotes[i].landscape} miniFlashing={this.state.Quotes[i].miniFlashing} xSize={this.state.Quotes[i].xSize} panels={this.state.Quotes[i].panels} panelTotal={this.state.Quotes[i].panelTotal} packers={this.state.Quotes[i].packers} width={this.state.Quotes[i].width} />)
                 summary = this.totalQuotes(summary, this.state.Quotes[i], half)
                 overallTotal += this.state.Quotes[i].total
                 overallTotal += this.state.Quotes[i].panelTotal
@@ -1138,7 +1148,7 @@ class App extends React.Component {
                 }
             }
             sum = <DisplayQuote id={0} currency={currency} total={overallTotal} discount={this.state.discount} flashings={summary} landscape={true} panels={totalPanels} />
-            pdf = <PDF currency={currency} total={overallTotal} flashings={summary} discount={this.state.discount} panels={totalPanels} Quotes={this.state.Quotes} />
+            pdf = <PDF send={send} currency={currency} total={overallTotal} flashings={summary} discount={this.state.discount} panels={totalPanels} Quotes={this.state.Quotes} />
         }
         
         var priceP = this.pricePer(overallTotal, totalPanels)
@@ -1150,8 +1160,8 @@ class App extends React.Component {
         table = null
 
         var y = []
-        y.push(<div className="button2" style={{ display: "flex", flexDirection: "row", flexShrink: "0", marginTop: "-10px", marginLeft: "36%", marginRight:"7%" }}> <Button className="button" onClick={() => this.expandPress(2)} style={{ width: "40px", height: "40px" }}><img src={Arrow} className="button2" style={{ transform: "rotate(90deg)", width: "40px", height: "40px", padding: "10px" }} /></Button></div>)
-        y.push(<div className="button2" style={{ display: "flex", flexDirection: "row", flexShrink: "0", marginTop: "-10px" }}> <Button className="button" onClick={() => this.expandPress(3)} style={{  width: "40px", height: "40px" }}><img src={Arrow} className="button2" style={{ transform: "rotate(270deg)", width: "40px", height: "40px", padding: "10px" }} /></Button></div>)
+        y.push(<div className="button2" style={{ display: "flex", flexDirection: "row", flexShrink: "0", marginTop: "-5px", marginLeft: "36%", marginRight: "7%" }}> <Button className="button" onClick={() => this.expandPress(2)} style={{ width: "40px", height: "40px" }}><img src={Arrow} className="button2" style={{ transform: "rotate(90deg)", marginLeft: "-12px", marginTop: "-6px", width: "40px", height: "40px", padding: "10px" }} /></Button></div>)
+        y.push(<div className="button2" style={{ display: "flex", flexDirection: "row", flexShrink: "0", marginTop: "-5px" }}> <Button className="button" onClick={() => this.expandPress(3)} style={{ width: "40px", height: "40px" }}><img src={Arrow} className="button2" style={{ transform: "rotate(270deg)", marginLeft: "-12px", marginTop:"-6px", width: "40px", height: "40px", padding: "10px" }} /></Button></div>)
         
         
         //if not displaying the send form, display the configurator
@@ -1168,7 +1178,7 @@ class App extends React.Component {
                             </div>
                         <div className="WorkSpace">
                             <div className="outerDivCenter">
-                            <div style={{marginTop:"10px", display: "flex", flexDirection: "row" }}>
+                            <div style={{marginTop:"30px", display: "flex", flexDirection: "row" }}>
                                 <Orientation press={this.changeOrientation} landscape={this.state.landscape} />
                                 <div className="DropDown">
                                 <div style={{ display: "flex", flexDirection: "column" }}>
@@ -1177,14 +1187,17 @@ class App extends React.Component {
                                     </div>
                                 </div>
                                 </div>
+                                <div className="TableUnder" style={{ width: "100%" }}>
                                 <div className="TableHeader" style={{width:"100%"}}>
-                                    <div style={{ display: "flex", flexDirection: "row", flexShrink:"0"}}>
+                                    <div style={{ display: "flex", flexDirection: "row"}}>
                                         <KWP kwp={kwp}/>
                                         <PricePerWatt currency={currency} panels={ppwPanels} total={ppwTotal} />
                                         <ArraySize size={this.arraySize()} />
                                         </div>
+                                    </div>
+                                    {x}
+                                    
                                 </div>
-                                {x}
                             <p> </p>
                         
                                 <div className="horizontal">
@@ -1194,22 +1207,24 @@ class App extends React.Component {
                                     <AddQuote press={this.addQuote} />
                                 <Clear press={this.clearPress} />
                                 </div>
-                                <Window press={this.windowPress} />
+                                <Window press={this.windowPress} landscape={this.state.landscape} />
+                            </div>
+                            
+                        </div>
+                        <div className="outerDivCenter" style={{ marginTop: "20px", marginBottom:"20px" }}>
+                            <KitSection flashings={this.state.flashings} packers={this.state.packers} />
+                        </div>
+                        <div className="WorkSpace">
+                        <div className="outerDivCenter" style={{ marginTop: "20px" }}>
+                                    {quotes}
+                                
                             </div>
                         </div>
-                        <table />
-                        
-                            
-                            <br></br>
-                            {sum}
-                            <br></br>
-                            {quotes}
-                            <br></br>
-                            {send}
-                            <br></br>
-                            <Button onClick={this.downloadPDF}>PDF</Button>
-                            <br></br>
-                            <br></br>
+                        <div className="WorkSpace2">
+                        <div className="outerDivCenter" style={{ marginTop: "20px", marginBottom: "20px" }}>
+                            <div id="divToPrint">{pdf}</div>
+                            </div>
+                        </div>
                         </div>
                         
                 )
@@ -1217,7 +1232,11 @@ class App extends React.Component {
             else {
                 return (<div id="capture">
                     <div className="layout">
+                        <div className="horizontal">
+                            
                         <Button onClick={this.downloadPDF}>BACK</Button>
+                         
+                         </div>
                         <br></br>
                         <br></br>
                         <div id="divToPrint">{pdf}</div>

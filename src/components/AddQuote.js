@@ -13,7 +13,7 @@ class AddQuote extends React.Component {
     }
 
     render() {
-        return (<div style={{ marginTop:"-30px" ,marginLeft: "-8px", marginRight: "0%" }}><img onClick={this.handleClick} style={{ width:"40%" }} src={Clip} /></div>)
+        return (<div style={{ marginTop:"-30px" ,marginLeft: "-8px", marginRight: "80px" }}><img onClick={this.handleClick} style={{ width:"60px" }} src={Clip} /></div>)
     }
 }
 

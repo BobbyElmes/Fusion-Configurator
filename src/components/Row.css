@@ -1,6 +1,7 @@
 .horizontal {
     display: flex;
     flex-direction:row;
+
 }
 
 .divForHor {

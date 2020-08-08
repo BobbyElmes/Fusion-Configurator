@@ -1,7 +1,7 @@
 import React from 'react';
 import Table from 'react-bootstrap/Table';
 import Record from './Record.js'
-import PanelList from './PanelList.js'
+import './Fonts.css'
 
 
 
@@ -32,7 +32,7 @@ class FlashingTable extends React.Component {
         var flashTab
         if (tableComponents != null) {
             for (var i = 0; i < tableComponents.length; i++) {
-                record.push(<Record currency={currency} items={tableComponents[i]} discount={this.props.discount} landscape={this.props.landscape} />)
+                record.push(<Record  currency={currency} items={tableComponents[i]} discount={this.props.discount} landscape={this.props.landscape} />)
                 totalPrice += tableComponents[i][2] * tableComponents[i][1]
             }
             if (this.props.over == 2) {
@@ -43,11 +43,11 @@ class FlashingTable extends React.Component {
             flashTab = <Table striped bordered hover variant="dark">
                 <thead>
                     <tr>
-                        <th>Flashing Kit</th>
-                        <th>Description</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Total Price</th>
+                        <th style={{ width: "15%" }}>Item</th>
+                        <th style={{ width: "40%" }}>Description</th>
+                        <th style={{ width: "15%" }}>Price</th>
+                        <th style={{ width: "15%" }}>Quantity</th>
+                        <th style={{ width: "15%" }}>Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,22 +69,22 @@ class FlashingTable extends React.Component {
             panelTab = <Table striped bordered hover variant="dark">
                 <thead>
                     <tr>
-                        <th>Panel</th>
-                        <th>Description</th>
-                        <th>Cost</th>
-                        <th>Quantity</th>
-                        <th>Total Cost</th>
-                        <th>kWp</th>
+                        <th style={{ width: "12%" }}>Panel</th>
+                        <th style={{ width: "36%" }}>Description</th>
+                        <th style={{ width: "12%" }}>Price</th>
+                        <th style={{ width: "15%" }}>Quantity</th>
+                        <th style={{ width: "15%" }}>Total</th>
+                        <th style={{ width: "10%" }}>kWp</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody >
                     {panels}
                 </tbody>
             </Table>
         }
 
 
-        
+        //calculate table for packers
         var packers = this.props.packers
         var width = this.props.width
         var packerTab
@@ -115,11 +115,11 @@ class FlashingTable extends React.Component {
                 packerTab = <Table striped bordered hover variant="dark">
                     <thead>
                         <tr>
-                            <th>Item</th>
-                            <th>Description</th>
-                            <th>Cost</th>
-                            <th>Quantity</th>
-                            <th>Total Cost</th>
+                            <th style={{ width: "15%" }}>Item</th>
+                            <th style={{ width: "40%" }}>Description</th>
+                            <th style={{ width: "15%" }}>Price</th>
+                            <th style={{ width: "15%" }}>Quantity</th>
+                            <th style={{ width: "15%" }}>Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -139,11 +139,12 @@ class FlashingTable extends React.Component {
             <thead>
                 <tr>
                     <th>Summary</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                <td>Total Price: </td>
-                <td>{currency[0]}{Math.round(((totalPrice * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100}{currency[1]}</td>
+                <td><div style={{ textAlign: "left" }}><p className="TableSmall">Total Price:</p></div> </td>
+                <td><div style={{ textAlign: "left" }}><p className="TableSmall">{currency[0]}{Math.round(((totalPrice * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100}{currency[1]}</p></div></td>
             </tbody>
         </Table>
 

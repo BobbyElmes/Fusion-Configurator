@@ -13,7 +13,8 @@ class Cell extends React.Component {
          this.upButton = this.upButton.bind(this)
          this.state = {
              down: false,
-             over:false
+             over: false,
+             width: 0
          }
     }
 
@@ -28,13 +29,21 @@ class Cell extends React.Component {
         this.state.over = false
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+  /*  shouldComponentUpdate(nextProps, nextState) {
+        var current = window.innerWidth;
+        console.log(current)
+        console.log(this.state.width)
+        if (current != this.state.width) {
+            this.state.width = current;
+            return true;
+        }
         if (this.props.marked === nextProps.marked && this.props.flashing == nextProps.flashing && this.props.landscape == nextProps.landscape) {
             return false;
         } else {
+            this.state.width = current;
             return true;
         }
-    }
+    }*/
 
     componentDidMount() {
         document.addEventListener('mousedown', this.down);
@@ -125,38 +134,42 @@ class Cell extends React.Component {
                         break;
                     case "F16-VC":
                         if (this.props.pdf == true)
-                            color = "PDFWindow"
+                            color = "Window"
                         else
                             color = "Window"
                         break;
 
                 }
                 if (flash != "none" && color == "none") {
-                 //   if (this.props.pdf == true)
-               //         color = "PDFCorner"
-                //    else {
+                    var style = ""
+                    if (this.props.landscape == true) {
+                        style = "-105%"
+                    }
+                    else {
+                        style = "-130%"
+                    }
                         var flashArr = flash.split(" ");
                         for (var i = 0; i < flashArr.length; i++) {
                             switch (flashArr[i]) {
                                 case "F16-CLT":
                                 case "F16-LCLT":
-                                    cornerStyle.push(<div className="CornerDiv"></div>)
+                                    cornerStyle.push(<div style={{right:style}} className="CornerDiv"></div>)
                                     break;
                                 case "F16-CRT":
                                 case "F16-LCRT":
-                                    cornerStyle.push(<div className="CornerDivBottomRight"></div>)
+                                    cornerStyle.push(<div style={{ left: style }} className="CornerDivBottomRight"></div>)
                                     break;
                                 case "F16-CLB-S":
                                 case "F16-LCLB-S":
-                                    cornerStyle.push(<div className="CornerDivTopRight2"></div>)
+                                    cornerStyle.push(<div style={{ right: style }} className="CornerDivTopRight2"></div>)
                                     break;
                                 case "F16-CLB":
                                 case "F16-LCLB":
-                                    cornerStyle.push(<div className="CornerDivTopRight1"></div>)
+                                    cornerStyle.push(<div style={{ right: style }} className="CornerDivTopRight1"></div>)
                                     break;
                                 case "F16-CRB":
                                 case "F16-LCRB":
-                                    cornerStyle.push(<div className="CornerDivTopLeft"></div>)
+                                    cornerStyle.push(<div style={{ left: style }} className="CornerDivTopLeft"></div>)
                                     break;
 
                             }
@@ -170,7 +183,7 @@ class Cell extends React.Component {
         }
 
 
-        return (<div className="BigDiv">{cornerStyle}<Button onMouseDown={this.handleClick} style={{ paddingRight: padding[0], paddingTop: padding[1], cornerStyle }} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} ></Button></div >)
+        return (<div className="BigDiv">{cornerStyle}<Button onMouseDown={this.handleClick} style={{ padding:0, width:pad[0],height:pad[1], cornerStyle }} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} ></Button></div >)
     }
 }
 

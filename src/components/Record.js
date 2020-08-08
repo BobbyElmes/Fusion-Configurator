@@ -1,5 +1,6 @@
 import React from 'react';
-import Table from 'react-bootstrap/Table';
+import './Fonts.css'
+import formatMoney from './FormatMoney.js'
 
 
 
@@ -18,22 +19,22 @@ class Record extends React.Component {
         if (this.props.panel == true) {
             return (
                 <tr>
-                    <td>{items[0]}</td>
-                    <td>{items[4]}</td>
-                    <td>{currency[0]}{Math.round(((items[3] * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100}{currency[1]}</td>
-                    <td>{items[1]}</td>
-                    <td>{currency[0]}{Math.round(((items[3] * items[1] * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100}{currency[1]}</td>
-                    <td>{Math.round((((items[2] * items[1]) * 0.001) + Number.EPSILON) * 100) / 100   }</td>
+                    <td style={{ width: "12%" }}><div style={{ textAlign:"left"}}><p className="TableSmall">{items[0]}</p></div></td>
+                    <td style={{ width: "36%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{items[4]}</p></div></td>
+                    <td style={{ width: "12%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{currency[0]}{formatMoney((Math.round(((items[3] * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100).toString())}{currency[1]}</p></div></td>
+                    <td style={{ width: "15%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{items[1]}</p></div></td>
+                    <td style={{ width: "15%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{currency[0]}{formatMoney((Math.round(((items[3] * items[1] * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100).toString())}{currency[1]}</p></div></td>
+                    <td style={{ width: "10%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{formatMoney((Math.round((((items[2] * items[1]) * 0.001) + Number.EPSILON) * 100) / 100).toString())}</p></div></td>
                 </tr>)
         }
         else {
             return (
                 <tr>
-                    <td>{items[0]}</td>
-                    <td>{items[3]}</td>
-                    <td>{currency[0]}{Math.round(((items[2] * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100}{currency[1]}</td>
-                    <td>{items[1]}</td>
-                    <td>{currency[0]}{Math.round(((items[2] * items[1] * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100}{currency[1]}</td>
+                    <td style={{ width: "15%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{items[0]}</p></div></td>
+                    <td style={{ width: "40%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{items[3]}</p></div></td>
+                    <td style={{ width: "15%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{currency[0]}{formatMoney((Math.round(((items[2] * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100).toString())}{currency[1]}</p></div></td>
+                    <td style={{ width: "15%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{items[1]}</p></div></td>
+                    <td style={{ width: "15%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{currency[0]}{formatMoney((Math.round(((items[2] * items[1] * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100).toString())}{currency[1]}</p></div></td>
                 </tr>)
         }
     }

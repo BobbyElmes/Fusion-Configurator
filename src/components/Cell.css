@@ -37,6 +37,67 @@
     font-size: 32%;
 }
 
+.CLB {
+    background: linear-gradient( 45deg, black, black 16.5px, yellow 10px, yellow 20px ) !important;
+    color: blueviolet !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+    height: 25px;
+    width: 25px;
+}
+
+.CLB-S {
+    background: linear-gradient( 45deg, black, black 16.5px, grey 10px, grey 20px ) !important;
+    color: blueviolet !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+    height: 25px;
+    width: 25px;
+}
+
+.CRT {
+    background: linear-gradient( 45deg, #1074bc, #1074bc 16.5px, black 10px, black 20px ) !important;
+    color: blueviolet !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+    height: 25px;
+    width: 25px;
+}
+
+.CLT {
+    background: linear-gradient( 135deg, black, black 16.5px, #8bc63e 10px, #8bc63e 20px ) !important;
+    color: blueviolet !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+    height: 25px;
+    width: 25px;
+}
+
+.CRB {
+    background: linear-gradient( 135deg, #f7911d, #f7911d 16.5px, black 10px, black 20px ) !important;
+    color: blueviolet !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+    height: 25px;
+    width: 25px;
+}
+
+
 .J {
     background-color: deepskyblue !important;
     color: black !important;
@@ -68,17 +129,87 @@
 }
 
 .Window {
-    background: repeating-linear-gradient( 45deg, white, white 10px, lightseagreen 10px, lightseagreen 20px ) !important;
-    color: blueviolet !important;
-    border: 0.1px solid black;
+    background: url(".././Imgs/Window.png")no-repeat scroll 0 0 transparent;
+    background-size: 100% 100%;
+    color: black !important;
+    border: 0.1px solid black !important;
     border-radius: 0.1px;
     text-transform: uppercase;
-    text-align: center;
-    font-size: 32%;
+    font-size: 34px;
+    color: black !important;
 }
 
+.Remove {
+    background-color: rgba(255, 0, 0, 0);
+    border: 2px solid darkred !important;
+    border-radius: 2px;
+    height: 30px;
+    margin-top: 8px;
+    text-align: center;
+    margin-left: 400px;
+    position: absolute;
+    text-transform: uppercase;
+    font-size: 10px;
+    font-family: Arial;
+    color: darkred;
+}
+    .Remove :hover,
+    .Remove :focus,
+    .Remove :active {
+        background-color: darkred !important;
+        background: darkred !important;
+        color: white;
+    }
+
+.btn-success:hover {
+    background-color: indianred;
+}
+
+.btn-Secondary:hover {
+    background-color: deepskyblue;
+    color: white !important;
+}
+
+.btn-danger:hover {
+    background-color: mediumspringgreen;
+    
+}
+
+.Send {
+    background-color: rgba(255, 0, 0, 0);
+    border: 2px solid lightseagreen !important;
+    border-radius: 2px;
+    height: 30px;
+    text-align: center;
+    margin-top: 12px;
+    text-transform: uppercase;
+    font-size: 10px;
+    font-family: Arial;
+    color: lightseagreen ;
+}
+    .Send :hover {
+        color: lightseagreen !important;
+    }
+
+.Download {
+    background-color: rgba(255, 0, 0, 0);
+    border: 2px solid dodgerblue !important;
+    border-radius: 2px;
+    height: 30px;
+    text-align: center;
+    margin-top: 12px;
+    text-transform: uppercase;
+    font-size: 10px;
+    font-family: Arial;
+    color: dodgerblue;
+}
+
+    .Download :hover {
+       
+    }
+
 .Corner {
-    background: #C6EAFA;
+    background: #C6EAFA !important;
     color: black !important;
     border: 0.1px solid black;
     border-radius: 0.1px;
@@ -91,7 +222,7 @@
 }
 
 .BigDiv {
-    background: #C6EAFA;
+    background: #C6EAFA !important;
     color: black !important;
     border: 0.1px white;
     border-radius: 0.1px;
@@ -104,23 +235,26 @@
 }
 
 .CornerDiv {
-        position: absolute;
-        bottom: 0;
-        height: 50px;
-        width: 30px;
-        right: -45px;
-        background-color: midnightblue;
-        content: "";
-        z-index: 1000;
-        transform: skew(-45deg);
- }
+    position: absolute;
+    bottom: 0;
+    border: 1px solid black;
+    border-radius: 0.1px;
+    height: 100%;
+    width: 100%;
+    background-color: #8bc63e;
+    content: "";
+    z-index: 1000;
+    transform: skew(-45deg);
+}
 .CornerDivBottomRight {
     position: absolute;
     bottom: 0;
-    height: 50px;
-    width: 30px;
-    left: -45px;
-    background-color: midnightblue;
+    border: 1px solid black;
+    border-radius: 0.1px;
+    height: 100%;
+    width: 100%;
+    left: -120%;
+    background-color: #1074bc;
     content: "";
     z-index: 1000;
     transform: skew(45deg);
@@ -128,10 +262,11 @@
 .CornerDivTopRight1 {
     position: absolute;
     bottom: 0;
-    height: 50px;
-    width: 30px;
-    right: -40px;
-    background-color: midnightblue;
+    height: 100%;
+    width: 100%;
+    right: -120%;
+    border: 1px solid black;
+    background-color: yellow;
     content: "";
     z-index: 1000;
     transform: skew(45deg);
@@ -140,10 +275,11 @@
 .CornerDivTopRight2 {
     position: absolute;
     bottom: 0;
-    height: 45px;
-    width: 30px;
-    right: -45px;
-    background-color: blueviolet;
+    height: 100%;
+    width: 100%;
+    right: -120%;
+    border: 1px solid black;
+    background-color: grey;
     content: "";
     z-index: 1000;
     transform: skew(45deg);
@@ -152,10 +288,11 @@
 .CornerDivTopLeft {
     position: absolute;
     bottom: 0;
-    height: 50px;
-    width: 30px;
-    left: -40px;
-    background-color: midnightblue;
+    height: 100%;
+    width: 100%;
+    left: -120%;
+    border: 1px solid black;
+    background-color: #f7911d;
     content: "";
     z-index: 1000;
     transform: skew(-45deg);

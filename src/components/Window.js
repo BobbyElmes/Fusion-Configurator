@@ -7,12 +7,16 @@ class Window extends React.Component {
         super(props)
         this.state = {
             windowId: 0,
-            windows:["Velux MK08"]
+            windows: ["Velux MK08"],
+            check:false
         }
         this.handleClick = this.handleClick.bind(this)
     }
 
     handleClick() {
+        this.setState({
+            check:!this.state.check
+        })
         this.props.press(this.state.windowId)
     }
 
@@ -27,8 +31,9 @@ class Window extends React.Component {
         var options = []
         for (var i = 0; i < windows.length; i++)
             options.push(<option style={{ direction: "rtl" }} value={i}>{windows[i]}</option>)
-
-        return (<div style={{ display: "flex", flexDirection: "row", marginTop: "10px", marginBottom: "10px" }}><InputGroup.Checkbox onChange={this.handleClick} />
+        if (this.props.landscape == true)
+            this.state.check = false
+        return (<div style={{ display: "flex", flexDirection: "row", marginTop: "10px", marginBottom: "20px" }}><InputGroup.Checkbox checked={this.state.check} onChange={this.handleClick} />
             <p style={{ fontFamily: "arial", fontSize: "80%", marginTop: "auto", marginBottom: "auto", marginRight: "5%", marginLeft:"2%" }}>Add a roof window, type</p>
             <select onChange={this.handleChange}>  {options}</select></div>)
     }

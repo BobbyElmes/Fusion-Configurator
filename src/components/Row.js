@@ -73,7 +73,7 @@ class Row extends React.Component {
 
         
 
-        return (<div className="layout"><div className="divForHor"><div className="horizontal">{cellRow}{x}</div></div></div>)
+        return (<div className="horizontal">{cellRow}{x}</div>)
     }
 }
 
