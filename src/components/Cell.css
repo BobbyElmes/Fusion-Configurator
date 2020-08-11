@@ -162,7 +162,13 @@
     }
 
 .btn-success:hover {
-    background-color: indianred;
+    background-color: indianred !important;
+}
+
+.btn-success:focus,
+.btn-success:active {
+    background-color: white !important;
+    color: indianred !important;
 }
 
 .btn-Secondary:hover {
@@ -170,10 +176,17 @@
     color: white !important;
 }
 
-.btn-danger:hover {
-    background-color: mediumspringgreen;
-    
+.btn-danger:hover
+ {
+    background-color: mediumspringgreen !important;
 }
+.btn-danger:active,
+.btn-danger:focus {
+    background-color: white !important;
+    color: mediumspringgreen !important;
+}
+
+
 
 .Send {
     background-color: rgba(255, 0, 0, 0);
@@ -185,7 +198,7 @@
     text-transform: uppercase;
     font-size: 10px;
     font-family: Arial;
-    color: lightseagreen ;
+    color: lightseagreen;
 }
     .Send :hover {
         color: lightseagreen !important;
@@ -209,7 +222,7 @@
     }
 
 .Corner {
-    background: #C6EAFA !important;
+    background: rgba(0,0,0,0) !important;
     color: black !important;
     border: 0.1px solid black;
     border-radius: 0.1px;
@@ -219,13 +232,14 @@
     display: block;
     overflow: hidden;
     font-size: 75%;
+    z-index: 2;
 }
 
+
 .BigDiv {
-    background: #C6EAFA !important;
     color: black !important;
-    border: 0.1px white;
-    border-radius: 0.1px;
+    border: 0 solid black !important;
+    border-radius: 0.01px;
     text-transform: uppercase;
     text-align: center;
     position: relative;
@@ -241,22 +255,24 @@
     border-radius: 0.1px;
     height: 100%;
     width: 100%;
+    overflow: hidden;
     background-color: #8bc63e;
     content: "";
-    z-index: 1000;
+    z-index: 1;
     transform: skew(-45deg);
 }
 .CornerDivBottomRight {
     position: absolute;
     bottom: 0;
     border: 1px solid black;
-    border-radius: 0.1px;
+    border-radius: 0px;
+    overflow: hidden;
     height: 100%;
     width: 100%;
     left: -120%;
     background-color: #1074bc;
     content: "";
-    z-index: 1000;
+    z-index: 1;
     transform: skew(45deg);
 }
 .CornerDivTopRight1 {
@@ -268,7 +284,7 @@
     border: 1px solid black;
     background-color: yellow;
     content: "";
-    z-index: 1000;
+    z-index: 1;
     transform: skew(45deg);
 }
 
@@ -281,7 +297,7 @@
     border: 1px solid black;
     background-color: grey;
     content: "";
-    z-index: 1000;
+    z-index: 1;
     transform: skew(45deg);
 }
 
@@ -294,7 +310,7 @@
     border: 1px solid black;
     background-color: #f7911d;
     content: "";
-    z-index: 1000;
+    z-index: 1;
     transform: skew(-45deg);
 }
 
@@ -320,7 +336,7 @@
 
 
 .none {
-    background-color: #C6EAFA !important;
+    background-color: rgba(0,0,0,0) !important;
     color: black !important;
     border: 0.1px solid black;
     border-radius: 0.1px;
@@ -334,6 +350,47 @@
     background-color: lightseagreen;
     border-color: black; /*set the color you want here*/
 }
-.btn-primary:focus {
+.btn-primary:focus,
+.btn-primary:active {
     background-color: lightseagreen;
 }
+
+.Minus {
+    background-color: rgba(255, 0, 0, 0);
+    border: 2px solid darkred !important;
+    border-radius: 2px;
+    width: 25%;
+    height: 100px;
+    min-width: 100px;
+    text-align: center;
+    box-shadow: none !important;
+    text-transform: uppercase;
+    font-size: 10px;
+    font-family: Arial;
+    color: darkred;
+}
+
+    .Minus :hover {
+        color: white;
+    }
+
+.Plus {
+    background: white;
+    background-color: white;
+    border: 2px solid lightseagreen !important;
+    border-radius: 2px;
+    width: 25%;
+    min-width:100px;
+    height: 100px;
+    text-align: center;
+    text-transform: uppercase;
+    box-shadow: none !important;
+    font-size: 10px;
+    font-family: Arial;
+    color: lightseagreen;
+}
+.Plus :hover {
+    color: white !important;
+}
+
+   

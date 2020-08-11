@@ -71,10 +71,13 @@ class KitItem extends React.Component {
 
         var cell
         if (color != "") {
-            cell = <Button style={{ marginRight: "10px", padding:0, width:"25px", height:"25px" }} className={color + ' shadow-none'}> </Button>
+            if (color == "Window")
+                cell = <Button style={{ marginRight: "10px", padding: 0, cursor:"context-menu", width: "22px", height: "25px" }} className={color + ' shadow-none'}> </Button>
+            else
+                cell = <Button style={{ marginRight: "10px", cursor: "context-menu", padding:0, width:"25px", height:"25px" }} className={color + ' shadow-none'}> </Button>
         }
 
-        return (<div style={{ display: "flex", flexDirection: "row", marginBottom: "-10px", minWidth:"130px" }} > {cell} <p style={{ fontFamily: "arial" }}>{this.props.item[0]}</p> <div style={{ position: "absolute", marginLeft: "130px" }}><p style={{ fontFamily: "arial" }}>{this.props.item[1]}</p></div> </div>)
+        return (<div style={{ display: "flex", flexDirection: "row", marginBottom: "-10px", minWidth:"130px" }} > {cell} <p style={{ fontFamily: "arial" }}>{this.props.id}</p> <div style={{ position: "absolute", marginLeft: "130px" }}><p style={{ fontFamily: "arial" }}>{this.props.item[1]}</p></div> </div>)
     }
 }
 

@@ -45,7 +45,10 @@ class PDFDownload extends React.Component {
             miniDisplay.push(new Array(flashQuotes.length))
             if (i == 0)
                 miniDisplay[i].push(<br></br>)
-            miniDisplay[i].push(<div style={{ marginLeft: "60px", textAlign: "left" }}> <p style={{ fontFamily: "Arial" }}><i>Layout: {i + 1}</i></p></div >)
+            miniDisplay[i].push(<div style={{ marginLeft: "60px", textAlign: "left" }}>
+                <p style={{ fontFamily: "Arial" }}><i>Layout: {i + 1}</i></p>
+                <p style={{ fontFamily: "Arial" }}><i>Quantity: {quotes[i].quantity}</i></p>
+            </div >)
             
             
             for (var c = 0; c < flashQuotes.length; c++) {
@@ -86,13 +89,13 @@ class PDFDownload extends React.Component {
                 <div>
                         {miniDisplay}
                         <p className="page-break" style={{ fontFamily:"Arial" }}><b>Section 2 - portrait flashings</b></p>
-                        <FlashingTable currency={currency} components={this.props.flashings[0]} discount={this.props.discount} landscape={false} over={1} />
+                        <FlashingTable currency={currency} ids={this.props.ids[0]} components={this.props.flashings[0]} discount={this.props.discount} landscape={false} over={1} />
                         <p className="page-break" style={{ fontFamily: "Arial" }}><b>Section 3 - landscape flashings</b></p>
-                        <FlashingTable className="pageBreak" currency={currency} components={this.props.flashings[1]} discount={this.props.discount} landscape={true} over={1} />
+                            <FlashingTable className="pageBreak" ids={this.props.ids[1]} currency={currency} components={this.props.flashings[1]} discount={this.props.discount} landscape={true} over={1} />
                         <p className="page-break" style={{ fontFamily: "Arial" }}><b>Section 4 - packers</b></p>
-                        <FlashingTable className="pageBreak" currency={currency} packers={this.props.flashings[2]} width={-1} discount={this.props.discount} over={1} />
+                            <FlashingTable className="pageBreak" ids={this.props.ids[2]} currency={currency} packers={this.props.flashings[2]} width={-1} discount={this.props.discount} over={1} />
                         <p className="page-break" style={{ fontFamily: "Arial" }}><b>Section 5 - panels & summary</b></p>
-                        <FlashingTable className="pageBreak" currency={currency} panelComponents={this.props.panels} discount={this.props.discount} landscape={false} over={2} total={this.props.total} />
+                            <FlashingTable className="pageBreak" ids={this.props.ids[3]} currency={currency} panelComponents={this.props.panels} discount={this.props.discount} landscape={false} over={2} total={this.props.total} />
                     </div>
             </div>
         </PDFExport></div></div>)

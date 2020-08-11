@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
+import formatMoney from '.././Functions/FormatMoney.js'
 import './Row.css';
 import './Cell.css'
 import Row from './Row.js'
@@ -74,15 +75,20 @@ class DisplayQuote extends React.Component {
         if (this.props.id != 0) {
             //   if (this.state.show == false) {
             //   x = "+"
-            return (<div style={{ textAlign: "center" }}><div className="horizontal">
+            return (<div style={{ textAlign: "center"}}><div className="horizontal">
                 <h1 style={{ fontFamily: "Segoe UI Light", fontSize: "35px" }}> Quote {this.props.id} </h1>
                 <pre>    </pre>
-                <h1 style={{ fontFamily: "Segoe UI Light", fontSize: "35px" }}>{currency[0]}{Math.round((((this.props.total + this.props.panelTotal) * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100}{currency[1]} </h1>
+                <h1 style={{ fontFamily: "Segoe UI Light", fontSize: "35px" }}>{currency[0]}{formatMoney((Math.round(((((this.props.total) * (1 - (this.props.discount / 100))) / this.props.quantity) + Number.EPSILON) * 100) / 100).toString())}{currency[1]} </h1>
                 <pre>    </pre>
                 <Button variant="success"  className="Remove" onClick={this.removeClick}>Remove</Button>
             </div>
-                <div style={{ display: "inline-block", marginBottom:"30px", marginTop:"10px" }}>
-                    {miniDisplay}
+                <div style={{ marginBottom: "30px", marginTop: "10px", textAlign: "left" }}><div className="horizontal">
+                    <div style={{marginLeft: "400px", marginTop: "10px", marginBottom: "10px" }}>
+                        {miniDisplay}
+                    </div>
+                    <p style={{ position: "absolute", marginLeft: "4px", fontFamily: "Segoe UI Light", fontSize: "20px" }}> Quantity: {this.props.quantity} </p>
+                    
+                </div>
                     </div>
             </div>
             )

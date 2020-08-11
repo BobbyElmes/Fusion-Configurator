@@ -1,7 +1,6 @@
 import React from 'react';
 import Cell from './Cell.js'
 import './Row.css';
-import Expand from './Expand.js'
 import Arrow from '.././Imgs/Arrow.png'
 import Button from 'react-bootstrap/Button';
 
@@ -52,20 +51,31 @@ class Row extends React.Component {
 
         var st
         for (var i = 0; i < this.props.xSize; i++) {
+            var cursor
+            if (this.props.wind) {
+                if(this.props.unblock[2] == false)
+                    cursor = "not-allowed"
+                else
+                    cursor = "pointer"
+                if (this.props.row == this.props.unblock[0] && i == this.props.unblock[1])
+                    cursor = "pointer"
+            } else
+                cursor = "pointer"
+
             if (this.props.type == null)
-                cellRow.push(<Cell key={i} style={{ marginRight:st}} type={false} press={this.cellClick} flashing={this.props.flashing[i]} row={this.props.row} column={i} down={this.props.down} up={this.props.up} landscape={this.props.landscape} cellOver={this.props.cellOver} marked={this.props.marked[i]} pdf={this.props.pdf} />)
+                cellRow.push(<Cell key={i} mobile={this.props.mobile} style={{ marginRight: st }} window={this.props.window} cursor={cursor} type={false} press={this.cellClick} flashing={this.props.flashing[i]} row={this.props.row} column={i} down={this.props.down} up={this.props.up} landscape={this.props.landscape} cellOver={this.props.cellOver} marked={this.props.marked[i]} pdf={this.props.pdf} />)
             else
-                cellRow.push(<Cell key={i} type={this.props.type[i]} press={this.cellClick} flashing={this.props.flashing[i]} row={this.props.row} column={i} down={this.props.down} up={this.props.up} landscape={this.props.landscape} cellOver={this.props.cellOver} marked={this.props.marked[i]} />)
+                cellRow.push(<Cell key={i} mobile={this.props.mobile}  type={this.props.type[i]} window={this.props.window} cursor={cursor} press={this.cellClick} flashing={this.props.flashing[i]} row={this.props.row} column={i} down={this.props.down} up={this.props.up} landscape={this.props.landscape} cellOver={this.props.cellOver} marked={this.props.marked[i]} />)
         }
 
         var x = null
-        if (this.props.ySize != null) {
+        if (this.props.ySize != null && this.props.mobile != true) {
             if (this.props.row == expand[0]) {
-                x = <div className="button2" style={{ display: "flex", flexDirection: "row", flexShrink: "0", marginTop: "10px" }}> <div style={{ marginRight: "200%" }}></div><Button className="button" onClick={this.handleClick} style={{ position: "absolute", marginTop: "-10px", marginLeft: "2%", width: "40px", height: "40px" }}><img src={Arrow} className="button2" style={{ position: "absolute", marginLeft: "-50%", marginTop: "-50%", width: "40px", height: "40px", padding: "10px" }} /></Button></div>
+                x = <div className="button2" style={{ display: "flex", flexDirection: "row", flexShrink: "0", marginTop: "10px" }}> <div style={{ marginRight: "200%" }}></div><Button disabled={!this.props.showArrow[1]} className="button" onClick={this.handleClick} style={{ position: "absolute", marginTop: "-10px", marginLeft: "2%", width: "40px", height: "40px" }}><img src={Arrow} className="button2" style={{ position: "absolute", marginLeft: "-50%", marginTop: "-50%", width: "40px", height: "40px", padding: "10px" }} /></Button></div>
             }
             else {
                 if (this.props.row == expand[1]) {
-                    x = <div className="button2" style={{ display: "flex", flexDirection: "row", flexShrink: "0", marginTop: "10px" }}> <div style={{ marginRight: "200%" }}></div><Button className="button" onClick={this.handleClick2} style={{ position: "absolute", marginTop: "5px", marginLeft: "2%", width: "40px", height: "40px" }}><img src={Arrow} style={{ transform: "rotate(180deg)", position: "absolute", marginLeft: "-50%", marginTop: "-50%", width: "40px", height: "40px", padding: "10px" }} /></Button></div>
+                    x = <div className="button2" style={{ display: "flex", flexDirection: "row", flexShrink: "0", marginTop: "10px" }}> <div style={{ marginRight: "200%" }}></div><Button disabled={!this.props.showArrow[0]} className="button" onClick={this.handleClick2} style={{ position: "absolute", marginTop: "5px", marginLeft: "2%", width: "40px", height: "40px" }}><img src={Arrow} style={{ transform: "rotate(180deg)", position: "absolute", marginLeft: "-50%", marginTop: "-50%", width: "40px", height: "40px", padding: "10px" }} /></Button></div>
                 }
             }
 

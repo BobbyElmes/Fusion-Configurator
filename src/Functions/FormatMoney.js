@@ -5,7 +5,6 @@ function formatMoney(formattedTotal, no) {
     for (var i = formattedTotal.length - 1; i >= 0; i--) {
         if (formattedTotal[i] == '.') {
             foundDot = true
-            console.log(formattedTotal + " " + numDP + " " + foundDot)
             break;
         }
         numDP++;
@@ -17,7 +16,6 @@ function formatMoney(formattedTotal, no) {
         if (numDP == 1)
             formattedTotal += "0"
     }
-    console.log(formattedTotal)
     var commaTotal = ""
     var start = (formattedTotal.length - 3) % 3
     var count = 0

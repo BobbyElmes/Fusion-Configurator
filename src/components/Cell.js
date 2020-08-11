@@ -56,7 +56,8 @@ class Cell extends React.Component {
     }
 
     enter() {
-
+        if(this.props.window != null)
+            this.props.window(this.props.row, this.props.column)
         if (this.state.down == true && this.state.over == false) {
             if (this.props.up != null)
                 this.props.cellOver(this.props.row, this.props.column)
@@ -84,20 +85,35 @@ class Cell extends React.Component {
     //render cell
     render() {
         var ratio = 1
+        var ratioMobile = 1
+        var bigDiv = "#C6EAFA"
+        var cursor = this.props.cursor
         //if displaying the mini grid, make cell smaller
-        if (this.props.up == null)
+        if (this.props.up == null) {
             ratio = 0.25
+            bigDiv = "#E6E7E9"
+            cursor = "context-menu"
+
+        }
+        if (this.props.mobile) {
+            if (!this.props.landscape)
+                ratioMobile = (window.innerWidth / (8 * 40)) * 0.9
+            else {
+                ratioMobile = (window.innerWidth / (6 * 64)) * 0.9
+            }
+        }
+
         var flash = this.props.flashing
         var width = window.innerWidth
         var height = window.innerHeight
         var use = Math.max(width, height)
         var pad, padding
         if (this.props.landscape) {
-            pad = [(use / 40) * 1.6 * ratio, (use / 40) * ratio]
-            padding = [40 * ratio, 25 * ratio]
+            pad = [64 * ratio * ratioMobile, 40 * ratio * ratioMobile]
+            padding = [40, 25 * ratio]
         }
         else {
-            pad = [(use / 40) * ratio, (use / 40) * 1.6 * ratio]
+            pad = [40 * ratio * ratioMobile, 64 * ratio * ratioMobile]
             padding = [25 * ratio, 40 * ratio]
         }
         var flashText = ""
@@ -174,6 +190,7 @@ class Cell extends React.Component {
 
                             }
                         }
+                         var cornerOver = ((<div className="CornerOver"></div>))
                         color = "Corner"
                 //    }
                 }
@@ -183,7 +200,7 @@ class Cell extends React.Component {
         }
 
 
-        return (<div className="BigDiv">{cornerStyle}<Button onMouseDown={this.handleClick} style={{ padding:0, width:pad[0],height:pad[1], cornerStyle }} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} ></Button></div >)
+        return (<div className="BigDiv" style={{ background: bigDiv }}>{cornerStyle}<Button onMouseDown={this.handleClick} style={{ padding: 0, width: pad[0], height: pad[1], cursor: cursor}} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} ></Button></div>)
     }
 }
 

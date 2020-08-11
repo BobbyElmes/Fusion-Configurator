@@ -37,8 +37,11 @@
         outline: none;
         box-shadow: none;
     }
+    .button:disabled {
+        opacity: 0.3;
+    }
 .button2 {
-    background: #E6E7E9 !important;
+    background: #E6E7E9;
     color: #E6E7E9 !important;
     border: 0px solid black;
     border-radius: 0px;
@@ -49,5 +52,8 @@
     .button2 :focus {
         outline: none;
         box-shadow: none;
+    }
+    .button2:disabled {
+        background: red !important;
     }
 

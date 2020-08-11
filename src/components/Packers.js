@@ -26,7 +26,7 @@ class PackerDropDown extends React.Component {
         var options = []
         for (var i = 0; i < widths.length; i++)
             options.push(<option style={{ direction: "rtl"}} value={i}>{widths[i]}</option>)
-        return (<div style={{ display: "flex", flexDirection: "row", marginTop: "5%" }}><p className="DropDown" style={{ fontFamily: "arial", fontSize: "80%" }}>Batten Thickness (mm)&nbsp;&nbsp; </p><select style={{ fontFamily: "arial", fontSize: "80%", width: "103px", textAlignLast: "right" }} value={this.state.panelId}
+        return (<div style={{ display: "flex", flexDirection: "row", marginTop: "5%" }}><p className="DropDown" style={{ fontFamily: "arial", fontSize: "80%" }}>Batten Thickness (mm)&nbsp;&nbsp; </p><select style={{ fontFamily: "arial", fontSize: "80%", width: "110px", textAlignLast: "right" }} value={this.state.panelId}
             onChange={this.handleChange} >
             {options}
         </select></div>)

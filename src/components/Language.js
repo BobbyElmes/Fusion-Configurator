@@ -31,7 +31,7 @@ class Language extends React.Component {
         for (var i = 0; i < lang.length; i++)
             options.push(<option style={{ direction: "rtl"}} value={i}>{lang[i]}</option>)
 
-        return (<select style={{ marginLeft: "auto", marginRight: "2%", marginTop: "-2%", marginBottom: "1%", textAlignLast: "center" }} onChange={this.handleChange}>  {options}</select>)
+        return (<select style={{ marginLeft: "auto", marginRight: "2%", marginTop: "-50px", textAlignLast: "center" }} onChange={this.handleChange}>  {options}</select>)
     }
 }
 

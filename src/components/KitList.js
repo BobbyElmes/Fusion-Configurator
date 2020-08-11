@@ -1,5 +1,6 @@
 import React from 'react';
 import KitItem from './KitItem.js'
+import { isMobile } from 'react-device-detect';
 
 class KitList extends React.Component {
     constructor(props) {
@@ -14,10 +15,12 @@ class KitList extends React.Component {
     render() {
         var list = []
         for (var i = 0; i < this.props.items.length; i++) {
-            list.push(<KitItem  item={this.props.items[i]}/>)
+            list.push(<KitItem id={this.props.id[i]} item={this.props.items[i]}/>)
         }
-
-        return (<div style={{ display: "flex", flexDirection: "column", marginRight:"140px", marginTop:"20px" }} > {list} </div>)
+        var margin = "140px"
+        if (isMobile)
+            margin = 0
+        return (<div style={{ display: "flex", flexDirection: "column", marginRight:margin, marginTop:"20px" }} > {list} </div>)
     }
 }
 

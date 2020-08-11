@@ -1,6 +1,6 @@
 import React from 'react';
 import './Fonts.css'
-import formatMoney from './FormatMoney.js'
+import formatMoney from '.././Functions/FormatMoney.js'
 
 
 
@@ -19,7 +19,7 @@ class Record extends React.Component {
         if (this.props.panel == true) {
             return (
                 <tr>
-                    <td style={{ width: "12%" }}><div style={{ textAlign:"left"}}><p className="TableSmall">{items[0]}</p></div></td>
+                    <td style={{ width: "12%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{this.props.id}</p></div></td>
                     <td style={{ width: "36%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{items[4]}</p></div></td>
                     <td style={{ width: "12%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{currency[0]}{formatMoney((Math.round(((items[3] * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100).toString())}{currency[1]}</p></div></td>
                     <td style={{ width: "15%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{items[1]}</p></div></td>
@@ -30,7 +30,7 @@ class Record extends React.Component {
         else {
             return (
                 <tr>
-                    <td style={{ width: "15%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{items[0]}</p></div></td>
+                    <td style={{ width: "15%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{this.props.id}</p></div></td>
                     <td style={{ width: "40%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{items[3]}</p></div></td>
                     <td style={{ width: "15%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{currency[0]}{formatMoney((Math.round(((items[2] * (1 - (this.props.discount / 100))) + Number.EPSILON) * 100) / 100).toString())}{currency[1]}</p></div></td>
                     <td style={{ width: "15%" }}><div style={{ textAlign: "left" }}><p className="TableSmall">{items[1]}</p></div></td>

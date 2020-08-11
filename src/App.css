@@ -1,11 +1,21 @@
 .App {
-  
+    
+}
+
+.AppMobile {
+    text-align: center;
+    overflow-x: hidden !important;
 }
 
 .outerDivCenter {
     text-align: left;
     padding-left: 10%;
     padding-right: 10%;
+    display: inline-block;
+}
+
+.outerDivMobile {
+    text-align: center;
     display: inline-block;
 }
 
@@ -34,6 +44,13 @@
 .TableUnder {
     margin-bottom: 0;
     margin-top: 2%;
+}
+
+.popUp {
+    text-align: center;
+    z-index: 1000;
+    margin-left: 0;
+    margin-top: 10%;
 }
 
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import './PricePerWatt.css'
-import formatMoney from './FormatMoney.js'
+import formatMoney from '.././Functions/FormatMoney.js'
 
 class PricePerWatt extends React.Component {
     constructor(props) {

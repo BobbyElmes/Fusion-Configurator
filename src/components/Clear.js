@@ -13,7 +13,7 @@ class Clear extends React.Component {
 
     render() {
         var x = "CLEAR CELLS"
-        return (<div style={{ marginTop: "-30px",marginLeft: "-80px", marginRight: "0" }}><img onClick={this.handleClick} style={{ width: "60px" }} src={Bin} /></div>)
+        return (<div style={{ marginTop: "-30px", marginLeft: "-80px", marginRight: "0" }}><img onClick={this.handleClick} style={{ width: "60px", cursor: "pointer" }} src={Bin} /></div>)
     }
 }
 

@@ -4,8 +4,11 @@
     "\\public",
     "\\src",
     "\\src\\components",
-    "\\src\\Imgs"
+    "\\src\\Config",
+    "\\src\\Functions",
+    "\\src\\Imgs",
+    "\\src\\Products"
   ],
-  "SelectedNode": "\\src\\App.js",
+  "SelectedNode": "\\src\\Config\\Config.js",
   "PreviewInSolutionExplorer": false
 }
