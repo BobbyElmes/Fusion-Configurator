@@ -16,6 +16,18 @@
     font-size:10px;
 }
 
+.Segoe {
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.Arial {
+    font-family: Arial, sans-serif;
+}
+
+.SegoeReg {
+    font-family: "Segoe", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 th {
     font-weight: normal;
     font-family: Arial;

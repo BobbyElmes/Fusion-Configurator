@@ -25,7 +25,10 @@ class Orientation extends React.Component {
         }
         imgMargin = imgMargin.toString()
         imgMargin += "%"
-        return (<div style={{ display: "flex", flexDirection: "row" }}><img style={{marginRight:imgMargin, cursor:"pointer"}} src={img} width="80px" height="100%" onClick={this.handleClick} /><p className="TitleFont" style={{ fontSize:"140%",marginTop: "auto", marginBottom:0 }}>{text}</p></div >)
+        if(this.props.mobile)
+            return (<div style={{ display: "flex", flexDirection: "row" }}><img style={{ marginRight: imgMargin, cursor: "pointer" }} src={img} width="80%" height="100%" onClick={this.handleClick} /></div >)
+        else
+            return (<div style={{ display: "flex", flexDirection: "row" }}><img style={{ marginRight: imgMargin, cursor: "pointer" }} src={img} width="80px" height="100%" onClick={this.handleClick} /><p className="TitleFont" style={{ fontSize: "140%", marginTop: "auto", marginBottom: 0 }}>{text}</p></div >)
     }
 }
 

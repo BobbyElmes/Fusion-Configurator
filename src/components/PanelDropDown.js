@@ -28,9 +28,15 @@ class PanelDropDown extends React.Component {
         var options = []
         for (var i = 0; i < panels.length; i++)
             options.push(<option style={{ direction: "rtl" }} value={i}>{panels[i]}</option>)
-        return (<div className="DropDown2"><div style={{ display: "flex", flexShrink:"0", flexDirection: "row" }}><p className="DropDown" style={{ fontFamily: "arial", fontSize: "80%" }}>Panels &nbsp; &nbsp;</p><select style={{width:"110px" ,fontFamily: "arial", fontSize: "80%", textAlignLast: "right"}} value={this.state.panelId}
-            onChange={this.handleChange} >
-            {options}
+        if(this.props.mobile)
+            return (<div className="DropDown2"><div style={{ display: "flex", flexShrink: "0", flexDirection: "row" }}><p className="DropDown" style={{ fontFamily: "arial", fontSize: "80%" }}>Panels &nbsp; &nbsp;</p><select style={{ width:"110px" ,fontFamily: "arial", fontSize: "80%", textAlignLast: "right"}} value={this.state.panelId}
+                onChange={this.handleChange} >
+                {options}
+            </select></div></div>)
+        else
+            return (<div className="DropDown2"><div style={{ display: "flex", flexShrink: "0", flexDirection: "row" }}><p className="DropDown" style={{ fontFamily: "arial", fontSize: "80%" }}>Panels &nbsp; &nbsp;</p><select style={{ width: "110px", fontFamily: "arial", fontSize: "80%", textAlignLast: "right" }} value={this.state.panelId}
+                onChange={this.handleChange} >
+                {options}
             </select></div></div>)
     }
 }

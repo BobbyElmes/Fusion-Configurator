@@ -1,5 +1,4 @@
 .App {
-    
 }
 
 .AppMobile {
@@ -12,6 +11,14 @@
     padding-left: 10%;
     padding-right: 10%;
     display: inline-block;
+}
+
+html {
+    
+}
+
+body {
+   
 }
 
 .outerDivMobile {
@@ -27,6 +34,7 @@
     background-color: #E6E7E9;
     width: 100%;
     width: 100vw;
+    overflow-y: visible;
 }
 
 .WorkSpace2 {

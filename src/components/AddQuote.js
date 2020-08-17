@@ -9,11 +9,22 @@ class AddQuote extends React.Component {
     }
 
     handleClick() {
-        this.props.press(this.props.expand)
+        if (this.props.total > 0) {
+            this.props.press(this.props.expand)
+        }
     }
 
     render() {
-        return (<div style={{ marginTop: "-30px", marginLeft: "-8px", marginRight: "80px" }}><img onClick={this.handleClick} style={{ width: "60px", cursor: "pointer" }} src={Clip} /></div>)
+        var cursor = "not-allowed"
+        if (this.props.total > 0) {
+            cursor = "pointer"
+        }
+
+        if (this.props.mobile)
+            return (<div style={{ marginTop: "4%" }}><img onClick={this.handleClick} style={{ width: "100%", cursor: cursor}} src={Clip} /></div>)
+        else
+            return (<div style={{ marginTop: "-30px", marginLeft: "-8px", marginRight: "80px" }}><img onClick={this.handleClick} style={{ width: "60px", cursor: cursor }} src={Clip} /></div>)
+
     }
 }
 

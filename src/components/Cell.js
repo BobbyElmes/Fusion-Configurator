@@ -97,9 +97,9 @@ class Cell extends React.Component {
         }
         if (this.props.mobile) {
             if (!this.props.landscape)
-                ratioMobile = (window.innerWidth / (8 * 40)) * 0.9
+                ratioMobile = (window.innerWidth / (8 * 40)) 
             else {
-                ratioMobile = (window.innerWidth / (6 * 64)) * 0.9
+                ratioMobile = (window.innerWidth / (6 * 64)) 
             }
         }
 
@@ -150,7 +150,7 @@ class Cell extends React.Component {
                         break;
                     case "F16-VC":
                         if (this.props.pdf == true)
-                            color = "Window"
+                            color = "Window2"
                         else
                             color = "Window"
                         break;

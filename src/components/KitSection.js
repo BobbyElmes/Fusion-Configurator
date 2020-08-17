@@ -1,14 +1,60 @@
 import React from 'react';
 import KitList from './KitList.js'
 import { isMobile } from 'react-device-detect';
+import html2canvas from 'html2canvas';
+import snapShot from '.././Imgs/snapshot.svg'
+import Modal from 'react-modal';
 
 class KitSection extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-
+            showPopUp: false
         }
 
+        this.popUpClose = this.popUpClose.bind(this)
+        this.copy = this.copy.bind(this)
+        this.copyToClipboard = this.copyToClipboard.bind(this)
+        this.sectionRef = React.createRef();
+    }
+
+    copyToClipboard = async (pngBlob) => {
+        try {
+            await navigator.clipboard.write([
+                // eslint-disable-next-line no-undef
+                new ClipboardItem({
+                    [pngBlob.type]: pngBlob
+                })
+            ]);
+            console.log("Image copied");
+            this.setState({
+                showPopUp: true
+            }, () => { this.popUpClose()});
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    popUpClose() {
+        setTimeout(function () {
+            this.setState({
+                showPopUp: false
+            })
+        }.bind(this),1000)
+    }
+
+    copy() {
+        const input = document.getElementById('kitList');
+       // input.focus()
+        
+        html2canvas(input, {
+            scrollX: 0,
+            scrollY: -window.scrollY,
+            scale: 2
+        })
+            .then((canvas) => {
+                canvas.toBlob(this.copyToClipboard, "image/png", 1);
+            })
     }
 
 
@@ -87,14 +133,30 @@ class KitSection extends React.Component {
                 items[4].push(<KitList id={SBID} items={SB} />)
         }
 
+        var panels = []
+        panels.push(this.props.panels[this.props.panel])
+        var panelID = [ids[3][this.props.panel]]
+        panelID.push()
+        var panelItem = []
+        panelItem.push(<KitList id={panelID} items={panels} />)
 
-        
-
-        return (<div style={{ display: "flex", flexDirection: "column" }} >
-            <h1 style={{ fontFamily: "Segoe UI Light", fontSize:"35px"}}>Kit List</h1>
+        return (<section  ><img onClick={this.copy} src={snapShot} style={{ width: "60px", marginBottom: "-50px", marginLeft: "820px", cursor: "pointer" }} /><div id="kitList" style={{ display: "flex", flexDirection: "column", width:"725px" }} >
+            <div style={{ display: "flex", flexDirection: "row"}} >{panelItem}</div>
             <div style={{ display: "flex", flexDirection: "row" }} >{items[0]}  </div>
             <div style={{ display: "flex", flexDirection: "row" }} >{items[1]}   </div>
-        </div>)
+            
+        </div>
+            <Modal
+            isOpen={this.state.showPopUp}
+                contentLabel="Kit List"
+                ariaHideApp={false}
+            style={{ position: "absolute", top: "50vw", left: "50%", overlay: { zIndex: 1000, height: "200px",width:"400px",top:"25vh", bottom: "25vh", right: "40vw", left: "40vw" } }}>
+                <div className="popUp" >
+                    <p>
+                Kit List Copied to Clipboard
+                    </p>        
+                </div>
+            </Modal></section>)
     }
 
     checkEmpty(list) {

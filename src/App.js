@@ -38,6 +38,7 @@ import './App.css';
 
 import ViridianIds from './Products/ViridianUKPrices.csv'
 import Arrow from './Imgs/Arrow.png'
+import clipHeader from './Imgs/clipboard_header.svg'
 
 //-----------------------------------------------------------------------
 
@@ -114,10 +115,14 @@ class App extends React.Component {
             //the config settings being used, changes with url query
             config: Config[0],
 
-            xMin: 12
+            xMin: 12,
+
+            images: [],
+            pdfKey: 0
         }
         
-        
+        this.setImages = this.setImages.bind(this)
+        this.quantityChange = this.quantityChange.bind(this)
         this.initGrid = this.initGrid.bind(this)
         this.quotePopUp = this.quotePopUp.bind(this)
         this.windowCellValid = this.windowCellValid.bind(this)
@@ -266,8 +271,9 @@ class App extends React.Component {
         for (var i = 0; i < this.state.panels.length; i++) {
             this.state.panels[i][4] = descriptions[3][i][this.state.language + 1]
         }
+        this.state.pdfKey += 1
         this.setState({
-            panels:this.state.panels
+            panels: this.state.panels
         })
     }
 
@@ -529,8 +535,8 @@ class App extends React.Component {
                             flashing[i][xTemp] = "none"
                             marked[i][xTemp] = false
                         }
-                        if (xTemp == 30)
-                            this.state.showArrow[0] = false
+                        if (xTemp == 29)
+                            this.state.showArrow[1] = false
                         xTemp += 1
                     }
                 }
@@ -574,7 +580,7 @@ class App extends React.Component {
                             marked[yTemp][i] = false
                         }
                         yTemp += 1
-                        if (yTemp == 30)
+                        if (yTemp == 29)
                             this.state.showArrow[3] = false
                     }
                 }
@@ -1043,7 +1049,8 @@ class App extends React.Component {
             //batten thickness 
             width: tempWidth,
             //number of this particular quote/array added
-            quantity: number
+            quantity: number,
+            kwp: this.calculatekWp(true)
         })
         this.setState({
             Quotes: temp,
@@ -1123,9 +1130,13 @@ class App extends React.Component {
     //removes a given quote
     removeQuote(index) {
         var temp = this.state.Quotes
+        var tempImg = this.state.images
         temp.splice(index, 1)
+        tempImg.splice(index, 1)
         this.setState({
-            Quote: temp
+            Quote: temp,
+            images: tempImg,
+            pdfKey: this.state.pdfKey + 1
         })
     }
 
@@ -1210,9 +1221,9 @@ class App extends React.Component {
     }
 
     //calculates the kWp
-    calculatekWp() {
+    calculatekWp(onlyGrid) {
         var kwp = 0
-        if (this.state.Quotes != null) {
+        if (this.state.Quotes != null && onlyGrid == false) {
             for (var i = 0; i < this.state.Quotes.length; i++) {
                 for (var c = 0; c < this.state.Quotes[i].panels.length; c++) {
                     kwp += this.state.Quotes[i].panels[c][1] * this.state.Quotes[i].panels[c][2]
@@ -1224,6 +1235,34 @@ class App extends React.Component {
 
         }
         return kwp/1000
+    }
+
+    quantityChange(quantity, id) {
+        var temp = this.state.Quotes
+        var prevQuant = temp[id - 1].quantity
+
+        temp[id - 1].quantity = quantity
+        for (var i = 0; i < temp[id - 1].flashingList.length; i++)
+            temp[id - 1].flashingList[i][1] = (temp[id - 1].flashingList[i][1] / prevQuant) * quantity
+        for (var i = 0; i < temp[id - 1].packers.length; i++)
+            temp[id - 1].packers[i][1] = (temp[id - 1].packers[i][1] / prevQuant) * quantity
+        for (var i = 0; i < temp[id - 1].panels.length; i++)
+            temp[id - 1].panels[i][1] = (temp[id - 1].panels[i][1] / prevQuant) * quantity
+        temp[id - 1].total = (temp[id - 1].total / prevQuant) * quantity
+        this.state.pdfKey = this.state.pdfKey + 1
+        this.setState({
+            Quotes: temp,
+        })
+    }
+
+    setImages(imgs) {
+        var imgArray = this.state.images
+        imgArray.push(imgs.toString())
+        this.state.pdfKey = this.state.pdfKey + 1
+        this.setState({
+            images: imgArray,
+        });
+        
     }
 
 
@@ -1263,30 +1302,43 @@ class App extends React.Component {
         var send
         var quotes = []
         var pdf
+        var total =[]
         if (this.state.Quotes.length > 0) {
             send = <SendQuote press={this.sendQuote} />
             var summary = []
             var half = summary.length
             var overallTotal = 0
+            var numQuotes = 0
+            var numKwp = 0
             var totalPanels = []
             this.createEmptyPanels(totalPanels)
+            quotes.push(<img src={clipHeader} style={{ width: "60px", marginBottom:"20px" }} />)
+            quotes.push(<div style={{ background: "black", height: "1px", width: "100%", marginBottom:"20px" }}></div>)
             //loop through quotes, totalling the panel & flashing: costs, totals ect
             for (var i = 0; i < this.state.Quotes.length; i++) {
-                quotes.push(<DisplayQuote id={i + 1} currency={currency} quantity={this.state.Quotes[i].quantity} remove={this.removeQuote} discount={this.state.discount} total={this.state.Quotes[i].total} flashings={this.state.Quotes[i].flashingList} landscape={this.state.Quotes[i].landscape} miniFlashing={this.state.Quotes[i].miniFlashing} xSize={this.state.Quotes[i].xSize} panels={this.state.Quotes[i].panels} packers={this.state.Quotes[i].packers} width={this.state.Quotes[i].width} />)
+                quotes.push(<DisplayQuote id={i + 1} currency={currency} quantity={this.state.Quotes[i].quantity} remove={this.removeQuote} discount={this.state.discount} total={this.state.Quotes[i].total} flashings={this.state.Quotes[i].flashingList} landscape={this.state.Quotes[i].landscape} miniFlashing={this.state.Quotes[i].miniFlashing} xSize={this.state.Quotes[i].xSize} panels={this.state.Quotes[i].panels} packers={this.state.Quotes[i].packers} width={this.state.Quotes[i].width} kwp={this.state.Quotes[i].kwp} quantityChange={this.quantityChange} setImages={this.setImages} />)
+                quotes.push(<div style={{ background: "black", height: "1px", width: "100%", marginBottom: "20px", marginTop:"10px" }}></div>)
                 summary = this.totalQuotes(summary, this.state.Quotes[i], half)
                 overallTotal += this.state.Quotes[i].total
+                numQuotes += this.state.Quotes[i].quantity
+                numKwp += this.state.Quotes[i].kwp * this.state.Quotes[i].quantity
                 for (var c = 0; c < this.state.Quotes[i].panels.length; c++) {
                     totalPanels[c][1] += this.state.Quotes[i].panels[c][1]
                 }
             }
-            pdf = <PDF ids={this.state.Ids} send={send} currency={currency} total={overallTotal} flashings={summary} discount={this.state.discount} panels={totalPanels} Quotes={this.state.Quotes} />
+            pdf = <PDF logo1={this.state.config.Logo1} logo2={this.state.config.Logo2} logo3={this.state.config.Logo3} ids={this.state.Ids} send={send} currency={currency} total={overallTotal} flashings={summary} discount={this.state.discount} panels={totalPanels} Quotes={this.state.Quotes} imgs={this.state.images} />
+            total.push(<DisplayQuote id={0} currency={currency} discount={this.state.discount} total={overallTotal} num={numQuotes} kwp={numKwp} />)
+            total.push(<div style={{ background: "black", height: "1px", width: "100%", marginBottom: "20px", marginTop: "10px" }}></div>)
         }
 
         //calculate price per watt & kWp 
-        var priceP = this.pricePer(overallTotal, totalPanels)
+        var x = []
+        this.createEmptyPanels(x)
+        var priceP = this.pricePer(0, x)
         var ppwTotal = priceP[0]
         var ppwPanels = priceP[1]
-        var kwp = this.calculatekWp();
+        var kwp = this.calculatekWp(false);
+        var kwpGrid = this.calculatekWp(true)
 
         //arrows below grid to expand and reduce the number of rows
         var bottomArrows = []
@@ -1297,7 +1349,7 @@ class App extends React.Component {
         var logo2 = null
         if (this.state.config.Logo2 != null)
             logo2 = <img style={{ width: "120px", marginLeft: "1%", marginTop: "1%", marginBottom: "-2%" }} src={require("./Imgs/" + this.state.config.Logo2)} />
-        var logo3 = <img style={{ width: "200px", marginLeft: "auto", marginRight: "1%", marginTop: "40px", marginBottom: "-1%" }} src={require("./Imgs/" + this.state.config.Logo3)} />
+        var logo3 = <img style={{ width: "200px", marginLeft: "900px", marginTop: "40px", marginBottom: "-1%" }} src={require("./Imgs/" + this.state.config.Logo3)} />
         var title = <h1 className="TitleFont" style={{ marginTop: "-25px" }}> {this.state.config.Title} </h1>
 
         //if not displaying the send form, display the configurator
@@ -1329,7 +1381,7 @@ class App extends React.Component {
                                 <div className="TableUnder" style={{ width: "100%" }}>
                                     <div className="TableHeader" style={{ width: "100%" }}>
                                         <div style={{ display: "flex", flexDirection: "row" }}>
-                                            <KWP kwp={kwp} />
+                                            <KWP kwp={kwpGrid} />
                                             <PricePerWatt currency={currency} panels={ppwPanels} total={ppwTotal} />
                                             <ArraySize size={this.arraySize()} landscape={this.state.landscape} />
                                         </div>
@@ -1341,23 +1393,24 @@ class App extends React.Component {
                                     {bottomArrows}
                                 </div>
                                 <div className="horizontal">
-                                    <AddQuote press={this.quotePopUp} />
+                                    <AddQuote press={this.quotePopUp} total={ppwTotal} />
                                     <Clear press={this.clearPress} />
                                 </div>
                                 <Window press={this.windowPress} landscape={this.state.landscape} />
                             </div>
                         </div>
-                        <div className="outerDivCenter" style={{ marginTop: "20px", marginBottom: "20px" }}>
-                            <KitSection flashings={this.state.flashings} ids={this.state.Ids} packers={this.state.packers} />
+                        <div className="outerDivCenter" style={{ marginTop: "10px", marginBottom: "20px" }}>
+                            <KitSection panels={this.state.panels} panel={this.state.currentPanel} flashings={this.state.flashings} ids={this.state.Ids} packers={this.state.packers} />
                         </div>
                         <div className="WorkSpace">
-                            <div className="outerDivCenter" style={{ marginTop: "20px", marginBottom: "10px" }}>
+                            <div className="outerDivCenter" style={{ marginTop: "20px", marginBottom: "10px" , overflowY: "visible"}}>
                                 {quotes}
+                                {total}
                             </div>
                         </div>
                         <div className="WorkSpace2">
-                            <div className="outerDivCenter" style={{ marginTop: "20px", marginBottom: "20px" }}>
-                                <div id="divToPrint">{pdf}
+                            <div className="outerDivCenter" style={{ marginTop: "20px", marginBottom: "20px", overflowX: "hidden !important" }}>
+                                <div id="divToPrint" style={{ overflowX: "hidden !important"}}>{pdf}
                                 </div>
                             </div>
                         </div>
@@ -1394,11 +1447,11 @@ class App extends React.Component {
                         <div className="WorkSpace">
                             <div className="outerDivMobile">
                                 <div style={{ marginTop: "30px", display: "flex", flexDirection: "row" }}>
-                                    <Orientation press={this.changeOrientation} landscape={this.state.landscape} />
+                                    <Orientation mobile={true} press={this.changeOrientation} landscape={this.state.landscape} />
                                     <div className="DropDown">
                                         <div style={{ display: "flex", flexDirection: "column" }}>
-                                            <PanelDropDown ids={this.state.Ids[3]} press={this.panelChange} panels={this.state.panels} />
-                                            <PackerDropDown press={this.packerChange} />
+                                            <PanelDropDown mobile={true} mobile={true} ids={this.state.Ids[3]} press={this.panelChange} panels={this.state.panels} />
+                                            <PackerDropDown mobile={true} press={this.packerChange} />
                                         </div>
                                     </div>
                                 </div>
@@ -1412,13 +1465,9 @@ class App extends React.Component {
                                     </div>
                                     {grid}
                                 </div>
-                                <p></p>
-                                <div className="horizontal">
-                                    {bottomArrows}
-                                </div>
-                                <div className="horizontal">
-                                    <AddQuote press={this.quotePopUp} />
-                                    <Clear press={this.clearPress} />
+                                <div className="horizontal" style={{ alignItems: "center", justifyContent: "center"}}>
+                                    <AddQuote mobile={true} press={this.quotePopUp} />
+                                    <Clear mobile={true} press={this.clearPress} />
                                 </div>
                                 <Window press={this.windowPress} landscape={this.state.landscape} />
                             </div>

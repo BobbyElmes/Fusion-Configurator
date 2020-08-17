@@ -63,9 +63,9 @@ class Row extends React.Component {
                 cursor = "pointer"
 
             if (this.props.type == null)
-                cellRow.push(<Cell key={i} mobile={this.props.mobile} style={{ marginRight: st }} window={this.props.window} cursor={cursor} type={false} press={this.cellClick} flashing={this.props.flashing[i]} row={this.props.row} column={i} down={this.props.down} up={this.props.up} landscape={this.props.landscape} cellOver={this.props.cellOver} marked={this.props.marked[i]} pdf={this.props.pdf} />)
+                cellRow.push(<Cell key={i} pdf={this.props.pdf} mobile={this.props.mobile} style={{ marginRight: st }} window={this.props.window} cursor={cursor} type={false} press={this.cellClick} flashing={this.props.flashing[i]} row={this.props.row} column={i} down={this.props.down} up={this.props.up} landscape={this.props.landscape} cellOver={this.props.cellOver} marked={this.props.marked[i]} pdf={this.props.pdf} />)
             else
-                cellRow.push(<Cell key={i} mobile={this.props.mobile}  type={this.props.type[i]} window={this.props.window} cursor={cursor} press={this.cellClick} flashing={this.props.flashing[i]} row={this.props.row} column={i} down={this.props.down} up={this.props.up} landscape={this.props.landscape} cellOver={this.props.cellOver} marked={this.props.marked[i]} />)
+                cellRow.push(<Cell key={i} pdf={this.props.pdf} mobile={this.props.mobile}  type={this.props.type[i]} window={this.props.window} cursor={cursor} press={this.cellClick} flashing={this.props.flashing[i]} row={this.props.row} column={i} down={this.props.down} up={this.props.up} landscape={this.props.landscape} cellOver={this.props.cellOver} marked={this.props.marked[i]} />)
         }
 
         var x = null

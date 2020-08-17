@@ -46,7 +46,7 @@ class PricePerWatt extends React.Component {
         return (
             <div style={{ margin: "auto", textAlign: "center" }}>
                 <p className="PPWtext" style={{ fontFamily: "arial",fontSize: "150%",  marginTop:"3px", marginBottom:"3px" }}>{this.props.currency[0]}{formattedTotal}{this.props.currency[1]}</p>
-                <p className="PPWtext" style={{ fontFamily: "arial", fontSize: "75%", marginTop: "0%", marginBottom: "10px" }}>{this.props.currency[0]}{formattedPPW}{this.props.currency[1]} P/W </p>
+                <p className="PPWtext" style={{ fontFamily: "arial", fontSize: "75%", marginTop: "0%", marginBottom: "10px" }}>{this.props.currency[0]}{formattedPPW}{this.props.currency[1]} /Wp </p>
             </div>
                 )
     }
