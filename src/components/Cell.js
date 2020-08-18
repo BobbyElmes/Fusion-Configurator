@@ -199,8 +199,12 @@ class Cell extends React.Component {
             }
         }
 
-
-        return (<div className="BigDiv" style={{ background: bigDiv }}>{cornerStyle}<Button onMouseDown={this.handleClick} style={{ padding: 0, width: pad[0], height: pad[1], cursor: cursor}} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} ></Button></div>)
+        if(color == "Corner")
+            return (<div className="BigDiv" style={{ background: bigDiv }}>{cornerStyle}<button onMouseDown={this.handleClick} style={{ padding: 0, width: pad[0], height: pad[1], cursor: cursor }} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} ></button></div>)
+        if (color == "none")
+            return (<button onMouseDown={this.handleClick} style={{ padding: 0, width: pad[0], height: pad[1], cursor: cursor, backgroundColor: bigDiv }} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} ></button>)
+        else
+            return (<button onMouseDown={this.handleClick} style={{ padding: 0, width: pad[0], height: pad[1], cursor: cursor }} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} ></button>)
     }
 }
 

@@ -53,7 +53,7 @@ class KitSection extends React.Component {
             scale: 2
         })
             .then((canvas) => {
-                canvas.toBlob(this.copyToClipboard, "image/png", 1);
+                canvas.toBlob(this.copyToClipboard, "image/jpg", 1);
             })
     }
 

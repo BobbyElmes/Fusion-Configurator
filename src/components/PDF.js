@@ -14,7 +14,12 @@ import segoeL from '.././Fonts/segoeuil.ttf'
 import segoeB from '.././Fonts/segoeuib.ttf'
 import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
-import { Text, StyleSheet, View, Document, Page, PDFDownloadLink, Image, Font, pdf} from "@react-pdf/renderer";
+import { Text, StyleSheet, View, Document, Page, PDFDownloadLink, Image, Font, pdf } from "@react-pdf/renderer";
+import ReactExport from "react-data-export";
+
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 Font.register({
     family: 'Arial',
@@ -66,9 +71,11 @@ class PDFDownload extends React.Component {
             width: 0,
             length: 0,
             MyDoc: null,
-            click: false
+            click: false,
+            multiDataSet: []
         }
         this.createPDF = this.createPDF.bind(this)
+        this.excelExport = this.excelExport.bind(this)
     }
 
     handleChange(e) {
@@ -88,6 +95,247 @@ class PDFDownload extends React.Component {
 
     exportPDF = () => {
         this.resume.save();
+    }
+
+    excelExport() {
+        var summary = []
+        var count = 1
+        var multiDataSet = [
+            {
+                columns: [
+                    { title: "Item", width: { wch: 5 } },//pixels width 
+                    { title: "Code", width: { wch: 15 } },//char width 
+                    { title: "Description", width: { wch: 75 } },
+                    { title: "Cost", width: { wch: 15 }, style: { alignment: { horizontal: "right" }, font: {bold:true} } },
+                    { title: "Number", width: { wch: 10 }, style: { alignment: { horizontal: "right" }, font: { bold: true } } },
+                    { title: "Total", width: { wch: 20 }, style: { alignment: { horizontal: "right" }, font: { bold: true } } },
+                ],
+                data: [
+                    
+                ]
+            }
+        ];
+        for (var i = 0; i < this.props.panels.length; i++) {
+            if (this.props.panels[i][1] > 0) {
+                if (this.props.currency[1] == null) {
+                    var cost = (this.props.currency[0] + formatMoney((Math.round(((((this.props.panels[i][3]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString()))
+                    var total = ((this.props.currency[0] + formatMoney((Math.round(((((this.props.panels[i][3] * this.props.panels[i][1]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString())))
+                }
+                else {
+                    var cost = (formatMoney((Math.round(((((this.props.panels[i][3]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString()) + this.props.currency[1])
+                    var total = ((formatMoney((Math.round(((((this.props.panels[i][3] * this.props.panels[i][1]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString()) + this.props.currency[1]))
+                }
+                multiDataSet[0].data.push([
+                    { value: count.toString(), style: { alignment: { vertical: "top" } } },
+                    { value: this.props.ids[3][i].toString(), style: { alignment: { vertical: "top" } } },
+                    { value: this.props.panels[i][4].toString(), style: { alignment: { wrapText: true } } },
+                    { value: cost.toString(), style: { alignment: { vertical: "top", horizontal: "right" } } },
+                    { value: this.props.panels[i][1].toString(), style: { alignment: { vertical: "top", horizontal: "right" } } },
+                    { value: total.toString(), style: { alignment: { vertical: "top", horizontal: "right" } } }])
+                count ++
+            }
+        }
+
+        for (var c = 0; c < this.props.flashings.length; c++)
+        for (var i = 0; i < this.props.flashings[c].length; i++) {
+            if (this.props.flashings[c][i][1] > 0) {
+                if (this.props.currency[1] == null) {
+                    var cost = (this.props.currency[0] + formatMoney((Math.round(((((this.props.flashings[c][i][2]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString()))
+                    var total = ((this.props.currency[0] + formatMoney((Math.round(((((this.props.flashings[c][i][2] * this.props.flashings[c][i][1]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString())))
+                }
+                else {
+                    var cost = formatMoney((Math.round(((((this.props.flashings[c][i][2]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString()) + this.props.currency[1]
+                    var total = formatMoney((Math.round(((((this.props.flashings[c][i][2] * this.props.flashings[c][i][1]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString()) + this.props.currency[1]
+                }
+                multiDataSet[0].data.push([
+                    { value: count.toString(), style: { alignment: { vertical: "top" } } },
+                    { value: this.props.ids[c][i].toString(), style: { alignment: { vertical: "top" } } },
+                    { value: this.props.flashings[c][i][3].toString(), style: { alignment: { wrapText: true } } },
+                    { value: cost.toString(), style: { alignment: { vertical: "top", horizontal: "right" } } },
+                    { value: this.props.flashings[c][i][1].toString(), style: { alignment: { vertical: "top", horizontal: "right" } } },
+                    { value: total.toString(), style: { alignment: { vertical: "top", horizontal: "right" } } }])
+                count++
+            }
+            }
+        if (this.props.currency[1] == null) 
+            var total = this.props.currency[0] + formatMoney((Math.round(((((this.props.total) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString())
+        else 
+            var total = formatMoney((Math.round(((((this.props.total) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString()) + this.props.currency[1] 
+        multiDataSet[0].data.push([
+            { value: "" },
+            { value: "" },
+            { value: "" },
+            { value: "" },
+            { value: "" } ,
+            { value: "" }])
+        multiDataSet[0].data.push([
+            { value: "" },
+            { value: "" },
+            { value: "Total", style: { alignment: { vertical: "top", horizontal: "right" } } },
+            { value: "" },
+            { value: "" },
+            { value: total, style: { alignment: { vertical: "top", horizontal: "right" } } }])
+        multiDataSet[0].data.push([
+            { value: "" },
+            { value: "" },
+            { value: "" },
+            { value: "" },
+            { value: "" },
+            { value: "" }])
+        multiDataSet[0].data.push([
+            { value: "" },
+            { value: "" },
+            { value: "Prices exclude VAT and delivery", style: { alignment: { vertical: "top", horizontal: "right" } } },
+            { value: "" },
+            { value: "" },
+            { value: "" }])
+
+        var quotes = this.props.Quotes
+        var tables = []
+        var sheets = []
+        for (var i = 0; i < quotes.length; i++) {
+            var tables = [
+                {
+                    columns: [
+                        { title: "Item", width: { wch: 5 } },//pixels width 
+                        { title: "Code", width: { wch: 15 } },//char width 
+                        { title: "Description", width: { wch: 75 } },
+                        { title: "Cost", width: { wch: 15 }, style: { alignment: { horizontal: "right" }, font: { bold: true } } },
+                        { title: "Number", width: { wch: 10 }, style: { alignment: { horizontal: "right" }, font: { bold: true } } },
+                        { title: "Total", width: { wch: 20 }, style: { alignment: { horizontal: "right" }, font: { bold: true } } },
+                    ],
+                    data: [
+
+                    ]
+                }
+            ]
+            var count = 0
+            for (var c = 0; c < quotes[i].panels.length; c++) {
+                if (quotes[i].panels[c][1] > 0) {
+                    count++
+                    if (this.props.currency[1] == null) {
+                        var cost = (this.props.currency[0] + formatMoney((Math.round(((((quotes[i].panels[c][3]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString()))
+                        var total = ((this.props.currency[0] + formatMoney((Math.round(((((quotes[i].panels[c][3] * quotes[i].panels[c][1]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString())))
+                    }
+                    else {
+                        var cost = (formatMoney((Math.round(((((quotes[i].panels[c][3]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString()) + this.props.currency[1])
+                        var total = ((formatMoney((Math.round(((((quotes[i].panels[c][3] * quotes[i].panels[c][1]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString()) + this.props.currency[1]))
+                    }
+                    tables[0].data.push([
+                        { value: count.toString(), style: { alignment: { vertical: "top" } } },
+                        { value: this.props.ids[3][c].toString(), style: { alignment: { vertical: "top" } } },
+                        { value: quotes[i].panels[c][4].toString(), style: { alignment: { wrapText: true } } },
+                        { value: cost.toString(), style: { alignment: { vertical: "top", horizontal: "right" } } },
+                        { value: quotes[i].panels[c][1].toString(), style: { alignment: { vertical: "top", horizontal: "right" } } },
+                        { value: total.toString(), style: { alignment: { vertical: "top", horizontal: "right" } } }])
+                }
+            }
+            var numFlash = 0
+            if (quotes[i].landscape)
+                numFlash = 1
+            for (var c = 0; c < quotes[i].flashingList.length; c++) {
+                if (quotes[i].flashingList[c][1] > 0) {
+                    count++
+                    if (this.props.currency[1] == null) {
+                        var cost = (this.props.currency[0] + formatMoney((Math.round(((((quotes[i].flashingList[c][2]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString()))
+                        var total = ((this.props.currency[0] + formatMoney((Math.round(((((quotes[i].flashingList[c][2] * quotes[i].flashingList[c][1]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString())))
+                    }
+                    else {
+                        var cost = (formatMoney((Math.round(((((quotes[i].flashingList[c][2]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString()) + this.props.currency[1])
+                        var total = ((formatMoney((Math.round(((((quotes[i].flashingList[c][2] * quotes[i].flashingList[c][1]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString()) + this.props.currency[1]))
+                    }
+                    tables[0].data.push([
+                        { value: count.toString(), style: { alignment: { vertical: "top" } } },
+                        { value: this.props.ids[numFlash][c].toString(), style: { alignment: { vertical: "top" } } },
+                        { value: quotes[i].flashingList[c][3].toString(), style: { alignment: { wrapText: true } } },
+                        { value: cost.toString(), style: { alignment: { vertical: "top", horizontal: "right" } } },
+                        { value: quotes[i].flashingList[c][1].toString(), style: { alignment: { vertical: "top", horizontal: "right" } } },
+                        { value: total.toString(), style: { alignment: { vertical: "top", horizontal: "right" } } }])
+                }
+            }
+
+            for (var c = 0; c < quotes[i].packers.length; c++) {
+                if (quotes[i].packers[c][1] > 0) {
+                    count++
+                    if (this.props.currency[1] == null) {
+                        var cost = (this.props.currency[0] + formatMoney((Math.round(((((quotes[i].packers[c][2]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString()))
+                        var total = ((this.props.currency[0] + formatMoney((Math.round(((((quotes[i].packers[c][2] * quotes[i].packers[c][1]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString())))
+                    }
+                    else {
+                        var cost = (formatMoney((Math.round(((((quotes[i].packers[c][2]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString()) + this.props.currency[1])
+                        var total = ((formatMoney((Math.round(((((quotes[i].packers[c][2] * quotes[i].packers[c][1]) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString()) + this.props.currency[1]))
+                    }
+                    tables[0].data.push([
+                        { value: count.toString(), style: { alignment: { vertical: "top" } } },
+                        { value: this.props.ids[2][c].toString(), style: { alignment: { vertical: "top" } } },
+                        { value: quotes[i].packers[c][3].toString(), style: { alignment: { wrapText: true } } },
+                        { value: cost.toString(), style: { alignment: { vertical: "top", horizontal: "right" } } },
+                        { value: quotes[i].packers[c][1].toString(), style: { alignment: { vertical: "top", horizontal: "right" } } },
+                        { value: total.toString(), style: { alignment: { vertical: "top", horizontal: "right" } } }])
+                }
+            }
+
+            if (this.props.currency[1] == null) {
+                var total = this.props.currency[0] + formatMoney((Math.round((((((quotes[i].total) * (1 - (this.props.discount / 100)))) / quotes[i].quantity) + Number.EPSILON) * 100) / 100).toString())
+                var grandTotal = this.props.currency[0] + formatMoney((Math.round(((((quotes[i].total) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString()) 
+            }
+            else {
+                var total = formatMoney((Math.round((((((quotes[i].total) * (1 - (this.props.discount / 100)))) / quotes[i].quantity) + Number.EPSILON) * 100) / 100).toString()) + this.props.currency[1]
+                var grandTotal = formatMoney((Math.round(((((quotes[i].total) * (1 - (this.props.discount / 100)))) + Number.EPSILON) * 100) / 100).toString()) + this.props.currency[1]
+            }
+            tables[0].data.push([
+                { value: "" },
+                { value: "" },
+                { value: "" },
+                { value: "" },
+                { value: "" },
+                { value: "" }])
+            tables[0].data.push([
+                { value: "" },
+                { value: "" },
+                { value: "Total for this set", style: { alignment: { vertical: "top", horizontal: "right" } } },
+                { value: "" },
+                { value: "" },
+                { value: total, style: { alignment: { vertical: "top", horizontal: "right" } } }])
+            tables[0].data.push([
+                { value: "" },
+                { value: "" },
+                { value: "Number of sets", style: { alignment: { vertical: "top", horizontal: "right" } } },
+                { value: "" },
+                { value: "" },
+                { value: quotes[i].quantity, style: { alignment: { vertical: "top", horizontal: "right" } } }])
+            tables[0].data.push([
+                { value: "" },
+                { value: "" },
+                { value: "Total", style: { alignment: { vertical: "top", horizontal: "right" } } },
+                { value: "" },
+                { value: "" },
+                { value: grandTotal, style: { alignment: { vertical: "top", horizontal: "right" } } }])
+            tables[0].data.push([
+                { value: "" },
+                { value: "" },
+                { value: "" },
+                { value: "" },
+                { value: "" },
+                { value: "" }])
+            tables[0].data.push([
+                { value: "" },
+                { value: "" },
+                { value: "Prices exclude VAT and delivery", style: { alignment: { vertical: "top", horizontal: "right" } } },
+                { value: "" },
+                { value: "" },
+                { value: "" }])
+
+
+            sheets.push(<ExcelSheet dataSet={tables} name={"Set " + (i + 1).toString()} />)
+        }
+
+        this.state.multiDataSet = multiDataSet
+        return < ExcelFile element = {< img style = {{ width: "60px", cursor: "pointer" }} src = { xlsImg } />}>
+            <ExcelSheet dataSet={multiDataSet} name="Summary" />
+            {sheets}
+                </ExcelFile >
+        
     }
 
     copy() {
@@ -728,15 +976,17 @@ class PDFDownload extends React.Component {
         if (this.props.imgs.length > 0) {
 
             var MyDoc = this.state.MyDoc
+            const excel = this.excelExport()
 
-            if(false)
-            return (<div>
-                <PDFDownloadLink  document={<MyDoc />} fileName={"Fusion Configuarator - " + today + ".pdf"}>
-                {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
-                    <img ref={input => this.inputElement = input}  style={{ marginRight: "20px", marginLeft: "600px", width: "60px", cursor: "pointer" }} src={pdfImg} />
-                    </PDFDownloadLink></div>)
-            else
-                return (<div><img style={{ marginRight: "20px", marginLeft: "600px", width: "60px", cursor: "pointer" }} src={pdfImg} onClick={this.createPDF} /></div>)
+            if ((this.state.multiDataSet.length == 0)) {
+                return (<div><img style={{ marginRight: "20px", marginLeft: "600px", width: "60px", cursor: "pointer" }} src={pdfImg} onClick={this.createPDF} />
+                    </div>)
+            }
+            else {
+                console.log("DATA " + this.state.multiDataSet)
+                return (<div><img style={{ marginRight: "20px", marginLeft: "600px", width: "60px", cursor: "pointer" }} src={pdfImg} onClick={this.createPDF} />
+                    {excel}</div>)
+            }
         }
         return(null)
 

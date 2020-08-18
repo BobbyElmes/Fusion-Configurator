@@ -10,6 +10,7 @@ import up from '.././Imgs/increase.svg'
 import down from '.././Imgs/decrease.svg'
 import bin from '.././Imgs/bin.svg'
 
+
 class DisplayQuote extends React.Component {
     constructor(props) {
         super(props)
@@ -58,7 +59,7 @@ class DisplayQuote extends React.Component {
 
 
     saveImg() {
-        
+        document.body.style.overflow = 'hidden';
         const input = document.getElementById(this.state.id);
         if (input != null) {
             input.focus()
@@ -69,7 +70,7 @@ class DisplayQuote extends React.Component {
             })
                 .then((canvas) => {
 
-                    var data = canvas.toDataURL("image/png", 1)
+                    var data = canvas.toDataURL("image/jpg", 1)
                     console.log(data)
                     this.saveImages(data)
                     //canvas.toBlob(this.saveImages, "image/png", 1);
@@ -90,7 +91,10 @@ class DisplayQuote extends React.Component {
     saveImages(blob) {
         
         this.props.setImages(blob)
+        document.body.style.overflow = 'unset';
     }
+
+    
 
     render() {
         var currency = this.props.currency
@@ -173,9 +177,9 @@ class DisplayQuote extends React.Component {
 
                     <div className="horizontal" style={{ alignItems: "center", overflow: "visible"}}>
                         <p className="Segoe" style={{ fontSize: "18px", marginRight: "30px" }}>{this.props.id} </p>
-                        <div  style={{ overflow: "visible"}}>
-                            <div id={this.state.id}  style={{ marginLeft: "20px", minWidth: "105px", maxWidth: "105px", alignItems: "center", justifyContent: "center", overflow: "visible"}}>
-                            {miniDisplay}
+                        <div style={{ overflow: "visible" }}>
+                            <div id={this.state.id} style={{ marginLeft: "20px", minWidth: "105px", maxWidth: "105px", alignItems: "center", justifyContent: "center", overflow: "visible" }}>
+                                    {miniDisplay}
                             </div> </div>
 
                         <div style={{ fontSize: "18px", marginLeft: "20px", minWidth: "100px", float: "right", textAlign: "right" }}><p className="Segoe" style={{ display: "inline-block" }}>{formatMoney((Math.round(((this.props.kwp) + Number.EPSILON) * 100) / 100).toString())} kWp </p></div>
