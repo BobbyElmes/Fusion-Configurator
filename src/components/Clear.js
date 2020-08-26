@@ -1,6 +1,7 @@
 import React from 'react';
 import Bin from '.././Imgs/bin.svg'
 
+//The clear grid button
 class Clear extends React.Component {
     constructor(props) {
         super(props)
@@ -12,7 +13,6 @@ class Clear extends React.Component {
     }
 
     render() {
-        var x = "CLEAR CELLS"
         if (this.props.mobile)
             return (<div style={{ marginTop: "4%" }}><img onClick={this.handleClick} style={{ width: "100%", cursor: "pointer" }} src={Bin} /></div>)
         else

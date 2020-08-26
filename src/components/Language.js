@@ -1,5 +1,6 @@
 import React from 'react';
 
+//Handles the language dropdown
 class Language extends React.Component {
     constructor(props) {
         super(props)
@@ -11,10 +12,6 @@ class Language extends React.Component {
         var temp = this.state.languages[0]
         this.state.languages[0] = this.state.languages[this.state.languageId]
         this.state.languages[this.state.languageId] = temp
-    }
-
-    handleClick() {
-        
     }
 
     handleChange(e) {

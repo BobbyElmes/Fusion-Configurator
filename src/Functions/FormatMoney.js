@@ -1,5 +1,5 @@
 //formats money into £xx,xxx.xx format
-function formatMoney(formattedTotal, no) {
+function formatMoney(formattedTotal, eur) {
     var numDP = 0
     var foundDot = false
     for (var i = formattedTotal.length - 1; i >= 0; i--) {
@@ -40,6 +40,23 @@ function formatMoney(formattedTotal, no) {
             }
         }
 
+    }
+
+    //convert to "£xx.xxx.xxx,xx format for Europeans
+    if (eur > 0) {
+        var temp = commaTotal
+        commaTotal = ""
+        for (var i = 0; i < temp.length; i++) {
+            if (temp[i] == ",")
+                commaTotal += "."
+            else {
+                if (temp[i] == ".")
+                    commaTotal += ","
+                else
+                    commaTotal += temp[i]
+            }
+            
+        }
     }
 
     return commaTotal

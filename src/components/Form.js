@@ -1,7 +1,8 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
-import flashings from './FlashingList'
-import Lflashings from './LandscapeFlashingList'
+
+//------------------------------------------------------------------------------------------------------------
+//------------- NOT CURRENTLY IN USE, BUT HANDLES SENDING DATA TO MY AUTOMATED EMAIL API ----------------------
+//------------------------------------------------------------------------------------------------------------
 
 class Form extends React.Component {
     constructor(props) {

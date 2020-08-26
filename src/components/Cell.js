@@ -1,7 +1,8 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
 import './Cell.css';
 
+//This class handles/displays each individual cell you might see as part of the grid, or a mini layout display
+//They are comprised of buttons, which is what allows us to perform their necessary behaviour
 class Cell extends React.Component {
      constructor(props){
          super(props)
@@ -25,26 +26,12 @@ class Cell extends React.Component {
         //this.props.press(this.props.column, this.props.row)
     }
 
+    //when the mouse leaves the current cell
     leave() {
         this.state.over = false
     }
 
-  /*  shouldComponentUpdate(nextProps, nextState) {
-        var current = window.innerWidth;
-        console.log(current)
-        console.log(this.state.width)
-        if (current != this.state.width) {
-            this.state.width = current;
-            return true;
-        }
-        if (this.props.marked === nextProps.marked && this.props.flashing == nextProps.flashing && this.props.landscape == nextProps.landscape) {
-            return false;
-        } else {
-            this.state.width = current;
-            return true;
-        }
-    }*/
-
+    //we check of mouse up and mouse down so that we can do the click and drag feature
     componentDidMount() {
         document.addEventListener('mousedown', this.down);
         document.addEventListener('mouseup', this.up);
@@ -55,9 +42,13 @@ class Cell extends React.Component {
         document.removeEventListener('mouseup', this.up);
     }
 
+    //when the mouse enters a cell
     enter() {
+        //this is so we can display a 'no-access' cursor when your hovering over a cell
+        //where you can't place a window
         if(this.props.window != null)
             this.props.window(this.props.row, this.props.column)
+        //This is for creating the grey shadow when the click and drag feature is used
         if (this.state.down == true && this.state.over == false) {
             if (this.props.up != null)
                 this.props.cellOver(this.props.row, this.props.column)
@@ -66,16 +57,18 @@ class Cell extends React.Component {
 
     }
 
+    //on mouse down
     down() {
         this.state.down = true;
-        
     }
 
+    
     up() {
         this.state.down = false;
         
     }
 
+    //on mouse up
     upButton() {
         if(this.props.up != null)
             this.props.up(this.props.column, this.props.row)
@@ -87,14 +80,31 @@ class Cell extends React.Component {
         var ratio = 1
         var ratioMobile = 1
         var bigDiv = "#C6EAFA"
+        var border = "1px solid black"
         var cursor = this.props.cursor
+
         //if displaying the mini grid, make cell smaller
         if (this.props.up == null) {
             ratio = 0.25
             bigDiv = "#E6E7E9"
             cursor = "context-menu"
+            border = "0px solid #3b3b3b"
+            var size = Math.max(this.props.xSize,this.props.ySize)
 
+            if (size > 6)
+                ratio = ratio * 6 / size
+
+            if (this.props.column == this.props.size - 1)
+                marginL = "-1px"
+            else if (this.props.column == 0)
+                marginR = "-1px"
+            else {
+                marginL = "-1px"
+                marginR = "-1px"
+            }
         }
+
+        //This but is work in progress, but we want the grid to fill the screen on mobile
         if (this.props.mobile) {
             if (!this.props.landscape)
                 ratioMobile = (window.innerWidth / (8 * 40)) 
@@ -106,19 +116,21 @@ class Cell extends React.Component {
         var flash = this.props.flashing
         var width = window.innerWidth
         var height = window.innerHeight
-        var use = Math.max(width, height)
-        var pad, padding
+
+        //here we calculate the size of the cell, which is flipped depending if the panels 
+        //Are meant to be landscape or portrait
+        var pad
         if (this.props.landscape) {
             pad = [64 * ratio * ratioMobile, 40 * ratio * ratioMobile]
-            padding = [40, 25 * ratio]
         }
         else {
             pad = [40 * ratio * ratioMobile, 64 * ratio * ratioMobile]
-            padding = [25 * ratio, 40 * ratio]
         }
-        var flashText = ""
+
         var cornerStyle = []
         var color = "none"
+        //'color' sets the css for the cell. It will be a different colour for a different 
+        //flashing type
         if (this.props.marked == true)
             color = "SELECTED"
         else {
@@ -164,47 +176,47 @@ class Cell extends React.Component {
                     else {
                         style = "-130%"
                     }
-                        var flashArr = flash.split(" ");
-                        for (var i = 0; i < flashArr.length; i++) {
-                            switch (flashArr[i]) {
-                                case "F16-CLT":
-                                case "F16-LCLT":
-                                    cornerStyle.push(<div style={{right:style}} className="CornerDiv"></div>)
-                                    break;
-                                case "F16-CRT":
-                                case "F16-LCRT":
-                                    cornerStyle.push(<div style={{ left: style }} className="CornerDivBottomRight"></div>)
-                                    break;
-                                case "F16-CLB-S":
-                                case "F16-LCLB-S":
-                                    cornerStyle.push(<div style={{ right: style }} className="CornerDivTopRight2"></div>)
-                                    break;
-                                case "F16-CLB":
-                                case "F16-LCLB":
-                                    cornerStyle.push(<div style={{ right: style }} className="CornerDivTopRight1"></div>)
-                                    break;
-                                case "F16-CRB":
-                                case "F16-LCRB":
-                                    cornerStyle.push(<div style={{ left: style }} className="CornerDivTopLeft"></div>)
-                                    break;
+                    //for corner brackets, we can have multiple in one cell, so we do it like so
+                    var flashArr = flash.split(" ");
+                    for (var i = 0; i < flashArr.length; i++) {
+                        switch (flashArr[i]) {
+                            case "F16-CLT":
+                            case "F16-LCLT":
+                                cornerStyle.push(<div style={{right:style}} className="CornerDiv"></div>)
+                                break;
+                            case "F16-CRT":
+                            case "F16-LCRT":
+                                cornerStyle.push(<div style={{ left: style }} className="CornerDivBottomRight"></div>)
+                                break;
+                            case "F16-CLB-S":
+                            case "F16-LCLB-S":
+                                cornerStyle.push(<div style={{ right: style }} className="CornerDivTopRight2"></div>)
+                                break;
+                            case "F16-CLB":
+                            case "F16-LCLB":
+                                cornerStyle.push(<div style={{ right: style }} className="CornerDivTopRight1"></div>)
+                                break;
+                            case "F16-CRB":
+                            case "F16-LCRB":
+                                cornerStyle.push(<div style={{ left: style }} className="CornerDivTopLeft"></div>)
+                                break;
 
-                            }
                         }
-                         var cornerOver = ((<div className="CornerOver"></div>))
-                        color = "Corner"
-                //    }
+                    }
+                    color = "Corner"
                 }
                 if (flash != "none")
                     flashText = flash
             }
         }
 
-        if(color == "Corner")
-            return (<div className="BigDiv" style={{ background: bigDiv }}>{cornerStyle}<button onMouseDown={this.handleClick} style={{ padding: 0, width: pad[0], height: pad[1], cursor: cursor }} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} ></button></div>)
+        //return, with some ugly inline styling (I'm no css pro)
+        if (color == "Corner")
+            return (<div className="BigDiv" style={{ background: bigDiv, width: pad[0], height: pad[1], border: border }}>{cornerStyle}<button onMouseDown={this.handleClick} style={{ padding: 0, width: pad[0], height: pad[1], cursor: cursor, zIndex: "12", border: border }} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} ></button></div>)
         if (color == "none")
-            return (<button onMouseDown={this.handleClick} style={{ padding: 0, width: pad[0], height: pad[1], cursor: cursor, backgroundColor: bigDiv }} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} ></button>)
+            return (<button onMouseDown={this.handleClick} style={{ padding: 0, width: pad[0], height: pad[1], cursor: cursor, backgroundColor: bigDiv, border: border,zIndex: "10" }} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} ></button>)
         else
-            return (<button onMouseDown={this.handleClick} style={{ padding: 0, width: pad[0], height: pad[1], cursor: cursor }} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} ></button>)
+            return (<button onMouseDown={this.handleClick} style={{ padding: 0, width: pad[0], height: pad[1], cursor: cursor, border: border, zIndex: "10"  }} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} ></button>)
     }
 }
 

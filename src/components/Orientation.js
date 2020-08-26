@@ -1,9 +1,9 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
 import Portrait from '.././Imgs/Portrait.svg'
 import Landscape from '.././Imgs/Landscape.svg'
 import './Fonts.css'
 
+//Handles the orientation button
 class Orientation extends React.Component {
     constructor(props) {
         super(props)
@@ -15,12 +15,13 @@ class Orientation extends React.Component {
     }
 
     render() {
+        //Set variables to portrait settings, if landscape is true then change it
         var img = Portrait
-        var text = "Portrait"
+        var text = this.props.portland[0]
         var imgMargin = -5;
         if (this.props.landscape == true) {
             img = Landscape
-            text = "Landscape"
+            text = this.props.portland[1]
             imgMargin = -2;
         }
         imgMargin = imgMargin.toString()

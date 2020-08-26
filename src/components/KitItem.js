@@ -2,16 +2,16 @@ import React from 'react';
 import './Cell.css'
 import Button from 'react-bootstrap/Button';
 
+//display an individual kit item,
+//which consists of an uninteractable button, a product ID and a quantity
 class KitItem extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            
-        }
 
     }
 
     decideItem(item) {
+        //switch the item to see what css is needed for the button
         var color = ""
         switch (item) {
             case "F16-TC":
@@ -65,19 +65,24 @@ class KitItem extends React.Component {
         return color
     }
 
-
+    //render the button, with text to its right
     render() {
         var color = this.decideItem(this.props.item[0])
-
         var cell
         if (color != "") {
             if (color == "Window")
-                cell = <Button style={{ marginRight: "10px", padding: 0, cursor:"context-menu", width: "22px", height: "25px" }} className={color + ' shadow-none'}> </Button>
+                cell = <button style={{ marginRight: "10px", cursor: "context-menu", width: "22px", height: "25px" }} className={color + ' shadow-none'}> </button>
             else
-                cell = <Button style={{ marginRight: "10px", cursor: "context-menu", padding:0, width:"25px", height:"25px" }} className={color + ' shadow-none'}> </Button>
+                cell = <button style={{ marginRight: "10px", cursor: "context-menu", width: "25px", height: "25px" }} className={color + ' shadow-none'}> </button>
         }
 
-        return (<div style={{ display: "flex", flexDirection: "row", marginBottom: "-10px", minWidth:"130px" }} > {cell} <p style={{ fontFamily: "arial" }}>{this.props.id}</p> <div style={{ position: "absolute", marginLeft: "130px" }}><p style={{ fontFamily: "arial" }}>{this.props.item[1]}</p></div> </div>)
+        return (<div style={{ display: "flex", flexDirection: "row", marginBottom: "-10px", minWidth: "130px" }} >
+                    {cell}
+                    <p style={{ fontFamily: "arial" }}>{this.props.id}</p>
+                    <div style={{ position: "absolute", marginLeft: "130px" }}>
+                        <p style={{ fontFamily: "arial" }}>{this.props.item[1]}</p>
+                    </div>
+                </div>)
     }
 }
 

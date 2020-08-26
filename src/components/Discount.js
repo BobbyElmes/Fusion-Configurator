@@ -1,5 +1,6 @@
 import React from 'react';
 
+//Handles the discount box, under the title of the page
 class Discount extends React.Component {
     constructor(props) {
         super(props)
@@ -10,6 +11,7 @@ class Discount extends React.Component {
 
     }
 
+    //We do some checks to make sure it's a valid number between 0 and 100 (inclusive)
     onDiscountChange(event) {
         var temp = event.target.value
             var value = ""
@@ -29,7 +31,7 @@ class Discount extends React.Component {
         return (
             <label style={{ display: "flex", flexShrink: "0", flexDirection: "row"}}>
                 <input type="text" style={{ width: "50px",height:"80%", fontFamily: "arial", fontSize: "80%", textAlignLast: "right"}} value={this.state.discount + "%"} onChange={this.onDiscountChange} />
-                <p style={{fontFamily: "arial", fontSize: "80%" }}>&nbsp;&nbsp;Your discount</p>
+                <p style={{ fontFamily: "arial", fontSize: "80%" }}>&nbsp;&nbsp;{this.props.disWord}</p>
                 </label>
          )
     }

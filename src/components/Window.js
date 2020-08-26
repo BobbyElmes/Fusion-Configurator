@@ -1,7 +1,7 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup'
 
+//This class is for the Velux window dropdown/checkbox 
 class Window extends React.Component {
     constructor(props) {
         super(props)
@@ -28,6 +28,7 @@ class Window extends React.Component {
 
     render() {
         var windows = this.state.windows
+        this.state.check=this.props.window
         var options = []
         var cursor = "pointer"
         var color = "black"
@@ -39,7 +40,7 @@ class Window extends React.Component {
             color = "#9e9e9e"
         }
         return (<div style={{ display: "flex", flexDirection: "row", marginTop: "10px", marginBottom: "20px" }}><InputGroup.Checkbox style={{ cursor:cursor}} disabled={this.props.landscape} checked={this.state.check} onChange={this.handleClick} />
-            <p  style={{ fontFamily: "arial", fontSize: "80%", marginTop: "auto", marginBottom: "auto", marginRight: "5%", marginLeft:"2%",color:color }}>Add a roof window, type</p>
+            <p style={{ fontFamily: "arial", fontSize: "80%", marginTop: "auto", marginBottom: "auto", marginRight: "5%", marginLeft: "2%", color: color }}>{this.props.windWord}</p>
             <select disabled={this.props.landscape} onChange={this.handleChange}>  {options}</select></div>)
     }
 }

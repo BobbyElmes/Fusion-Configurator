@@ -2,6 +2,13 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import './Cell.css'
 
+//-------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
+//THIS IS/WAS AGAIN USED FOR TESTING THE EMAIL API FUNCTIONALITY AND IS CURRENTLY NOT IN USE
+//-------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
+
+
 class SendQuote extends React.Component {
     constructor(props) {
         super(props)

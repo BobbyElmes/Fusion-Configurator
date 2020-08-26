@@ -1,7 +1,7 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
 import Clip from '.././Imgs/clipboard.svg'
 
+//Handles the add quote button bottom left of the main grid
 class AddQuote extends React.Component {
     constructor(props) {
         super(props)

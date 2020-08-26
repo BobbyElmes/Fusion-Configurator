@@ -26,7 +26,7 @@ const Config = [
     {
         Id: "ViridianNL",
         Language: "nl",
-        Title: "Fusion Configurator",
+        Title: "Clearline Fusion Configurator",
         PriceList: "ViridianNLPrices.csv",
         Currency: "EURO",
         Logo1: "ViridianLogo.svg",
@@ -36,7 +36,7 @@ const Config = [
     {
         Id: "ViridianNO",
         Language: "no",
-        Title: "Fusion Configurator",
+        Title: "Fusion Konfigurator",
         PriceList: "ViridianNOPrices.csv",
         Currency: "KR",
         Logo1: "ViridianLogo.svg",
@@ -46,7 +46,7 @@ const Config = [
     {
         Id: "ViridianDE",
         Language: "de",
-        Title: "Fusion Configurator",
+        Title: "Clearline-Fusion-Konfigurator",
         PriceList: "ViridianDEPrices.csv",
         Currency: "EURO",
         Logo1: "ViridianLogo.svg",
@@ -62,7 +62,7 @@ const Config = [
         Logo1: "CM.png",
         Logo2: "ram.png",
         Logo3: "Clearline.png"
-    }
+    },
 ]
 
 export default Config

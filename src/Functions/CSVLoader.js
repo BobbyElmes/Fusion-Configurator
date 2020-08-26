@@ -63,6 +63,7 @@ function CSVLoader(file, numItems, columnNum) {
         }
         prev = current
     }
+    console.log("PROD: " +product)
     return product
 }
 

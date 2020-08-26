@@ -1,10 +1,9 @@
 import React from 'react';
-import Modal from 'react-modal';
+import ReactModal from 'react-modal';
 import { isMobile } from 'react-device-detect';
 
 //-----------------------------------------------------------------------
 
-import Config from './Config/Config.js'
 import Row from './components/Row.js'
 import Button from 'react-bootstrap/Button';
 import Window from './components/Window.js'
@@ -18,7 +17,6 @@ import PanelDropDown from './components/PanelDropDown.js'
 import PDF from './components/PDF.js'
 import NumQuote from './components/NumQuote.js'
 import Discount from './components/Discount.js'
-import languages from './Products/Languages.csv';
 import PricePerWatt from './components/PricePerWatt.js'
 import PackerDropDown from './components/Packers.js'
 import ArraySize from './components/ArraySize'
@@ -37,15 +35,23 @@ import './App.css';
 //-----------------------------------------------------------------------
 
 import ViridianIds from './Products/ViridianUKPrices.csv'
+import languages from './Products/Descriptions.csv';
+import languages2 from './Products/Languages.csv';
 import Arrow from './Imgs/Arrow.png'
 import clipHeader from './Imgs/clipboard_header.svg'
+import cancel from './Imgs/cancel.svg'
+import confirm from './Imgs/confirm.svg'
+import clipboard from './Imgs/clipboard_header.png'
 
 //-----------------------------------------------------------------------
 
 
-
+/*global Config*/
 //This 'App' class does most of the data processing and acts as kind of the omniscient being which tells
 //The subcomponents what to do and when to do it.
+
+//On reflection, it really should have been broken down into smaller bits, but I didn't realise how large this file would actually get
+//  :(
 class App extends React.Component {
 
     constructor(props) {
@@ -72,6 +78,7 @@ class App extends React.Component {
             panels: [[]],
             //holds the descriptions of items in different languages
             descriptions: [[]],
+            words:[[]],
             Ids: [[]],
             //cell coordinate mouse was previously hovered over
             prevHover: [],
@@ -125,6 +132,7 @@ class App extends React.Component {
         this.quantityChange = this.quantityChange.bind(this)
         this.initGrid = this.initGrid.bind(this)
         this.quotePopUp = this.quotePopUp.bind(this)
+        this.quotePopDown = this.quotePopDown.bind(this)
         this.windowCellValid = this.windowCellValid.bind(this)
         this.changeLanguage = this.changeLanguage.bind(this)
         this.calculatekWp = this.calculatekWp.bind(this)
@@ -150,7 +158,8 @@ class App extends React.Component {
         this.changeOrientation = this.changeOrientation.bind(this)
     }
 
-    componentWillMount(){
+    componentWillMount() {
+        
         this.getLanguage()
         this.getProducts()
         this.initGrid()
@@ -194,12 +203,14 @@ class App extends React.Component {
     getLanguage() {
         let search = window.location.search;
         let params = new URLSearchParams(search);
-        
         let id = params.get('id');
         var config;
-        for (var i = 0; i < Config.length; i++) {
-            if (Config[i].Id == id) {
-                config = Config[i]
+        let Con = Config
+        
+        
+        for (var i = 0; i < Con.length; i++) {
+            if (Con[i].Id == id) {
+                config = Con[i]
             }
         }
         if (config != null) {
@@ -209,15 +220,12 @@ class App extends React.Component {
                 switch (lang) {
                     case "nl":
                         this.state.language = 1
-                        this.state.currency = 1
                         break;
                     case "de":
                         this.state.language = 2
-                        this.state.currency = 2
                         break;
                     case "no":
                         this.state.language = 3
-                        this.state.currency = 3
                         break;
                 }
             }
@@ -277,13 +285,25 @@ class App extends React.Component {
         })
     }
 
+    async fetchItem(s) {
+        var csvRoute = await fetch(s)
+        return csvRoute
+    }
+
     //loads in the csv files and puts them into the relevent arrays
     getProducts() {
+     //   var csvRoute = await this.fetchItem("https://www.fusionconfigurator.com/static/Prices/" + this.state.config.PriceList)
         var csvRoute = require("./Products/" + this.state.config.PriceList)
+       // var product = CSVLoader("https://www.fusionconfigurator.com/static/Prices/" + this.state.config.PriceList, 4, 2)
+   /*     var product = CSVLoader("https://www.fusionconfigurator.com/static/Prices/" + this.state.config.PriceList, 4, 2)
+        var ViridianProd = CSVLoader("https://www.fusionconfigurator.com/static/Prices/ViridianUKPrices.csv", 4, 2)
+        var descriptions = CSVLoader("https://www.fusionconfigurator.com/static/Languages/Descriptions.csv", 4, 5)
+        var words = CSVLoader("https://www.fusionconfigurator.com/static/Languages/Languages.csv", 1, 4)*/
         var product = CSVLoader(csvRoute, 4, 2)
         var ViridianProd = CSVLoader(ViridianIds, 4, 2)
         var descriptions = CSVLoader(languages, 4, 5)
-        
+        var words = CSVLoader(languages2, 1, 4)
+
         //this array has the portrait, landscape and finally packer flashing
         //values & descriptions loaded into it
         var productArr = [[],[],[]]
@@ -323,6 +343,7 @@ class App extends React.Component {
         this.state.panels = panelArr
         this.state.packers = productArr[2]
         this.state.descriptions = descriptions
+        this.state.words = words[0]
     }
 
 
@@ -523,7 +544,7 @@ class App extends React.Component {
             case 0:
                 //ensure grid isn't too big
                 for (var m = 0; m < by; m++) {
-                    if (xTemp < 30) {
+                    if (xTemp < 40) {
                         this.state.showArrow[0] = true
                         for (var i = 0; i < yTemp; i++) {
                             temp[i].push([])
@@ -535,7 +556,7 @@ class App extends React.Component {
                             flashing[i][xTemp] = "none"
                             marked[i][xTemp] = false
                         }
-                        if (xTemp == 29)
+                        if (xTemp == 39)
                             this.state.showArrow[1] = false
                         xTemp += 1
                     }
@@ -569,7 +590,7 @@ class App extends React.Component {
                 break;
             case 2:
                 for (var m = 0; m < by; m++) {
-                    if (yTemp < 30) {
+                    if (yTemp < 40) {
                         this.state.showArrow[2] = true
                         temp.push(new Array(xTemp))
                         flashing.push(new Array(xTemp))
@@ -580,7 +601,7 @@ class App extends React.Component {
                             marked[yTemp][i] = false
                         }
                         yTemp += 1
-                        if (yTemp == 29)
+                        if (yTemp == 39)
                             this.state.showArrow[3] = false
                     }
                 }
@@ -644,7 +665,7 @@ class App extends React.Component {
                 packers[3 + x][1] = flashing[3][1]
                 packers[4 + x][1] = flashing[4][1]
                 packers[5 + x][1] = flashing[5][1]
-                packers[6 + x][1] = flashing[9][1]
+                packers[6 + x][1] = flashing[9][1] + flashing[10][1]
 
                 for (var i = 0; i < 4; i++)
                     packers[i][1] = 0
@@ -899,6 +920,12 @@ class App extends React.Component {
         })
     }
 
+    quotePopDown() {
+        this.setState({
+            showPopUp: false
+        })
+    }
+
     //sets the send quote form to visible
     sendQuote() {
         this.setState({
@@ -908,9 +935,9 @@ class App extends React.Component {
 
     //changes the discount value
     discountChange(x) {
-        this.setState({
-            discount: x
-        })
+        this.state.discount = x
+        this.recalculateTotals()
+        
     }
 
     //changes the batten thickness
@@ -998,7 +1025,8 @@ class App extends React.Component {
             flashCopy[i][1] = flashTemp[i][1]*number
             flashCopy[i][2] = flashTemp[i][2]
             flashCopy[i][3] = flashTemp[i][3]
-            itemTotal += flashCopy[i][1] * flashTemp[i][2]
+            itemTotal += (Math.round(((flashTemp[i][2] * (1 - (this.state.discount / 100))) + Number.EPSILON) * 100) / 100) * flashCopy[i][1] 
+            itemTotal = (Math.round(((itemTotal) + Number.EPSILON) * 100) / 100)
         }
 
         //copy packers over
@@ -1011,7 +1039,8 @@ class App extends React.Component {
             packersCopy[i][1] = packerTemp[i][1] * number
             packersCopy[i][2] = packerTemp[i][2]
             packersCopy[i][3] = packerTemp[i][3]
-            itemTotal += packersCopy[i][1] * packerTemp[i][2]
+            itemTotal += (Math.round(((packerTemp[i][2] * (1 - (this.state.discount / 100))) + Number.EPSILON) * 100) / 100) * packersCopy[i][1] 
+            itemTotal = (Math.round(((itemTotal) + Number.EPSILON) * 100) / 100)
         }
 
         //copy panels over
@@ -1025,8 +1054,16 @@ class App extends React.Component {
             panelsCopy[i][2] = panelTemp[i][2]
             panelsCopy[i][3] = panelTemp[i][3]
             panelsCopy[i][4] = panelTemp[i][4]
-            panelTotal += panelsCopy[i][1] * panelTemp[i][3]
+            panelTotal += (Math.round(((panelTemp[i][3] * (1 - (this.state.discount / 100))) + Number.EPSILON) * 100) / 100) * panelsCopy[i][1]
+            panelTotal = (Math.round(((panelTotal) + Number.EPSILON) * 100) / 100)
+            
         }
+
+        if (this.state.window)
+            this.state.window = false
+
+        var overallTotal = itemTotal + panelTotal
+        overallTotal = (Math.round(((overallTotal) + Number.EPSILON) * 100) / 100)
 
         var temp = this.state.Quotes
         //a quote contains: flashing items, flashing total, orientation, packers, panels, panel total, 
@@ -1041,7 +1078,7 @@ class App extends React.Component {
             //orientation
             landscape: this.state.landscape,
             //total cost of the quote
-            total: itemTotal + panelTotal,
+            total: overallTotal,
             //cropped grid of flashing items to be displayed
             miniFlashing: mini,
             // number of columns of the cropped grid
@@ -1057,6 +1094,35 @@ class App extends React.Component {
             showPopUp: false
         })
         this.clearPress()
+    }
+
+    recalculateTotals() {
+        var quotes = this.state.Quotes
+        var discount = this.state.discount
+        var newTotal = 0
+        for (var i = 0; i < quotes.length; i++) {
+            console.log("OLD: " + quotes[i].total)
+            for (var c = 0; c < quotes[i].panels.length; c++) {
+                newTotal += (Math.round(((quotes[i].panels[c][3] * (1 - (discount / 100))) + Number.EPSILON) * 100) / 100) * quotes[i].panels[c][1] 
+                newTotal = (Math.round(((newTotal) + Number.EPSILON) * 100) / 100)
+            }
+            for (var c = 0; c < quotes[i].flashingList.length; c++) {
+                newTotal += (Math.round(((quotes[i].flashingList[c][2] * (1 - (discount / 100))) + Number.EPSILON) * 100) / 100) * quotes[i].flashingList[c][1]
+                newTotal = (Math.round(((newTotal) + Number.EPSILON) * 100) / 100)
+            }
+            for (var c = 0; c < quotes[i].packers.length; c++) {
+                newTotal += (Math.round(((quotes[i].packers[c][2] * (1 - (discount / 100))) + Number.EPSILON) * 100) / 100) * quotes[i].packers[c][1] 
+                newTotal = (Math.round(((newTotal) + Number.EPSILON) * 100) / 100)
+            }
+            newTotal = (Math.round(((newTotal) + Number.EPSILON) * 100) / 100)
+            
+            quotes[i].total = newTotal
+            console.log("NEW: " + quotes[i].total)
+            newTotal = 0
+        }
+        this.setState({
+            Quotes:quotes
+        })
     }
 
     
@@ -1169,34 +1235,38 @@ class App extends React.Component {
             var ppwTotal = total
             var ppwPanels = []
             for (var i = 0; i < this.state.flashings.length; i++) {
-                ppwTotal += this.state.flashings[i][1] * this.state.flashings[i][2]
+                ppwTotal += (Math.round(((this.state.flashings[i][2] * (1 - (this.state.discount / 100))) + Number.EPSILON) * 100) / 100) * this.state.flashings[i][1]
+                ppwTotal = (Math.round(((ppwTotal) + Number.EPSILON) * 100) / 100)
             }
             this.createEmptyPanels(ppwPanels)
 
             for (var i = 0; i < this.state.packers.length; i++) {
-                ppwTotal += this.state.packers[i][1] * this.state.packers[i][2]
+                ppwTotal += (Math.round(((this.state.packers[i][2] * (1 - (this.state.discount / 100))) + Number.EPSILON) * 100) / 100) * this.state.packers[i][1]
+                ppwTotal = (Math.round(((ppwTotal) + Number.EPSILON) * 100) / 100)
             }
 
             for (var i = 0; i < this.state.panels.length; i++) {
                 ppwPanels[i][1] += panels[i][1]
                 ppwPanels[i][1] += this.state.panels[i][1]
-                ppwTotal += this.state.panels[i][1] * this.state.panels[i][3]
+                ppwTotal += (Math.round(((this.state.panels[i][3] * (1 - (this.state.discount / 100))) + Number.EPSILON) * 100) / 100) * this.state.panels[i][1]
+                ppwTotal = (Math.round(((ppwTotal) + Number.EPSILON) * 100) / 100)
             }
-            ppwTotal -= (ppwTotal * this.state.discount / 100)
             return [ppwTotal, ppwPanels]
         }
         else {
             var ppwTotal = 0
             for (var i = 0; i < this.state.flashings.length; i++) {
-                ppwTotal += this.state.flashings[i][1] * this.state.flashings[i][2]
+                ppwTotal += (Math.round(((this.state.flashings[i][2] * (1 - (this.state.discount / 100))) + Number.EPSILON) * 100) / 100) * this.state.flashings[i][1]
+                ppwTotal = (Math.round(((ppwTotal) + Number.EPSILON) * 100) / 100)
             }
             for (var i = 0; i < this.state.packers.length; i++) {
-                ppwTotal += this.state.packers[i][1] * this.state.packers[i][2]
+                ppwTotal += (Math.round(((this.state.packers[i][2] * (1 - (this.state.discount / 100))) + Number.EPSILON) * 100) / 100) * this.state.packers[i][1]
+                ppwTotal = (Math.round(((ppwTotal) + Number.EPSILON) * 100) / 100)
             }
             for (var i = 0; i < this.state.panels.length; i++) {
-                ppwTotal += this.state.panels[i][1] * this.state.panels[i][3]
+                ppwTotal += (Math.round(((this.state.panels[i][3] * (1 - (this.state.discount / 100))) + Number.EPSILON) * 100) / 100) * this.state.panels[i][1]
+                ppwTotal = (Math.round(((ppwTotal) + Number.EPSILON) * 100) / 100)
             }
-            ppwTotal -= (ppwTotal * this.state.discount/100)
             return [ppwTotal, this.state.panels]
         }
         return null
@@ -1278,6 +1348,7 @@ class App extends React.Component {
     //renders the whole screen by sending relevent info down to sub components and placing them
     //in the right order
     render() {
+        console.log(window.Config)
         //if window is true, load this variable which says whether the cell being hovered over 
         //can have a window placed in it or not
         var unblockedCell = [-1, -1]
@@ -1290,10 +1361,12 @@ class App extends React.Component {
             mobile = true
         }
 
+
         //create the main grid
         var grid = []
-        for (var i = 0; i < this.state.yLen; i++)
+        for (var i = 0; i < this.state.yLen; i++) {
             grid.push(<div style={{ marginTop: 0, marginBottom: 0, fontSize: 0 }}><Row mobile={mobile} key={i} window={this.windowCellValid} wind={this.state.window} unblock={unblockedCell} showArrow={this.state.showArrow} expandPress={this.expandPress} ySize={this.state.yLen} xSize={this.state.xLen} type={this.state.type[i]} flashing={this.state.flashing[i]} cellPress={this.cellPress} row={i} down={this.cellDown} up={this.cellUp} landscape={this.state.landscape} cellOver={this.cellOver} marked={this.state.marked[i]} /></div>)
+        }
 
         //current currency in use (£100 or 1000kr for example)
         var currency = this.calculateCurrency()
@@ -1316,7 +1389,7 @@ class App extends React.Component {
             quotes.push(<div style={{ background: "black", height: "1px", width: "100%", marginBottom:"20px" }}></div>)
             //loop through quotes, totalling the panel & flashing: costs, totals ect
             for (var i = 0; i < this.state.Quotes.length; i++) {
-                quotes.push(<DisplayQuote id={i + 1} currency={currency} quantity={this.state.Quotes[i].quantity} remove={this.removeQuote} discount={this.state.discount} total={this.state.Quotes[i].total} flashings={this.state.Quotes[i].flashingList} landscape={this.state.Quotes[i].landscape} miniFlashing={this.state.Quotes[i].miniFlashing} xSize={this.state.Quotes[i].xSize} panels={this.state.Quotes[i].panels} packers={this.state.Quotes[i].packers} width={this.state.Quotes[i].width} kwp={this.state.Quotes[i].kwp} quantityChange={this.quantityChange} setImages={this.setImages} />)
+                quotes.push(<DisplayQuote  eur={this.state.currency} id={i + 1} currency={currency} quantity={this.state.Quotes[i].quantity} remove={this.removeQuote} discount={this.state.discount} total={this.state.Quotes[i].total} flashings={this.state.Quotes[i].flashingList} landscape={this.state.Quotes[i].landscape} miniFlashing={this.state.Quotes[i].miniFlashing} xSize={this.state.Quotes[i].xSize} panels={this.state.Quotes[i].panels} packers={this.state.Quotes[i].packers} width={this.state.Quotes[i].width} kwp={this.state.Quotes[i].kwp} quantityChange={this.quantityChange} setImages={this.setImages} />)
                 quotes.push(<div style={{ background: "black", height: "1px", width: "100%", marginBottom: "20px", marginTop:"10px" }}></div>)
                 summary = this.totalQuotes(summary, this.state.Quotes[i], half)
                 overallTotal += this.state.Quotes[i].total
@@ -1326,8 +1399,8 @@ class App extends React.Component {
                     totalPanels[c][1] += this.state.Quotes[i].panels[c][1]
                 }
             }
-            pdf = <PDF logo1={this.state.config.Logo1} logo2={this.state.config.Logo2} logo3={this.state.config.Logo3} ids={this.state.Ids} send={send} currency={currency} total={overallTotal} flashings={summary} discount={this.state.discount} panels={totalPanels} Quotes={this.state.Quotes} imgs={this.state.images} />
-            total.push(<DisplayQuote id={0} currency={currency} discount={this.state.discount} total={overallTotal} num={numQuotes} kwp={numKwp} />)
+            pdf = <PDF wordList={this.state.words} lang={this.state.language} eur={this.state.currency} name={this.state.config.Title} logo1={this.state.config.Logo1} logo2={this.state.config.Logo2} logo3={this.state.config.Logo3} ids={this.state.Ids} send={send} currency={currency} total={overallTotal} flashings={summary} discount={this.state.discount} panels={totalPanels} Quotes={this.state.Quotes} imgs={this.state.images} />
+            total.push(<DisplayQuote totalWord={this.state.words[6][this.state.language]} id={0} currency={currency} discount={this.state.discount} total={overallTotal} num={numQuotes} kwp={numKwp} />)
             total.push(<div style={{ background: "black", height: "1px", width: "100%", marginBottom: "20px", marginTop: "10px" }}></div>)
         }
 
@@ -1340,16 +1413,26 @@ class App extends React.Component {
         var kwp = this.calculatekWp(false);
         var kwpGrid = this.calculatekWp(true)
 
+
+        var [mini, xSize] = this.resizeFlashingGrid()
+        
+
         //arrows below grid to expand and reduce the number of rows
         var bottomArrows = []
         bottomArrows.push(<div className="button2" style={{ display: "flex", flexDirection: "row", flexShrink: "0", marginTop: "-5px", marginLeft: "36%", marginRight: "7%" }}> <Button variant="primary" disabled={!this.state.showArrow[3]} className="button" onClick={() => this.expandPress(2)} style={{ width: "40px", height: "40px" }}><img src={Arrow} className="button2" style={{ transform: "rotate(90deg)", marginLeft: "-12px", marginTop: "-6px", width: "40px", height: "40px", padding: "10px" }} /></Button></div>)
         bottomArrows.push(<div className="button2" style={{ display: "flex", flexDirection: "row", flexShrink: "0", marginTop: "-5px" }}> <Button variant ="primary" disabled={!this.state.showArrow[2]} className="button" onClick={() => this.expandPress(3)} style={{ width: "40px", height: "40px" }}><img src={Arrow} className="button2" style={{ transform: "rotate(270deg)", marginLeft: "-12px", marginTop:"-6px", width: "40px", height: "40px", padding: "10px" }} /></Button></div>)
 
-        var logo1 = <img style={{ width: "120px", marginLeft: "10%", marginTop: "1%", marginBottom: "-2%" }} src={require("./Imgs/" + this.state.config.Logo1)} />
+       var logo1 = <img style={{ width: "120px", marginLeft: "10%", marginTop: "1%", marginBottom: "-2%" }} src={require("./Imgs/" + this.state.config.Logo1)} />
         var logo2 = null
         if (this.state.config.Logo2 != null)
             logo2 = <img style={{ width: "120px", marginLeft: "1%", marginTop: "1%", marginBottom: "-2%" }} src={require("./Imgs/" + this.state.config.Logo2)} />
         var logo3 = <img style={{ width: "200px", marginLeft: "900px", marginTop: "40px", marginBottom: "-1%" }} src={require("./Imgs/" + this.state.config.Logo3)} />
+
+      /*  var logo1 = <img style={{ width: "120px", marginLeft: "10%", marginTop: "1%", marginBottom: "-2%" }} src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.config.Logo1} />
+        var logo2 = null
+        if (this.state.config.Logo2 != null)
+            logo2 = <img style={{ width: "120px", marginLeft: "1%", marginTop: "1%", marginBottom: "-2%" }} src={("https://www.fusionconfigurator.com/static/Logos/" + this.state.config.Logo2)} />
+        var logo3 = <img style={{ width: "200px", marginLeft: "900px", marginTop: "40px", marginBottom: "-1%" }} src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.config.Logo3} />*/
         var title = <h1 className="TitleFont" style={{ marginTop: "-25px" }}> {this.state.config.Title} </h1>
 
         //if not displaying the send form, display the configurator
@@ -1365,25 +1448,25 @@ class App extends React.Component {
                         {logo3}
                         <div className="outerDivCenter">
                             {title}
-                            <Discount discount={this.discountChange} />
+                            <Discount disWord={this.state.words[22][this.state.language]} discount={this.discountChange} />
                         </div>
                         <div className="WorkSpace">
                             <div className="outerDivCenter">
                                 <div style={{ marginTop: "30px", display: "flex", flexDirection: "row" }}>
-                                    <Orientation press={this.changeOrientation} landscape={this.state.landscape} />
+                                    <Orientation portland={[this.state.words[0][this.state.language], this.state.words[1][this.state.language]]} press={this.changeOrientation} landscape={this.state.landscape} />
                                     <div className="DropDown">
                                         <div style={{ display: "flex", flexDirection: "column" }}>
-                                            <PanelDropDown ids={this.state.Ids[3]} press={this.panelChange} panels={this.state.panels} />
-                                            <PackerDropDown press={this.packerChange} />
+                                            <PanelDropDown panelWord={this.state.words[2][this.state.language]} ids={this.state.Ids[3]} press={this.panelChange} panels={this.state.panels} />
+                                            <PackerDropDown battenWord={this.state.words[3][this.state.language]} press={this.packerChange} />
                                         </div>
                                     </div>
                                 </div>
-                                <div className="TableUnder" style={{ width: "100%" }}>
-                                    <div className="TableHeader" style={{ width: "100%" }}>
-                                        <div style={{ display: "flex", flexDirection: "row" }}>
+                                <div className="TableUnder" style={{  }}>
+                                    <div className="TableHeader" style={{}}>
+                                        <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent:"center" }}>
                                             <KWP kwp={kwpGrid} />
-                                            <PricePerWatt currency={currency} panels={ppwPanels} total={ppwTotal} />
-                                            <ArraySize size={this.arraySize()} landscape={this.state.landscape} />
+                                            <PricePerWatt currency={currency} panels={ppwPanels} total={ppwTotal} eur={this.state.currency} />
+                                            <ArraySize outsideWord={this.state.words[4][this.state.language]} size={this.arraySize()} landscape={this.state.landscape} />
                                         </div>
                                     </div>
                                     {grid}
@@ -1396,33 +1479,36 @@ class App extends React.Component {
                                     <AddQuote press={this.quotePopUp} total={ppwTotal} />
                                     <Clear press={this.clearPress} />
                                 </div>
-                                <Window press={this.windowPress} landscape={this.state.landscape} />
+                                <Window windWord={this.state.words[5][this.state.language]} window={this.state.window} press={this.windowPress} landscape={this.state.landscape} />
                             </div>
                         </div>
                         <div className="outerDivCenter" style={{ marginTop: "10px", marginBottom: "20px" }}>
-                            <KitSection panels={this.state.panels} panel={this.state.currentPanel} flashings={this.state.flashings} ids={this.state.Ids} packers={this.state.packers} />
+                            <KitSection popUpText={this.state.words[19][this.state.language]} panels={this.state.panels} landscape={this.state.landscape} panel={this.state.currentPanel} flashings={this.state.flashings} ids={this.state.Ids} packers={this.state.packers} />
                         </div>
                         <div className="WorkSpace">
                             <div className="outerDivCenter" style={{ marginTop: "20px", marginBottom: "10px" , overflowY: "visible"}}>
                                 {quotes}
                                 {total}
+                                <div id="divToPrint" style={{ overflowX: "hidden !important" }}>{pdf}
+                                </div>
                             </div>
                         </div>
                         <div className="WorkSpace2">
                             <div className="outerDivCenter" style={{ marginTop: "20px", marginBottom: "20px", overflowX: "hidden !important" }}>
-                                <div id="divToPrint" style={{ overflowX: "hidden !important"}}>{pdf}
-                                </div>
+                                
                             </div>
                         </div>
 
-                        <Modal
+                        <ReactModal
                             isOpen={this.state.showPopUp}
                             contentLabel="Quotes PopUp"
-                            style={{ position: "absolute", top: "50vw", left: "50%", overlay: { zIndex: 1000, top: "25vh", bottom: "25vh", right: "25vw", left: "25vw" } }}>
+                            className="Modal"
+                            overlayClassName="Overlay"
+                            >
                             <div className="popUp" >
-                                <NumQuote press={this.addQuote} />
+                                <NumQuote eur={this.state.currency} clip={clipboard} cancel={cancel} confirm={confirm} press={this.addQuote} pressDown={this.quotePopDown} flashing={this.state.flashings} panels={this.state.panels} packers={this.state.packers} total={ppwTotal} kwp={kwp} discount={this.state.discount} currency={currency} mini={mini} xSize={xSize} landscape={this.state.landscape} />
                             </div>
-                        </Modal>
+                        </ReactModal>
                     </div>
                 )
             }
@@ -1487,14 +1573,14 @@ class App extends React.Component {
                             </div>
                         </div>
 
-                        <Modal
+                        <ReactModal
                             isOpen={this.state.showPopUp}
                             contentLabel="Quotes PopUp"
                             style={{ position: "absolute", top: "50vw", left: "50%", overlay: { zIndex: 1000, top: "25vh", bottom: "25vh", right: "25vw", left: "25vw" } }}>
                             <div className="popUp" >
-                                <NumQuote press={this.addQuote} />
+                                <NumQuote press={this.addQuote} clip={clipboard} cancel={cancel} confirm={confirm} flashing={this.state.flashings} panels={this.state.panels} packers={this.state.packers} total={ppwTotal} kwp={kwp} discount={this.state.discount} currency={this.state.currency} mini={mini} xSize={xSize} />
                             </div>
-                        </Modal>
+                        </ReactModal>
                     </div>
                 )
             }

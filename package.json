@@ -3,16 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@progress/kendo-drawing": "^1.8.1",
-    "@progress/kendo-react-pdf": "^3.15.0",
     "@react-pdf/renderer": "^1.6.10",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "file-saver": "^2.0.2",
     "html2canvas": "^1.0.0-rc.5",
-    "jspdf": "^1.5.3",
-    "papaparse": "^5.2.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-data-export": "^0.6.0",
@@ -24,12 +20,12 @@
     "react-scripts": "3.4.1",
     "redux": "^4.0.5"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
+    },
   "eslintConfig": {
     "extends": "react-app"
   },

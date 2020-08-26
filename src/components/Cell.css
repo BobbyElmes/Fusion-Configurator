@@ -149,7 +149,7 @@
     background: url(".././Imgs/Window.png")no-repeat scroll 0 0 transparent;
     background-size: 100% 100%;
     color: black !important;
-    border: 0.1px solid black !important;
+    border: 0.1px solid black;
     border-radius: 0.1px;
     outline: 0 !important;
     text-transform: uppercase;
@@ -160,7 +160,7 @@
     background: rgba(242,135,181,1);
     background-size: 100% 100%;
     color: black !important;
-    border: 0.1px solid black !important;
+    border: 0.1px solid black;
     outline: 0 !important;
     border-radius: 0.1px;
     text-transform: uppercase;
@@ -268,7 +268,7 @@
 
 .BigDiv {
     color: black !important;
-    border: 0 solid black !important;
+    border: 0px solid black !important;
     border-radius: 0.01px;
     text-transform: uppercase;
     text-align: center;
@@ -277,6 +277,8 @@
     display: block;
     overflow: hidden;
     font-size: 75%;
+    padding:-2px;
+    z-index:10;
 }
 
 .CornerDiv {
@@ -425,6 +427,29 @@
 }
 .Plus :hover {
     color: white !important;
+}
+
+.cancel{
+    cursor:pointer;
+    width:65px;
+    position:absolute;
+    top:2%;
+    right:1%;
+}
+
+.confirm {
+    cursor: pointer;
+    width: 65px;
+    position: absolute;
+    bottom: 2%;
+    right: 1%;
+}
+
+.clipboard {
+    width: 60px;
+    position: absolute;
+    top: 4%;
+    left: 1%;
 }
 
    
