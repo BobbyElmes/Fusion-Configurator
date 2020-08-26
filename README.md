@@ -8,11 +8,11 @@ Link: https://www.fusionconfigurator.com/
 
 Basically we've got the classic 'App.js' which sends data down to sub components and sub comonents of sub components ect ect. Therefore it's quite a large file, holds a fair few variables and does most of the actual data processing. 
 
-We've got the subcomponents in the /components/ directory and in the /Config/ directory we have the config file, used to set up custom versions of the configurator for different businesses/countries ect. In the /Funcitons/ directory we have some general purpose functions I created which are used across the project. One for formatting money and one for importing and parsing csv files. 
+We've got the subcomponents in the /components/ directory and in the /Config/ directory we have the config file, used to set up custom versions of the configurator for different businesses/countries ect. In the /Functions/ directory we have some general purpose functions I created which are used across the project. One for formatting money and one for importing and parsing csv files. 
 
 ### Dependencies
 
-All the packages it use are under the MIT license, the list of which can be seen below. I only used dependencies where I really had to, and it made sense to outsource code. For example, for creating PDFs and XLSX files.
+All the packages it use are under the MIT license, the list of which can be seen below. I only introduced dependencies where I really had to, and it made sense to outsource code. For example, for creating PDFs and XLSX files.
 
 1. React-Bootstrap - https://react-bootstrap.github.io/
 2. Html2Canvas - https://html2canvas.hertzen.com/
