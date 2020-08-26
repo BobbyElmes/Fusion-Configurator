@@ -1,14 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\public",
     "\\src",
-    "\\src\\components",
-    "\\src\\Config",
-    "\\src\\Functions",
-    "\\src\\Imgs",
-    "\\src\\Products"
+    "\\src\\components"
   ],
-  "SelectedNode": "\\src\\components\\PDF.js",
+  "SelectedNode": "\\src\\components\\Cell.js",
   "PreviewInSolutionExplorer": false
 }
