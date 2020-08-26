@@ -1,68 +1,25 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## THE FUSION CONFIGURATOR
 
-## Available Scripts
+This is the Fusion Configurator. My first React App and first time using JavaScript, so inevitably some things are done slightly inneficiently. But it runs fine and works, so it's certainly a success. Still a work in progress but nearly completed this first draft.
 
-In the project directory, you can run:
+Link: https://www.fusionconfigurator.com/
 
-### `npm start`
+### How it all ties together
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Basically we've got the classic 'App.js' which sends data down to sub components and sub comonents of sub components ect ect. Therefore it's quite a large file, holds a fair few variables and does most of the actual data processing. 
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+We've got the subcomponents in the /components/ directory and in the /Config/ directory we have the config file, used to set up custom versions of the configurator for different businesses/countries ect. In the /Funcitons/ directory we have some general purpose functions I created which are used across the project. One for formatting money and one for importing and parsing csv files. 
 
-### `npm test`
+### Dependencies
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+All the packages it use are under the MIT license, the list of which can be seen below. I only used dependencies where I really had to, and it made sense to outsource code. For example, for creating PDFs and XLSX files.
 
-### `npm run build`
+1. React-Bootstrap - https://react-bootstrap.github.io/
+2. Html2Canvas - https://html2canvas.hertzen.com/
+3. React-PDF - https://react-pdf.org/
+4. React-device-detect - https://www.npmjs.com/package/react-device-detect
+5. React-Modal - https://github.com/reactjs/react-modal
+6. React-data-export - https://www.npmjs.com/package/react-data-export
+7. File-saver - https://www.npmjs.com/package/file-saver
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
