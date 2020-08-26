@@ -82,6 +82,8 @@ class Cell extends React.Component {
         var bigDiv = "#C6EAFA"
         var border = "1px solid black"
         var cursor = this.props.cursor
+        var marginL = "0px"
+        var marginR = "0px"
 
         //if displaying the mini grid, make cell smaller
         if (this.props.up == null) {
@@ -114,8 +116,6 @@ class Cell extends React.Component {
         }
 
         var flash = this.props.flashing
-        var width = window.innerWidth
-        var height = window.innerHeight
 
         //here we calculate the size of the cell, which is flipped depending if the panels 
         //Are meant to be landscape or portrait
@@ -205,8 +205,6 @@ class Cell extends React.Component {
                     }
                     color = "Corner"
                 }
-                if (flash != "none")
-                    flashText = flash
             }
         }
 
