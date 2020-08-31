@@ -27,12 +27,21 @@ class PricePerWatt extends React.Component {
         formattedPPW = formatMoney(formattedPPW, this.props.eur)
         formattedTotal = formatMoney(formattedTotal, this.props.eur)
 
-        return (
-            <div style={{ margin: "auto", textAlign: "center", alignItems: "center", justifyContent: "center" }}>
-                <p className="PPWtext" style={{ fontFamily: "arial",fontSize: "150%",  marginTop:"5px", marginBottom:"3px" }}>{this.props.currency[0]}{formattedTotal}{this.props.currency[1]}</p>
-                <p className="PPWtext" style={{ fontFamily: "arial", fontSize: "75%", marginTop: "0%", marginBottom: "10px" }}>{this.props.currency[0]}{formattedPPW}{this.props.currency[1]} /Wp </p>
-            </div>
-                )
+        if (this.props.mobile) {
+            return (
+                <div style={{ margin: "auto", textAlign: "center", alignItems: "center", justifyContent: "center" }}>
+                    <p className="PPWtext" style={{ fontFamily: "arial", fontSize: "125%", marginTop: "10px", marginBottom: "3px" }}>{this.props.currency[0]}{formattedTotal}{this.props.currency[1]}</p>
+                    <p className="PPWtext" style={{ fontFamily: "arial", fontSize: "75%", marginTop: "0%", marginBottom: "10px" }}>{this.props.currency[0]}{formattedPPW}{this.props.currency[1]} /Wp </p>
+                </div>
+            )
+        }
+        else
+            return (
+                <div style={{ margin: "auto", textAlign: "center", alignItems: "center", justifyContent: "center" }}>
+                    <p className="PPWtext" style={{ fontFamily: "arial",fontSize: "150%",  marginTop:"5px", marginBottom:"3px" }}>{this.props.currency[0]}{formattedTotal}{this.props.currency[1]}</p>
+                    <p className="PPWtext" style={{ fontFamily: "arial", fontSize: "75%", marginTop: "0%", marginBottom: "10px" }}>{this.props.currency[0]}{formattedPPW}{this.props.currency[1]} /Wp </p>
+                </div>
+                    )
     }
 }
 

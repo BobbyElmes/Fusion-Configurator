@@ -1,6 +1,6 @@
 import React from 'react';
 import KitList from './KitList.js'
-import { isMobile } from 'react-device-detect';
+import { isMobile, isEdgeChromium,isChrome } from 'react-device-detect';
 import html2canvas from 'html2canvas';
 import snapShot from '.././Imgs/snapshot.svg'
 import Modal from 'react-modal';
@@ -148,7 +148,7 @@ class KitSection extends React.Component {
                 }
             }
             if (!this.checkEmpty(ppb)) {
-                items[1].push(<div><KitList id={ppbID} items={ppb} /><p style={{ fontFamily: "arial" }}>20 pieces per box</p></div>)
+                items[1].push(<div><KitList id={ppbID} items={ppb} /><p style={{ fontFamily: "arial" }}>{this.props.boxText}</p></div>)
             }
             if (!this.checkEmpty(SB)) {
                 items[1].push(<KitList id={SBID} items={SB} />)
@@ -163,7 +163,7 @@ class KitSection extends React.Component {
                     items[2].push(< KitList id={vcID} items={vc} />)
             }
             if (!this.checkEmpty(ppb))
-                items[3].push(<div><KitList id={ppbID} items={ppb} /><p style={{ fontFamily: "arial" }}>20 pieces per box</p></div>)
+                items[3].push(<div><KitList id={ppbID} items={ppb} /><p style={{ fontFamily: "arial" }}>{this.props.boxText}</p></div>)
             if (!this.checkEmpty(SB))
                 items[4].push(<KitList id={SBID} items={SB} />)
         }
@@ -178,24 +178,41 @@ class KitSection extends React.Component {
         var panelItem = []
         panelItem.push(<KitList id={panelID} items={panels} />)
 
+        //Checking for browser type
+        if (isEdgeChromium || isChrome)
+            var camera = <img onClick={this.copy} src={snapShot} style={{ width: "60px", marginBottom: "-50px", marginLeft: "820px", cursor: "pointer" }} />
+
         //display the lists
-        return (<div ><img onClick={this.copy} src={snapShot} style={{ width: "60px", marginBottom: "-50px", marginLeft: "820px", cursor: "pointer" }} /><div id="kitList" style={{ display: "flex", flexDirection: "column", maxWidth: "685px" }} >
+        if (this.props.mobile) {
+            return (<div ><div id="kitList" style={{ display: "flex", flexDirection: "column", maxWidth: "100%" }} >
+
+                {panelItem}
+                {items[0]}  
+                {items[1]}   
+                {items[2]} 
+                {items[3]} 
+                {items[4]} 
+            </div>
+                </div>)
+        }
+        else
+            return (<div >{camera}<div id="kitList" style={{ display: "flex", flexDirection: "column", maxWidth: "685px" }} >
             
-            <div style={{ display: "flex", flexDirection: "row" }} >{panelItem}</div>
-                <div style={{ display: "flex", flexDirection: "row" }} >{items[0]}  </div>
-            <div style={{ display: "flex", flexDirection: "row" }} >{items[1]}   </div>
-        </div>
-            <Modal
-            isOpen={this.state.showPopUp}
-                contentLabel="Kit List"
-                ariaHideApp={false}
-            style={{ position: "absolute", top: "50vw", left: "50%", overlay: { zIndex: 1000, height: "200px",width:"400px",top:"25vh", bottom: "25vh", right: "40vw", left: "40vw" } }}>
-                <div className="popUp" >
-                    <p>
-                        {this.props.popUpText}
-                    </p>        
-                </div>
-            </Modal></div>)
+                <div style={{ display: "flex", flexDirection: "row" }} >{panelItem}</div>
+                    <div style={{ display: "flex", flexDirection: "row" }} >{items[0]}  </div>
+                <div style={{ display: "flex", flexDirection: "row" }} >{items[1]}   </div>
+            </div>
+                <Modal
+                isOpen={this.state.showPopUp}
+                    contentLabel="Kit List"
+                    ariaHideApp={false}
+                style={{ position: "absolute", top: "50vw", left: "50%", overlay: { zIndex: 1000, height: "200px",width:"400px",top:"25vh", bottom: "25vh", right: "40vw", left: "40vw" } }}>
+                    <div className="popUp" >
+                        <p>
+                            {this.props.popUpText}
+                        </p>        
+                    </div>
+                </Modal></div>)
     }
 
     //checks if the current product list has any items with more than 0 needed for the current layout

@@ -16,6 +16,7 @@ import robotoB from '.././Fonts/Roboto-Bold.ttf'
 //--------------------------------------------------------------------------------------------
 import { saveAs } from 'file-saver';
 import { Text, StyleSheet, View, Document, Page, Image, Font, pdf } from "@react-pdf/renderer";
+import { isLegacyEdge, isEdgeChromium, isMobile } from 'react-device-detect';
 //--------------------------------------------------------------------------------------------
 
 
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
     page: {},
     date: { fontFamily: "SegoeLight", fontSize: 10, top: "96%", left: "20px" },
     number: { fontFamily: "SegoeLight", fontSize: 10, top: "94%", left: "49%"},
-    heading: { display: "flex", flexDirection: "row", justifyContent: "center", width: "100%", marginTop: "20px" },
+    heading: { display: "flex", flexDirection: "row", justifyContent: "center", width: "100%", marginTop: "10px" },
     heading2: { display: "flex", flexDirection: "row", width: "100%"},
     table: { display: "table", width: "auto"},
     newTable: { display: "table", width: "auto",marginTop:"60px" },
@@ -79,13 +80,15 @@ const styles = StyleSheet.create({
     headingCell: { marginTop: 0, fontSize: 9, float: "right", textAlign: "right", width: "100%", fontFamily: "Arial" },
     tableCellLeft: { margin: "auto", marginTop: 5, fontSize: 9, maxWidth: "50px", fontFamily: "Segoe" },
     tableCellLeft2: { marginLeft: 100, marginTop: 5, fontSize: 9, maxWidth: "50px", fontFamily: "SegoeBold" },
-    title: { fontFamily: "SegoeLight", fontSize: 25 },
+    title: { fontFamily: "SegoeLight", fontSize: 25,marginTop:"40px" },
     subTitle: { fontFamily: "SegoeLight", fontSize: 18, marginLeft: "7.5%", marginTop: "40px", marginBottom: "-20px" },
     vatText: { fontFamily: "SegoeLight", fontSize: 7, marginLeft: "auto", marginRight:"50px", marginTop: "5", marginBottom: "0" },
     subTitle2: { fontFamily: "SegoeLight", fontSize: 10, maxWidth: "100px" },
     image: { maxWidth: "100px" },
-    imgLeft: { width: "75px", height: "100%", marginLeft: "20px", marginRight: "auto" },
-    imgRight: { width: "15%", marginLeft: "auto", marginRight: "40px", maxWidth: "100%", maxHeight: "40px", height: "40px" },
+    imgLeft: { width: "12%", marginLeft: "20px", marginRight: "auto" },
+    imgLeft2: { width: "12%", marginLeft: "20px",marginRight:"3px"},
+    imgRight: { width: "12%", marginLeft: "auto", marginRight: "40px" },
+    imgLeft3: { width: "12%", marginLeft: "0px", marginRight: "65px" }
 })
 
 
@@ -377,8 +380,13 @@ class PDFDownload extends React.Component {
         }
         var filename = this.getFileName()
         this.state.multiDataSet = multiDataSet
+
+        if (this.props.mobile)
+            var width = "90px"
+        else
+            var width = "60px"
         //return full excel file data
-        return < ExcelFile filename={filename} element={< img style={{ width: "60px", cursor: "pointer" }} src={xlsImg} />}>
+        return < ExcelFile filename={filename} element={< img style={{ width: width, cursor: "pointer" }} src={xlsImg} />}>
             <ExcelSheet dataSet={multiDataSet} name={words[7][lang]} />
             {sheets}
                 </ExcelFile >
@@ -453,6 +461,26 @@ class PDFDownload extends React.Component {
         var totalKwp =0
         var totalCost = 0
 
+     /*  if (this.props.logo2 != null) {
+            var logo3 = <Image src={require(".././Imgs/" + this.props.logo2)} style={styles.imgLeft3} />
+            var logo1 = <Image src={require(".././Imgs/" + this.props.logo1)} style={styles.imgLeft2} />
+            var logo2 = <Image src={require(".././Imgs/" + this.props.logo3)} style={styles.imgRight} />
+        }
+        else {
+            var logo1 = <Image src={require(".././Imgs/" + this.props.logo1)} style={styles.imgLeft} />
+            var logo2 = <Image src={require(".././Imgs/" +this.props.logo3)} style={styles.imgRight} />
+        }*/
+
+          if (this.props.logo2 != null) {
+            var logo3 = <Image src={"https://www.fusionconfigurator.com/static/Logos/" + this.props.logo2} style={styles.imgLeft3} />
+            var logo1 = <Image src={"https://www.fusionconfigurator.com/static/Logos/" + this.props.logo1} style={styles.imgLeft2} />
+            var logo2 = <Image src={"https://www.fusionconfigurator.com/static/Logos/" + this.props.logo3} style={styles.imgRight} />
+        }
+        else {
+            var logo1 = <Image src={("https://www.fusionconfigurator.com/static/Logos/" + this.props.logo1)} style={styles.imgLeft} />
+            var logo2 = <Image src={"https://www.fusionconfigurator.com/static/Logos/" + this.props.logo3} style={styles.imgRight} />
+        }
+        
         //Push each quote summary row by row
         for (var i = 0; i < this.props.imgs.length; i++) {
 
@@ -465,10 +493,12 @@ class PDFDownload extends React.Component {
                         <Text fixed style={styles.date}>{today}</Text>
                         <Text fixed style={styles.number}>{pageNum}</Text>
                         <View style={styles.heading} >
-                            <Image src={require(".././Imgs/ViridianLogo.png")} style={styles.imgLeft} />
+                            {logo1}
+                            {logo3}
                             <Text style={styles.title}>Configurator </Text>
-                            <Image src={require(".././Imgs/ClearlineLogo.png")} style={styles.imgRight} />
+                            {logo2}
                         </View>
+                        
                         <View style={styles.heading2} >
                             <Text style={styles.subTitle}>{words[7][lang]} </Text>
                             <Text style={styles.tableCellDis}>{discount} </Text>
@@ -509,7 +539,7 @@ class PDFDownload extends React.Component {
                     <Text style={styles.tableCell}>{quotes[i].quantity}</Text>
                 </View>
                 <View style={styles.tableCol, { width: "70px", maxWidth: "70px"  }}>
-                    <Text style={styles.tableCell}>{formatMoney((Math.round(((quotes[i].kwp * quotes[i].quantity) + Number.EPSILON) * 100) / 100).toString())} kWp</Text>
+                    <Text style={styles.tableCell}>{formatMoney((Math.round(((quotes[i].kwp * quotes[i].quantity) + Number.EPSILON) * 100) / 100).toString(),this.props.eur)} kWp</Text>
                 </View>
                 <View style={styles.tableCol, { width: "80px", maxWidth: "80px"  }}>
                     <Text style={styles.tableCell}>{currency[0]}{formatMoney((Math.round((((quotes[i].total)) + Number.EPSILON) * 100) / 100).toString(), this.props.eur)}{currency[1]}</Text>
@@ -537,7 +567,7 @@ class PDFDownload extends React.Component {
             <View style={styles.tableCol, { width: "60px", maxWidth: "60px" }}>
             </View>
             <View style={styles.tableCol, { width: "70px", maxWidth: "70px" }}>
-                <Text style={styles.tableCellB}>{formatMoney((Math.round(((totalKwp) + Number.EPSILON) * 100) / 100).toString())} kWp</Text>
+                <Text style={styles.tableCellB}>{formatMoney((Math.round(((totalKwp) + Number.EPSILON) * 100) / 100).toString(), this.props.eur)} kWp</Text>
             </View>
             <View style={styles.tableCol, { width: "80px", maxWidth: "80px" }}>
                 <Text style={styles.tableCellB}>{currency[0]}{formatMoney((Math.round((((totalCost)) + Number.EPSILON) * 100) / 100).toString(), this.props.eur)}{currency[1]}</Text>
@@ -554,9 +584,10 @@ class PDFDownload extends React.Component {
                 <Text fixed style={styles.date}>{today}</Text>
                 <Text fixed style={styles.number}>{pageNum}</Text>
                 <View style={styles.heading} >
-                    <Image src={require(".././Imgs/ViridianLogo.png")} style={styles.imgLeft} />
+                    {logo1}
+                    {logo3}
                     <Text style={styles.title}>Configurator </Text>
-                    <Image src={require(".././Imgs/ClearlineLogo.png")} style={styles.imgRight} />
+                    {logo2}
                 </View>
                 <View style={styles.heading2} >
                     <Text style={styles.subTitle}>{words[7][lang]} </Text>
@@ -957,20 +988,51 @@ class PDFDownload extends React.Component {
     render() {
         const excel = this.excelExport()
 
-        //We have to check that we have one or more images for the pdf here because we have a second wait between adding a quote and taking the image in
-        //The 'DisplayQuote.js' file. This is because immediately taking a picture just as the mini layout gets rendered to DOM results in undefined behaviour.
-        if (this.props.imgs.length > 0) {
-            if ((this.state.multiDataSet.length == 0)) {
-                return (<div><img style={{ marginRight: "20px", marginLeft: "600px", width: "60px", cursor: "pointer" }} src={pdfImg} onClick={this.createPDF} />
-                    </div>)
+        if (this.props.mobile) {
+            //PDF not supported for these browsers
+            if (isLegacyEdge && !isEdgeChromium) {
+                return (<div style={{ width: "100px" }}>{excel}</div>)
             }
             else {
-                return (<div><img style={{ marginRight: "20px", marginLeft: "600px", width: "60px", cursor: "pointer" }} src={pdfImg} onClick={this.createPDF} />
-                    {excel}</div>)
+                //We have to check that we have one or more images for the pdf here because we have a second wait between adding a quote and taking the image in
+                //The 'DisplayQuote.js' file. This is because immediately taking a picture just as the mini layout gets rendered to DOM results in undefined behaviour.
+                if (this.props.imgs.length > 0) {
+                    if ((this.state.multiDataSet.length == 0)) {
+                        return (<div><img style={{ marginRight: "20px", width: "90px", cursor: "pointer" }} src={pdfImg} onClick={this.createPDF} />
+                        </div>)
+                    }
+                    else {
+                        return (<div><img style={{ marginRight: "20px", width: "90px", cursor: "pointer" }} src={pdfImg} onClick={this.createPDF} />
+                            {excel}</div>)
+                    }
+                }
+                return (<div><img style={{ marginRight: "20px", width: "90px", cursor: "not-allowed" }} src={pdfImg} />{excel}
+                </div>)
             }
         }
-        return (<div><img style={{ marginRight: "20px", marginLeft: "600px", width: "60px", cursor: "not-allowed" }} src={pdfImg} />{excel}
-        </div>)
+        else {
+
+            //PDF not supported for these browsers
+            if (isLegacyEdge && !isEdgeChromium) {
+                return (<div style={{ marginRight: "20px", marginLeft: "600px", width: "60px" }}>{excel}</div>)
+            }
+            else {
+                //We have to check that we have one or more images for the pdf here because we have a second wait between adding a quote and taking the image in
+                //The 'DisplayQuote.js' file. This is because immediately taking a picture just as the mini layout gets rendered to DOM results in undefined behaviour.
+                if (this.props.imgs.length > 0) {
+                    if ((this.state.multiDataSet.length == 0)) {
+                        return (<div><img style={{ marginRight: "20px", marginLeft: "600px", width: "60px", cursor: "pointer" }} src={pdfImg} onClick={this.createPDF} />
+                        </div>)
+                    }
+                    else {
+                        return (<div><img style={{ marginRight: "20px", marginLeft: "600px", width: "60px", cursor: "pointer" }} src={pdfImg} onClick={this.createPDF} />
+                            {excel}</div>)
+                    }
+                }
+                return (<div><img style={{ marginRight: "20px", marginLeft: "600px", width: "60px", cursor: "not-allowed" }} src={pdfImg} />{excel}
+                </div>)
+            }
+        }
 
 
     }

@@ -9,6 +9,9 @@ function formatMoney(formattedTotal, eur) {
         }
         numDP++;
     }
+    if (numDP > 2) {
+
+    }
 
     if (numDP == 0 || foundDot == false)
         formattedTotal += ".00"

@@ -33,12 +33,21 @@ class NumQuote extends React.Component {
     
 
     render() {
-        return (<div style={{ alignItems: "center", justifyContent: "center", width: "100%" }}>
-            <img src={this.props.clip} className="clipboard" />
-            <img src={this.props.cancel} onClick={() => this.submit(false)} className="cancel" />
-            <DisplayQuote eur={this.props.currency} id={null} popUp={true} currency={this.props.currency} quantity={this.state.number} discount={this.props.discount} total={this.props.total} flashings={this.props.flashings} landscape={this.props.landscape} miniFlashing={this.props.mini} xSize={this.props.xSize} panels={this.props.panels} packers={this.props.packers} width={this.props.xSize} kwp={this.props.kwp} quantityChange={this.change} />
-            <img src={this.props.confirm} onClick={() => this.submit(true)} className="confirm" />
-        </div>)
+        if (this.props.mobile) {
+            return (<div style={{ alignItems: "center", justifyContent: "center", width: "100%" }}>
+                <img src={this.props.clip}  className="clipboard" />
+                <img src={this.props.cancel} onClick={() => this.submit(false)} className="cancel" />
+                <DisplayQuote mobile={true} extraSmall={true} eur={this.props.currency} id={null} popUp={true} currency={this.props.currency} quantity={this.state.number} discount={this.props.discount} total={this.props.total} flashings={this.props.flashings} landscape={this.props.landscape} miniFlashing={this.props.mini} xSize={this.props.xSize} panels={this.props.panels} packers={this.props.packers} width={this.props.xSize} kwp={this.props.kwp} quantityChange={this.change} />
+                <img src={this.props.confirm} onClick={() => this.submit(true)} className="confirm" />
+            </div>)
+        }
+        else
+            return (<div style={{ alignItems: "center", justifyContent: "center", width: "100%" }}>
+                <img src={this.props.clip} className="clipboard" />
+                <img src={this.props.cancel} onClick={() => this.submit(false)} className="cancel" />
+                <DisplayQuote eur={this.props.currency} id={null} popUp={true} currency={this.props.currency} quantity={this.state.number} discount={this.props.discount} total={this.props.total} flashings={this.props.flashings} landscape={this.props.landscape} miniFlashing={this.props.mini} xSize={this.props.xSize} panels={this.props.panels} packers={this.props.packers} width={this.props.xSize} kwp={this.props.kwp} quantityChange={this.change} />
+                <img src={this.props.confirm} onClick={() => this.submit(true)} className="confirm" />
+            </div>)
     }
 }
 

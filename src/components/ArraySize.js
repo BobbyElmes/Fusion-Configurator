@@ -33,15 +33,24 @@ class ArraySize extends React.Component {
                 height = size[1] * 1640 + (size[1] - 1) * 5 + 505
         }
 
+        if (this.props.mobile) {
+            return (
+                <div style={{ textAlign: "right", marginRight: "2%", display: "flex", flexDirection: "column",width:"30%" }}>
+                    <div style={{ marginTop: "10px", display: "flex", flexDirection: "row", marginRight: "5px", marginLeft: "auto", textAlign: "right", float: "right" }}><p style={{ fontFamily: "arial", fontSize: "75%", color: "white", width: "10px", textAlign: "left" }}>H: </p><p style={{ fontFamily: "arial", fontSize: "75%", color: "white", width: "60px", textAlign: "right" }}>{height}mm</p></div>
+                    <div style={{ marginTop: "-10px", marginBottom: "-15px", display: "flex", flexDirection: "row", marginRight: "5px", marginLeft: "auto", textAlign: "right", float: "right" }}><p style={{ fontFamily: "arial", fontSize: "75%", color: "white", width: "10px", textAlign: "left" }}>W:</p><p style={{ fontFamily: "arial", fontSize: "75%", color: "white", width: "60px", textAlign: "right" }}> {width}mm</p></div>
 
-        return (
-            <div style={{ textAlign: "right", marginRight: "2%", display: "flex", flexDirection: "column" }}>
-                <div style={{ marginTop: "15px", display: "flex", flexDirection: "row", marginRight: "5px", marginLeft: "auto", textAlign: "right", float: "right" }}><p style={{ fontFamily: "arial", fontSize: "75%", color: "white", width: "10px", textAlign: "left" }}>H: </p><p style={{ fontFamily: "arial", fontSize: "75%", color: "white", width: "60px",textAlign: "right" }}>{height}mm</p></div>
-                <div style={{ marginTop: "-15px", marginBottom: "-15px", display: "flex", flexDirection: "row", marginRight: "5px", marginLeft: "auto", textAlign: "right",float:"right" }}><p style={{ fontFamily: "arial", fontSize: "75%", color: "white", width: "10px", textAlign: "left" }}>W:</p><p style={{ fontFamily: "arial", fontSize: "75%", color: "white", width: "60px",textAlign: "right" }}> {width}mm</p></div>
+                </div>
+            )
+        }
+        else
+            return (
+                <div style={{ textAlign: "right", marginRight: "2%", display: "flex", flexDirection: "column" }}>
+                    <div style={{ marginTop: "15px", display: "flex", flexDirection: "row", marginRight: "5px", marginLeft: "auto", textAlign: "right", float: "right" }}><p style={{ fontFamily: "arial", fontSize: "75%", color: "white", width: "10px", textAlign: "left" }}>H: </p><p style={{ fontFamily: "arial", fontSize: "75%", color: "white", width: "60px",textAlign: "right" }}>{height}mm</p></div>
+                    <div style={{ marginTop: "-15px", marginBottom: "-15px", display: "flex", flexDirection: "row", marginRight: "5px", marginLeft: "auto", textAlign: "right",float:"right" }}><p style={{ fontFamily: "arial", fontSize: "75%", color: "white", width: "10px", textAlign: "left" }}>W:</p><p style={{ fontFamily: "arial", fontSize: "75%", color: "white", width: "60px",textAlign: "right" }}> {width}mm</p></div>
 
-                <p style={{ marginTop: "-30px",fontFamily: "arial", fontSize: "75%", color: "white", margin: "auto", marginBottom: "10px", marginRight: "5px", marginLeft: "auto", direction: "rtl",width:"150px",float:"right" }}>{this.props.outsideWord}</p>
-            </div>
-        )
+                    <p style={{ marginTop: "-30px",fontFamily: "arial", fontSize: "75%", color: "white", margin: "auto", marginBottom: "10px", marginRight: "5px", marginLeft: "auto", direction: "rtl",width:"150px",float:"right" }}>{this.props.outsideWord}</p>
+                </div>
+            )
 
     }
 }

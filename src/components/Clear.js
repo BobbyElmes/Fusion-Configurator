@@ -14,7 +14,7 @@ class Clear extends React.Component {
 
     render() {
         if (this.props.mobile)
-            return (<div style={{ marginTop: "4%" }}><img onClick={this.handleClick} style={{ width: "100%", cursor: "pointer" }} src={Bin} /></div>)
+            return (<div style={{ marginTop: "4%" }}><img onClick={this.handleClick} style={{ width: "90px", cursor: "pointer" }} src={Bin} /></div>)
         else
             return (<div style={{ marginTop: "-30px", marginLeft: "-80px", marginRight: "0" }}><img onClick={this.handleClick} style={{ width: "60px", cursor: "pointer" }} src={Bin} /></div>)
         

@@ -2,6 +2,11 @@
     font-family: Segoe UI Light;
 }
 
+@font-face {
+    font-family: 'Roboto';
+    src: url('.././Fonts/Roboto-Thin.ttf') format('truetype');
+}
+
 .TableEntry {
     font-family: Arial;
     font-size: 15px;

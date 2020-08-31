@@ -2,7 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
+import { unregister } from './serviceWorker';
 import App from "./App"
+
+unregister();
 
 ReactDOM.render(
     <React.StrictMode>
@@ -11,9 +14,6 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-function Unordered() {
-    return <ul><li>apples</li></ul>
-}
 
 
 

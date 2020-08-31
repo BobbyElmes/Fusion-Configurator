@@ -131,7 +131,10 @@ class DisplayQuote extends React.Component {
                     marked.push(false)
                 if (i == miniFlash.length - 1)
                     var last = true
-                miniDisplay.push(<div style={{ marginTop: 0, marginBottom: 0, fontSize: 0, minWidth: "100px", maxWidth: "100px" }}><Row ySize={miniFlash.length} last={last} pdf={this.props.pdf} key={i} xSize={this.props.xSize} type={null} flashing={miniFlash[i]} cellPress={null} row={i} down={null} up={null} landscape={this.props.landscape} cellOver={null} marked={marked} /></div>)
+                if (this.props.mobile)
+                    miniDisplay.push(<div style={{ marginTop: 0, marginBottom: 0, fontSize: 0 }}><Row extraSmall={this.props.extraSmall} ySize={miniFlash.length} last={last} pdf={this.props.pdf} key={i} xSize={this.props.xSize} type={null} flashing={miniFlash[i]} cellPress={null} row={i} down={null} up={null} landscape={this.props.landscape} cellOver={null} marked={marked} /></div>)
+                else
+                 miniDisplay.push(<div style={{ marginTop: 0, marginBottom: 0, fontSize: 0, minWidth: "100px", maxWidth: "100px" }}><Row ySize={miniFlash.length} last={last} pdf={this.props.pdf} key={i} xSize={this.props.xSize} type={null} flashing={miniFlash[i]} cellPress={null} row={i} down={null} up={null} landscape={this.props.landscape} cellOver={null} marked={marked} /></div>)
 
             }
         }
@@ -147,11 +150,28 @@ class DisplayQuote extends React.Component {
             //Then we display things slightly differently to the full quote table
             if (this.props.id != null) {
                 this.state.id = this.props.id.toString()
-                var id = <p className="Segoe" style={{ fontSize: "18px", marginRight: "30px" }}>{this.props.id} </p>
-                var miniD = <div id={this.state.id} style={{ marginLeft: "20px", marginTop: "0px", marginBottom: "10px", minWidth: "105px", maxWidth: "105px", alignItems: "center", justifyContent: "center", overflow: "visible" }}>
-                    {miniDisplay}
-                </div>
-                var removeItem = <img style={{ marginLeft: "50px", width: "20px", marginTop: "-12px", cursor: "pointer" }} src={bin} onClick={this.removeClick} />
+                if (this.props.mobile)
+                    var id = <p className="Segoe" style={{ fontSize: "60px" }}>{this.props.id} </p>
+                else
+                    var id = <p className="Segoe" style={{ fontSize: "18px", marginRight: "30px" }}>{this.props.id} </p>
+                if (this.props.mobile)
+                    var miniD = <div id={this.state.id} style={{ marginTop: "15px", overflow: "visible" }}>
+                        {miniDisplay}
+                    </div>
+                else
+                    var miniD = <div id={this.state.id} style={{ marginLeft: "20px", marginTop: "0px", marginBottom: "10px", minWidth: "105px", maxWidth: "105px", alignItems: "center", justifyContent: "center", overflow: "visible" }}>
+                        {miniDisplay}
+                    </div>
+                if (!this.props.mobile) {
+                    var left = "50px"
+                    var top = "-12px"
+                    var size = "20px"
+                }
+                else {
+                    var size = "50px"
+                    var top = "15px"
+                }
+                var removeItem = <img style={{ marginLeft: left, width: size, marginTop: top, cursor: "pointer" }} src={bin} onClick={this.removeClick} />
             }
             else
                 var miniD = <div id={this.state.id} style={{ minWidth: "105px", maxWidth: "105px", alignItems: "center", justifyContent: "center", overflow: "visible", marginTop: "-12px" }}>
@@ -159,17 +179,57 @@ class DisplayQuote extends React.Component {
             </div>
 
             //If not the total row at the bottom of the quotes table, show this, otherwise - show the next one
-            if (this.props.id != 0) {
+        if (this.props.id != 0) {
+            if (this.props.mobile) {
+                if (this.props.id == null)
+                    return (<div style={{ marginLeft: "0", overflow: "visible" }}>
+
+                        <div className="horizontal" style={{ alignItems: "center", overflow: "visible" }}>
+
+                            <div style={{ overflow: "visible" }}>
+                                {miniD}
+                            </div>
+
+                            <div style={{ display: "flex", flexDirection: "column", marginLeft: "-12.5px", marginTop: "-13px" }}>
+                                <img style={{ width: "60px", marginLeft: "-9px", marginBottom: "-5px", cursor: "pointer" }} src={up} onClick={() => this.quantityButton(1)} />
+                                <input type="text" style={{ border: "1px solid black", width: "40px", height: "30px", fontFamily: "Sergoe UI Light, arial", fontSize: "14x", marginRight: "-15px", textAlign: "center" }} value={this.state.quantity} onChange={this.quantityChange} />
+                                <img style={{ width: "60px", marginLeft: "-9px", marginTop: "-5px", cursor: "pointer" }} src={down} onClick={() => this.quantityButton(-1)} />
+                            </div>
+                            <p className="Segoe" style={{ fontSize: "18px", marginLeft: "20px", minWidth: "100px", float: "right", textAlign: "right" }}>{currency[0]}{formatMoney((Math.round(((this.props.total * num) + Number.EPSILON) * 100) / 100).toString(), this.props.eur)}{currency[1]} </p>
+                            {removeItem}
+                        </div>
+                    </div>
+                    )
+                else 
+                    return (
+
+                        <div style={{ alignItems: "center", justifyContent: "center", overflow: "visible", display: "flex", flexDirection: "column",marginBottom: "20px" }}>
+                            {id}
+                            <div style={{ overflow: "visible", display: "inline-block", alignItems: "center", justifyContent: "center"}}>
+                                {miniD}
+                            </div>
+
+                            <div style={{ display: "flex", flexDirection: "column", marginTop: "40px" }}>
+                                <img style={{ width: "100px", marginBottom: "-12px", cursor: "pointer" }} src={up} onClick={() => this.quantityButton(1)} />
+                                <input type="text" style={{ border: "1px solid black", width: "60px", height: "45px", fontFamily: "Sergoe UI Light, arial", fontSize: "30px", textAlign: "center", marginLeft:"18px" }} value={this.state.quantity} onChange={this.quantityChange} />
+                                <img style={{ width: "100px",  marginTop: "-10px", cursor: "pointer" }} src={down} onClick={() => this.quantityButton(-1)} />
+                            </div>
+                            <p className="Segoe" style={{ fontSize: "30px", minWidth: "100px", marginTop: "25px", textAlign: "center" }}>{currency[0]}{formatMoney((Math.round(((this.props.total * num) + Number.EPSILON) * 100) / 100).toString(), this.props.eur)}{currency[1]} </p>
+                            {removeItem}
+                        </div>
+                    )
+            }
+            else {
                 return (<div style={{ marginLeft: "0", overflow: "visible" }}>
 
-                    <div className="horizontal" style={{ alignItems: "center", overflow: "visible"}}>
+                    <div className="horizontal" style={{ alignItems: "center", overflow: "visible" }}>
                         {id}
                         <div style={{ overflow: "visible" }}>
                             {miniD}
                         </div>
 
                         <div style={{ fontSize: "18px", marginLeft: "20px", minWidth: "100px", float: "right", textAlign: "right" }}><p className="Segoe" style={{ display: "inline-block" }}>{formatMoney((Math.round(((this.props.kwp) + Number.EPSILON) * 100) / 100).toString())} kWp </p></div>
-                        <p className="Segoe" style={{ fontSize: "18px", marginLeft: "20px", minWidth: "100px", float: "right", textAlign: "right" }}>{currency[0]}{formatMoney((Math.round(((this.props.total/this.props.quantity*num) + Number.EPSILON) * 100) / 100).toString(), this.props.eur)}{currency[1]} </p>
+                        <p className="Segoe" style={{ fontSize: "18px", marginLeft: "20px", minWidth: "100px", float: "right", textAlign: "right" }}>{currency[0]}{formatMoney((Math.round(((this.props.total / this.props.quantity * num) + Number.EPSILON) * 100) / 100).toString(), this.props.eur)}{currency[1]} </p>
                         <input type="text" style={{ border: "1px solid black", paddingRight: "10px", width: "40px", marginLeft: "40px", marginTop: "-14px", height: "30px", fontFamily: "Sergoe UI Light, arial", fontSize: "14x", textAlignLast: "right" }} value={this.state.quantity} onChange={this.quantityChange} />
                         <div style={{ display: "flex", marginLeft: "0px", flexDirection: "column", marginTop: "-13px" }}>
                             <img style={{ width: "33px", marginBottom: "-11px", cursor: "pointer" }} src={up} onClick={() => this.quantityButton(1)} />
@@ -182,7 +242,19 @@ class DisplayQuote extends React.Component {
                 </div>
                 )
             }
-            else {
+            }
+        else {
+            if (this.props.mobile) {
+                return (
+
+                    <div className="horizontal" style={{ alignItems: "center", justifyContent: "center" }}>
+                        <p className="Segoe" style={{ fontSize: "30px", marginLeft: "0px" }}>{this.props.totalWord.toUpperCase()} </p>
+
+                        <p className="Segoe" style={{ fontSize: "30px", marginLeft: "20px", float: "right", textAlign: "right", minWidth: "100px" }}>{currency[0]}{formatMoney(((Math.round(((this.props.total) + Number.EPSILON) * 100) / 100).toString()), this.props.eur)}{currency[1]}</p>
+                    </div>
+               )
+            }
+            else
                 return (<div style={{ marginLeft: "0" }}>
 
                     <div className="horizontal" style={{ alignItems: "center" }}>

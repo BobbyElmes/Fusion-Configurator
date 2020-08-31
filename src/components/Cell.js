@@ -96,6 +96,10 @@ class Cell extends React.Component {
             if (size > 6)
                 ratio = ratio * 6 / size
 
+            if (this.props.extraSmall && this.props.landscape)
+                if (size > 5)
+                    ratio = ratio *5/size
+
             if (this.props.column == this.props.size - 1)
                 marginL = "-1px"
             else if (this.props.column == 0)

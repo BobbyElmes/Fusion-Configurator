@@ -21,7 +21,7 @@ class AddQuote extends React.Component {
         }
 
         if (this.props.mobile)
-            return (<div style={{ marginTop: "4%" }}><img onClick={this.handleClick} style={{ width: "100%", cursor: cursor}} src={Clip} /></div>)
+            return (<div style={{ marginTop: "4%" }}><img onClick={this.handleClick} style={{ width: "90px", cursor: cursor}} src={Clip} /></div>)
         else
             return (<div style={{ marginTop: "-30px", marginLeft: "-8px", marginRight: "80px" }}><img onClick={this.handleClick} style={{ width: "60px", cursor: cursor }} src={Clip} /></div>)
 
