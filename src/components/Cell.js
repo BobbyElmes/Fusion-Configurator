@@ -96,9 +96,16 @@ class Cell extends React.Component {
             if (size > 6)
                 ratio = ratio * 6 / size
 
-            if (this.props.extraSmall && this.props.landscape)
-                if (size > 5)
-                    ratio = ratio *5/size
+            if (this.props.extraSmall && this.props.landscape) {
+                if (size > 4)
+                    ratio = ratio * 4 / size
+            }
+            else {
+                if (this.props.mobile) {
+                    if (size > 2)
+                        ratio = ratio * 2 / size
+                }
+            }
 
             if (this.props.column == this.props.size - 1)
                 marginL = "-1px"
@@ -113,9 +120,9 @@ class Cell extends React.Component {
         //This but is work in progress, but we want the grid to fill the screen on mobile
         if (this.props.mobile) {
             if (!this.props.landscape)
-                ratioMobile = (window.innerWidth / (8 * 40)) 
+                ratioMobile = (this.props.initWidth / (8 * 40)) 
             else {
-                ratioMobile = (window.innerWidth / (6 * 64)) 
+                ratioMobile = (this.props.initWidth / (6 * 64)) 
             }
         }
 

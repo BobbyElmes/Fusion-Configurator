@@ -461,7 +461,7 @@ class PDFDownload extends React.Component {
         var totalKwp =0
         var totalCost = 0
 
-     /*  if (this.props.logo2 != null) {
+        if (this.props.logo2 != null) {
             var logo3 = <Image src={require(".././Imgs/" + this.props.logo2)} style={styles.imgLeft3} />
             var logo1 = <Image src={require(".././Imgs/" + this.props.logo1)} style={styles.imgLeft2} />
             var logo2 = <Image src={require(".././Imgs/" + this.props.logo3)} style={styles.imgRight} />
@@ -469,9 +469,9 @@ class PDFDownload extends React.Component {
         else {
             var logo1 = <Image src={require(".././Imgs/" + this.props.logo1)} style={styles.imgLeft} />
             var logo2 = <Image src={require(".././Imgs/" +this.props.logo3)} style={styles.imgRight} />
-        }*/
+        }
 
-          if (this.props.logo2 != null) {
+     /*     if (this.props.logo2 != null) {
             var logo3 = <Image src={"https://www.fusionconfigurator.com/static/Logos/" + this.props.logo2} style={styles.imgLeft3} />
             var logo1 = <Image src={"https://www.fusionconfigurator.com/static/Logos/" + this.props.logo1} style={styles.imgLeft2} />
             var logo2 = <Image src={"https://www.fusionconfigurator.com/static/Logos/" + this.props.logo3} style={styles.imgRight} />
@@ -479,7 +479,7 @@ class PDFDownload extends React.Component {
         else {
             var logo1 = <Image src={("https://www.fusionconfigurator.com/static/Logos/" + this.props.logo1)} style={styles.imgLeft} />
             var logo2 = <Image src={"https://www.fusionconfigurator.com/static/Logos/" + this.props.logo3} style={styles.imgRight} />
-        }
+        }*/
         
         //Push each quote summary row by row
         for (var i = 0; i < this.props.imgs.length; i++) {

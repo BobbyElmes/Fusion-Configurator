@@ -39,7 +39,7 @@ class KitItem extends React.Component {
                 color = "VAT-16"
                 break;
             case "F16-VC":
-                color="Window"
+                color ="WindowAlternate"
                 break;
             case "F16-CLT":
             case "F16-LCLT":
@@ -70,8 +70,10 @@ class KitItem extends React.Component {
         var color = this.decideItem(this.props.item[0])
         var cell
         if (color != "") {
-            if (color == "Window")
-                cell = <button style={{ marginRight: "10px", cursor: "context-menu", width: "22px", height: "25px" }} className={color + ' shadow-none'}> </button>
+            if (color == "Window") {
+                cell = <button style={{ marginRight: "10px", cursor: "context-menu", width: "25px", height: "25px" }} className={"WindowAlternate" + ' shadow-none'}> </button>
+                
+            }
             else
                 cell = <button style={{ marginRight: "10px", cursor: "context-menu", width: "25px", height: "25px" }} className={color + ' shadow-none'}> </button>
         }

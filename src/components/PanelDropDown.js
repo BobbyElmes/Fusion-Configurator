@@ -27,7 +27,7 @@ class PanelDropDown extends React.Component {
             if(panels[i] != null)
                 options.push(<option style={{ direction: "rtl" }} value={i}>{panels[i]}</option>)
         if (this.props.mobile)
-            return (<div className="DropDown2"><div style={{ display: "flex", flexShrink: "0", flexDirection: "row", alignItems: "center", justifyContent: "center" }}><p className="DropDown" style={{ fontFamily: "arial",  fontSize: "70%",marginTop:"-0px" }}>{this.props.panelWord} &nbsp; &nbsp;</p><select style={{ width: "90px", height: "30px", fontFamily: "arial", fontSize: "80%", textAlignLast: "right" }} value={this.state.panelId}
+            return (<div className="DropDown2"><div style={{ display: "flex", flexShrink: "0", flexDirection: "row", alignItems: "center", justifyContent: "center" }}><p className="DropDown" style={{ fontFamily: "arial",  fontSize: "60%",marginTop:"-0px" }}>{this.props.panelWord} &nbsp; &nbsp;</p><select style={{ width: "110px", height: "30px", fontFamily: "arial", fontSize: "70%", textAlignLast: "right" }} value={this.state.panelId}
                 onChange={this.handleChange} >
                 {options}
             </select></div></div>)

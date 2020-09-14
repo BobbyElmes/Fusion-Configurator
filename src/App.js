@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactModal from 'react-modal';
-import { isMobile } from 'react-device-detect';
+import { isMobile, isMobileSafari, isEdgeChromium, isChrome } from 'react-device-detect';
+import html2canvas from 'html2canvas';
+import Modal from 'react-modal';
 
 //-----------------------------------------------------------------------
 
@@ -23,6 +25,7 @@ import ArraySize from './components/ArraySize'
 import Language from './components/Language.js'
 import KitSection from './components/KitSection.js'
 import KWP from './components/KWP.js'
+import Camera from './components/Camera.js'
 import CSVLoader from './Functions/CSVLoader.js'
 
 //-----------------------------------------------------------------------
@@ -118,6 +121,7 @@ class App extends React.Component {
             showArrow: [true, true, true, true],
             //says whether the popup should be displayed (only displayed after the add quote button is placed)
             showPopUp: false,
+            showCopyPopUp:false,
 
             //the config settings being used, changes with url query
             config: Config[0],
@@ -125,7 +129,9 @@ class App extends React.Component {
             xMin: 12,
 
             images: [],
-            pdfKey: 0
+            pdfKey: 0,
+
+            initialWidth: 0
         }
         
         this.setImages = this.setImages.bind(this)
@@ -156,6 +162,9 @@ class App extends React.Component {
         this.expandPress = this.expandPress.bind(this)
         this.windowPress = this.windowPress.bind(this)
         this.changeOrientation = this.changeOrientation.bind(this)
+        this.popUpClose = this.popUpClose.bind(this)
+        this.copyGrid = this.copyGrid.bind(this)
+        this.copyToClipboard = this.copyToClipboard.bind(this)
     }
 
     componentWillMount() {
@@ -163,13 +172,16 @@ class App extends React.Component {
         this.getLanguage()
         this.getProducts()
         this.initGrid()
-        console.log(this.state.flashings)
         //get flashings from file
         if (isMobile) {
             if(this.state.xLen > 10)
                 this.state.xLen = 8;
             this.state.xMin = 6;
             this.state.yLen = 6;
+            //when it's mobile, we take the initial screen width and use that
+            //to decide how large the grid should be
+            //to stop resizing the phone changing the grid size
+            this.state.initialWidth = window.innerWidth
         }
     }
 
@@ -244,6 +256,15 @@ class App extends React.Component {
                 case "KR":
                     this.state.currency = 2
                     break;
+                case "USD":
+                    this.state.currency = 3
+                    break;
+                case "RAND":
+                    this.state.currency = 4;
+                    break;
+                case "YEN":
+                    this.state.currency = 5;
+                    break;
             }
         }
     }
@@ -294,17 +315,17 @@ class App extends React.Component {
     //loads in the csv files and puts them into the relevent arrays
     getProducts() {
 
-        var product = CSVLoader("https://www.fusionconfigurator.com/static/Prices/" + this.state.config.PriceList, 4, 2)
+     /*  var product = CSVLoader("https://www.fusionconfigurator.com/static/Prices/" + this.state.config.PriceList, 4, 2)
         var ViridianProd = CSVLoader("https://www.fusionconfigurator.com/static/Prices/ViridianUKPrices.csv", 4, 2)
         var descriptions = CSVLoader("https://www.fusionconfigurator.com/static/Languages/Descriptions.csv", 4, 5)
-        var words = CSVLoader("https://www.fusionconfigurator.com/static/Languages/Languages.csv", 1, 4) 
+        var words = CSVLoader("https://www.fusionconfigurator.com/static/Languages/Languages.csv", 1, 4) */
 
-      /*  var csvRoute = require("./Products/" + this.state.config.PriceList)
+        var csvRoute = require("./Products/" + this.state.config.PriceList)
         var product = CSVLoader(csvRoute, 4, 2)
         var ViridianProd = CSVLoader(ViridianIds, 4, 2)
         var descriptions = CSVLoader(languages, 4, 5)
-        var words = CSVLoader(languages2, 1, 4)*/
-
+        var words = CSVLoader(languages2, 1, 4)
+        
         //this array has the portrait, landscape and finally packer flashing
         //values & descriptions loaded into it
         var productArr = [[],[],[]]
@@ -541,10 +562,11 @@ class App extends React.Component {
         var yTemp = this.state.yLen
         var flashing = this.state.flashing
         var marked = this.state.marked
+        var xLim = 40
         if (this.state.landscape)
-            var xLim = 25
+            var yLim = 26
         else
-            var xLim = 15
+            var yLim = 16
         switch (expand) {
             case 0:
                 //ensure grid isn't too big
@@ -595,7 +617,7 @@ class App extends React.Component {
                 break;
             case 2:
                 for (var m = 0; m < by; m++) {
-                    if (yTemp < 40) {
+                    if (yTemp < yLim) {
                         this.state.showArrow[2] = true
                         temp.push(new Array(xTemp))
                         flashing.push(new Array(xTemp))
@@ -606,7 +628,7 @@ class App extends React.Component {
                             marked[yTemp][i] = false
                         }
                         yTemp += 1
-                        if (yTemp == 39)
+                        if (yTemp == yLim-1)
                             this.state.showArrow[3] = false
                     }
                 }
@@ -634,6 +656,8 @@ class App extends React.Component {
                 }
                 break;
         }
+
+        this.state.yLen = yTemp;
         this.setState({
             type: temp,
             xLen: xTemp,
@@ -669,7 +693,10 @@ class App extends React.Component {
                 packers[2 + x][1] = flashing[2][1]
                 packers[3 + x][1] = flashing[3][1]
                 packers[4 + x][1] = flashing[4][1]
-                packers[5 + x][1] = flashing[5][1] + flashing[11][1]
+                if(landscape)
+                    packers[5 + x][1] = flashing[5][1]
+                else
+                    packers[5 + x][1] = flashing[5][1] + flashing[11][1]
                 packers[6 + x][1] = flashing[9][1] + flashing[10][1]
 
                 for (var i = 0; i < 4; i++)
@@ -905,13 +932,13 @@ class App extends React.Component {
             }
         }
         else {
-            if (this.state.landscape && this.state.xLen >= 15) {
-                this.expandPress(1, this.state.xLen - 14)
+            if (this.state.landscape && this.state.yLen >= 15) {
+                this.expandPress(3, this.state.yLen - 14)
             }
             else {
                 if (!this.state.landscape)
-                    if (this.state.xLen == 15) {
-                        this.expandPress(1, 1)
+                    if (this.state.yLen == 15) {
+                        this.expandPress(3, 1)
                         
                     }
             }
@@ -1122,7 +1149,6 @@ class App extends React.Component {
         var discount = this.state.discount
         var newTotal = 0
         for (var i = 0; i < quotes.length; i++) {
-            console.log("OLD: " + quotes[i].total)
             for (var c = 0; c < quotes[i].panels.length; c++) {
                 newTotal += (Math.round(((quotes[i].panels[c][3] * (1 - (discount / 100))) + Number.EPSILON) * 100) / 100) * quotes[i].panels[c][1] 
                 newTotal = (Math.round(((newTotal) + Number.EPSILON) * 100) / 100)
@@ -1138,7 +1164,6 @@ class App extends React.Component {
             newTotal = (Math.round(((newTotal) + Number.EPSILON) * 100) / 100)
             
             quotes[i].total = newTotal
-            console.log("NEW: " + quotes[i].total)
             newTotal = 0
         }
         this.setState({
@@ -1306,6 +1331,15 @@ class App extends React.Component {
             case 2:
                 after = " kr"
                 break;
+            case 3:
+                before = "$"
+                break;
+            case 4:
+                before = "R "
+                break;
+            case 5:
+                before = "\u{00A5}"
+                break;
 
         }
         return [before,after]
@@ -1356,6 +1390,52 @@ class App extends React.Component {
         
     }
 
+    //copies the grid layout being built to clipboard
+    copyGrid() {
+        const input = document.getElementById("grid");
+
+        var xstart = window.innerWidth * 0.1
+        html2canvas(input, {
+            scrollX: 0,
+            scrollY: -window.scrollY, //this is a little hack because it needs to think the scollbar is at the top
+            x: xstart,
+            scale: 5 //this gives it higher resolution than say, 1
+        })
+            .then((canvas) => {
+                //copy to clipboard
+                canvas.toBlob(this.copyToClipboard, "image/jpg", 1);
+            })
+    }
+
+    //takes a png, copies it to the clipboard
+    copyToClipboard = async (pngBlob) => {
+        try {
+            await navigator.clipboard.write([
+                // eslint-disable-next-line no-undef
+                new ClipboardItem({
+                    [pngBlob.type]: pngBlob
+                })
+            ]);
+
+
+            this.setState({
+                showCopyPopUp: true
+            }, () => { this.popUpClose() });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    //Closes the 'copied kit list to clipboard' popup 1 second
+    //after it is shown
+    popUpClose() {
+        setTimeout(function () {
+            this.setState({
+                showCopyPopUp: false
+            })
+        }.bind(this), 1000)
+    }
+
 
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1385,20 +1465,20 @@ class App extends React.Component {
         //create the main grid
         var grid = []
         for (var i = 0; i < this.state.yLen; i++) {
-            grid.push(<div style={{ marginTop: 0, marginBottom: 0, fontSize: 0 }}><Row mobile={mobile} key={i} window={this.windowCellValid} wind={this.state.window} unblock={unblockedCell} showArrow={this.state.showArrow} expandPress={this.expandPress} ySize={this.state.yLen} xSize={this.state.xLen} type={this.state.type[i]} flashing={this.state.flashing[i]} cellPress={this.cellPress} row={i} down={this.cellDown} up={this.cellUp} landscape={this.state.landscape} cellOver={this.cellOver} marked={this.state.marked[i]} /></div>)
+            grid.push(<div style={{ marginTop: 0, marginBottom: 0, fontSize: 0 }}><Row initWidth={this.state.initialWidth} mobile={mobile} key={i} window={this.windowCellValid} wind={this.state.window} unblock={unblockedCell} showArrow={this.state.showArrow} expandPress={this.expandPress} ySize={this.state.yLen} xSize={this.state.xLen} type={this.state.type[i]} flashing={this.state.flashing[i]} cellPress={this.cellPress} row={i} down={this.cellDown} up={this.cellUp} landscape={this.state.landscape} cellOver={this.cellOver} marked={this.state.marked[i]} /></div>)
         }
         
-     /*   if (mobile) {
-            var logo1 = <img style={{ width: "80px", marginLeft: "5%", marginTop: "20px",marginRight:"auto", marginBottom: "-2%" }} src={require("./Imgs/" + this.state.config.Logo1)} />
+          if (mobile) {
+             var logo1 = <img style={{ width: "80px", height: "80px", marginLeft: "5%", marginTop: "20px",marginRight:"auto" }} src={require("./Imgs/" + this.state.config.Logo1)} />
             var logo2 = null
             if (this.state.config.Logo2 != null) {
-                logo2 = <img style={{ width: "80px", marginLeft: "auto", marginRight: "5%", marginTop: "20px", marginBottom: "-2%" }} src={require("./Imgs/" + this.state.config.Logo2)} />
-                var logo3 = <img style={{ width: "80px", marginLeft: "auto", marginRight: "auto", marginTop: "20px" }} src={require("./Imgs/" + this.state.config.Logo3)} />
-                var logos = <div style={{ marginBottom: "75px" }}><div style={{ display: "flex", flexDirection: "row" }}>{logo1}<Language mobile={true} press={this.changeLanguage} language={this.state.language} />{logo2}</div>{logo3}</div>
+                logo2 = <img style={{ width: "80px",height:"80px", marginLeft: "auto", marginRight: "5%", marginTop: "20px"}} src={require("./Imgs/" + this.state.config.Logo2)} />
+                var logo3 = <img style={{ width: "140px", height: "140px", marginLeft: "auto", marginRight: "auto", marginTop: "20px" }} src={require("./Imgs/" + this.state.config.Logo3)} />
+                var logos = <div style={{ marginBottom: "40px", display: "flex", flexDirection: "column", justifyContent: "center" }}><div style={{ display: "flex", flexDirection: "row" }}>{logo1}{logo2}</div>{logo3}<div style={{ alignItems: "center" }}><Language mobile={true} press={this.changeLanguage} language={this.state.language} /></div></div>
             }
             else {
-                var logo3 = <img style={{ width: "80px", marginLeft: "auto", marginRight: "5%", marginTop: "20px", marginBottom: "-2%" }} src={require("./Imgs/" + this.state.config.Logo3)} />
-                var logos = <div style={{ display: "flex", flexDirection: "row", marginBottom: "75px" }}>{logo1}<Language mobile={true} press={this.changeLanguage} language={this.state.language} />{logo3}</div>
+                var logo3 = <img style={{ width: "80px", height: "80px", marginLeft: "auto", marginRight: "5%", marginTop: "20px"}} src={require("./Imgs/" + this.state.config.Logo3)} />
+                var logos = <div style={{ marginBottom: "40px" }}><div style={{ display: "flex", flexDirection: "row", marginBottom: "20px" }}>{logo1}{logo3}</div> <Language mobile={true} press={this.changeLanguage} language={this.state.language} /></div>
             }
             
         }
@@ -1408,19 +1488,25 @@ class App extends React.Component {
             if (this.state.config.Logo2 != null)
                 logo2 = <img style={{ width: "120px", marginLeft: "1%", marginTop: "1%", marginBottom: "-2%" }} src={require("./Imgs/" + this.state.config.Logo2)} />
             var logo3 = <img style={{ width: "200px", marginLeft: "900px", marginTop: "40px", marginBottom: "-1%" }} src={require("./Imgs/" + this.state.config.Logo3)} />
-        }*/
+        }
+        
 
-        if (mobile) {
-            var logo1 = <img style={{ width: "80px", marginLeft: "5%", marginTop: "20px", marginRight: "auto", marginBottom: "-2%" }} src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.config.Logo1} />
+
+       /*  if (mobile) {
+            if (isMobileSafari)
+                var topDis = "20px"
+            else
+                var topDis = "20px"
+            var logo1 = <img style={{ width: "80px", height: "80px", marginLeft: "5%", marginTop: topDis , marginRight: "auto" }} src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.config.Logo1} />
             var logo2 = null
             if (this.state.config.Logo2 != null) {
-                logo2 = <img style={{ width: "80px", marginLeft: "auto", marginRight: "5%", marginTop: "20px", marginBottom: "-2%" }} src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.config.Logo2} />
-                var logo3 = <img style={{ width: "80px", marginLeft: "auto", marginRight: "auto", marginTop: "20px" }} src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.config.Logo3} />
-                var logos = <div style={{ marginBottom: "75px" }}><div style={{ display: "flex", flexDirection: "row" }}>{logo1}<Language mobile={true} press={this.changeLanguage} language={this.state.language} />{logo2}</div>{logo3}</div>
+                logo2 = <img style={{ width: "80px", height: "80px", marginLeft: "auto", marginRight: "5%", marginTop: topDis }} src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.config.Logo2} />
+                var logo3 = <img style={{ width: "140px", height: "140px", marginLeft: "auto", marginRight: "auto", marginTop: topDis  }} src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.config.Logo3} />
+                var logos = <div style={{ marginBottom: "40px", display: "flex", flexDirection: "column", justifyContent: "center" }}><div style={{ display: "flex", flexDirection: "row" }}>{logo1}{logo2}</div>{logo3}<div style={{ alignItems: "center" }}><Language mobile={true} press={this.changeLanguage} language={this.state.language} /></div></div>
             }
             else {
-                var logo3 = <img style={{ width: "80px", marginLeft: "auto", marginRight: "5%", marginTop: "20px", marginBottom: "-2%" }} src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.config.Logo3} />
-                var logos = <div style={{ display: "flex", flexDirection: "row", marginBottom: "75px" }}>{logo1}<Language mobile={true} press={this.changeLanguage} language={this.state.language} />{logo3}</div>
+                var logo3 = <img style={{ width: "80px", height: "80px", marginLeft: "auto", marginRight: "5%", marginTop: topDis }} src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.config.Logo3} />
+                var logos = <div style={{ marginBottom: "40px" }}><div style={{ display: "flex", flexDirection: "row", marginBottom: "20px" }}>{logo1}{logo3}</div> <Language mobile={true} press={this.changeLanguage} language={this.state.language} /></div>
             }
 
         }
@@ -1428,9 +1514,9 @@ class App extends React.Component {
             var logo1 = <img style={{ width: "120px", marginLeft: "10%", marginTop: "1%", marginBottom: "-2%" }} src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.config.Logo1} />
             var logo2 = null
             if (this.state.config.Logo2 != null)
-                logo2 = <img style={{ width: "120px", marginLeft: "1%", marginTop: "1%", marginBottom: "-2%" }} src={("https://www.fusionconfigurator.com/static/Logos/" + this.state.config.Logo2)} />
+                logo2 = <img style={{ width: "120px", marginLeft: "1%", marginTop: "1%", marginBottom: "-2%" }} src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.config.Logo2} />
             var logo3 = <img style={{ width: "200px", marginLeft: "900px", marginTop: "40px", marginBottom: "-1%" }} src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.config.Logo3} />
-        }
+        }*/
 
         //current currency in use (£100 or 1000kr for example)
         var currency = this.calculateCurrency()
@@ -1473,7 +1559,7 @@ class App extends React.Component {
                 }
             }
             pdf = <PDF mobile={mobile} wordList={this.state.words} lang={this.state.language} eur={this.state.currency} name={this.state.config.Title} logo1={this.state.config.Logo1PDF} logo2={this.state.config.Logo2PDF} logo3={this.state.config.Logo3PDF} ids={this.state.Ids} send={send} currency={currency} total={overallTotal} flashings={summary} discount={this.state.discount} panels={totalPanels} Quotes={this.state.Quotes} imgs={this.state.images} />
-            total.push(<DisplayQuote mobile={mobile} totalWord={this.state.words[6][this.state.language]} id={0} currency={currency} discount={this.state.discount} total={overallTotal} num={numQuotes} kwp={numKwp} />)
+            total.push(<DisplayQuote mobile={mobile} totalWord={this.state.words[6][this.state.language]} id={0} currency={currency} discount={this.state.discount} total={overallTotal} num={numQuotes} kwp={numKwp} eur={this.state.currency} />)
             total.push(<div style={{ background: "black", height: "1px", width: width, marginBottom: "20px", marginTop: "10px" }}></div>)
         }
 
@@ -1500,11 +1586,30 @@ class App extends React.Component {
         else
             var title = <h1 className="TitleFont" style={{ marginTop: "-25px" }}> {this.state.config.Title} </h1>
 
+        if (this.state.initialWidth >= 350)
+            var mobilePacker = "230px"
+        else
+            var mobilePacker = "210px"
+
+        //calculating where the camera icon should be in relation to the grid
+        if (!mobile) {
+            if (this.state.landscape)
+                var dist = 64 * (this.state.xLen - 12)
+            else
+                var dist = 40 * (this.state.xLen - 13)
+            if (dist < 0)
+                dist = 0
+            //Checking for browser type
+            if (isEdgeChromium || isChrome)
+                var camera = <div style={{ position: "absolute", marginLeft: 820 + dist, marginTop: "0px" }}><Camera press={this.copyGrid} /></div>
+        }
+
         //if not displaying the send form, display the configurator
         if (!mobile) {
             if (this.state.send == false) {
                 return (
                     <div className="app">
+                        <p className="Segoe" style={{ position: "fixed", bottom: -15, right: 5, opacity: "50%", fontSize:"20px" }}>v1.0</p>
                         <div style={{ display: "flex", flexDirection: "row" }}>
                             {logo1}
                             {logo2}
@@ -1525,16 +1630,17 @@ class App extends React.Component {
                                             <PackerDropDown battenWord={this.state.words[3][this.state.language]} press={this.packerChange} />
                                         </div>
                                     </div>
+                                    {camera}
                                 </div>
-                                <div className="TableUnder" style={{  }}>
+                                <div className="TableUnder" style={{}} id="grid">
                                     <div className="TableHeader" style={{}}>
                                         <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
                                             <KWP kwp={kwpGrid} eur={this.state.currency} />
                                             <PricePerWatt currency={currency} panels={ppwPanels} total={ppwTotal} eur={this.state.currency} />
                                             <ArraySize outsideWord={this.state.words[4][this.state.language]} size={this.arraySize()} landscape={this.state.landscape} />
                                         </div>
-                                    </div>
-                                    {grid}
+                                        </div>
+                                            {grid}
                                 </div>
                                 <p></p>
                                 <div className="horizontal">
@@ -1548,7 +1654,7 @@ class App extends React.Component {
                             </div>
                         </div>
                         <div className="outerDivCenter" style={{ marginTop: "10px", marginBottom: "20px" }}>
-                            <KitSection popUpText={this.state.words[19][this.state.language]} boxText={this.state.words[24][this.state.language]} panels={this.state.panels} landscape={this.state.landscape} panel={this.state.currentPanel} flashings={this.state.flashings} ids={this.state.Ids} packers={this.state.packers} />
+                            <KitSection popUpText={this.state.words[19][this.state.language]} boxText={this.state.words[23][this.state.language]} panels={this.state.panels} landscape={this.state.landscape} panel={this.state.currentPanel} flashings={this.state.flashings} ids={this.state.Ids} packers={this.state.packers} />
                         </div>
                         <div className="WorkSpace">
                             <div className="outerDivCenter" style={{ marginTop: "20px", marginBottom: "10px" , overflowY: "visible"}}>
@@ -1574,6 +1680,17 @@ class App extends React.Component {
                                 <NumQuote eur={this.state.currency} clip={clipboard} cancel={cancel} confirm={confirm} press={this.addQuote} pressDown={this.quotePopDown} flashing={this.state.flashings} panels={this.state.panels} packers={this.state.packers} total={ppwTotal} kwp={kwp} discount={this.state.discount} currency={currency} mini={mini} xSize={xSize} landscape={this.state.landscape} />
                             </div>
                         </ReactModal>
+                        <Modal
+                            isOpen={this.state.showCopyPopUp}
+                            contentLabel="Grid Copy"
+                            ariaHideApp={false}
+                            style={{ position: "absolute", top: "50vw", left: "50%", overlay: { zIndex: 1000, height: "200px", width: "400px", top: "25vh", bottom: "25vh", right: "40vw", left: "40vw" } }}>
+                            <div className="popUp" >
+                                <p>
+                                    {this.state.words[24][this.state.language]}
+                                </p>
+                            </div>
+                        </Modal>
                     </div>
                 )
             }
@@ -1585,7 +1702,9 @@ class App extends React.Component {
             if (this.state.send == false) {
                 return (
                     <div className="AppMobile">
+                        <p className="Segoe" style={{ position: "fixed", bottom: -15, right: 5, opacity: "50%", fontSize: "15px", zIndex:"1000" }}>v1.0</p>
                         {logos}
+                        <div style={{ background: "#E6E7E9", height: "5px", width: width, marginBottom: "50px", marginTop: "0px" }}></div>
                         <div className="outerDivMobile" style={{ width: "90%"}}>
                             {title}
                             <Discount mobile={true} eur={this.state.currency} disWord={this.state.words[22][this.state.language]} discount={this.discountChange} />
@@ -1595,9 +1714,9 @@ class App extends React.Component {
                                 <div style={{ marginTop: "30px", display: "flex", flexDirection: "row",width:"90%", marginLeft:"5%" }}>
                                     <Orientation mobile={true} portland={[this.state.words[0][this.state.language], this.state.words[1][this.state.language]]} press={this.changeOrientation} landscape={this.state.landscape} />
                                     <div className="DropDown">
-                                        <div style={{ display: "flex", flexDirection: "column",marginRight:"5px",width:"200px" }}>
+                                        <div style={{ display: "flex", flexDirection: "column",marginRight:"5px",width:mobilePacker }}>
                                             <PanelDropDown mobile={true} panelWord={this.state.words[2][this.state.language]} ids={this.state.Ids[3]} press={this.panelChange} panels={this.state.panels} />
-                                            <PackerDropDown mobile={true} battenWord={this.state.words[23][this.state.language]} press={this.packerChange} />
+                                            <PackerDropDown mobile={true} width={mobilePacker} battenWord={this.state.words[3][this.state.language]} press={this.packerChange} />
                                         </div>
                                     </div>
                                 </div>
@@ -1619,7 +1738,7 @@ class App extends React.Component {
                             </div>
                         </div>
                         <div className="outerDivMobile" style={{ marginTop: "20px", marginBottom: "20px",display:"inline-block" }}>
-                            <KitSection mobile={true} boxText={this.state.words[24][this.state.language]} popUpText={this.state.words[19][this.state.language]} panels={this.state.panels} landscape={this.state.landscape} panel={this.state.currentPanel} flashings={this.state.flashings} ids={this.state.Ids} packers={this.state.packers} />
+                            <KitSection mobile={true} boxText={this.state.words[23][this.state.language]} popUpText={this.state.words[19][this.state.language]} panels={this.state.panels} landscape={this.state.landscape} panel={this.state.currentPanel} flashings={this.state.flashings} ids={this.state.Ids} packers={this.state.packers} />
                         </div>
                         <div className="WorkSpace">
                             <div className="outerDivMobile" style={{ marginTop: "20px", marginBottom: "10px" }}>

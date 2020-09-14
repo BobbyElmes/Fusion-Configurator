@@ -132,7 +132,7 @@ class DisplayQuote extends React.Component {
                 if (i == miniFlash.length - 1)
                     var last = true
                 if (this.props.mobile)
-                    miniDisplay.push(<div style={{ marginTop: 0, marginBottom: 0, fontSize: 0 }}><Row extraSmall={this.props.extraSmall} ySize={miniFlash.length} last={last} pdf={this.props.pdf} key={i} xSize={this.props.xSize} type={null} flashing={miniFlash[i]} cellPress={null} row={i} down={null} up={null} landscape={this.props.landscape} cellOver={null} marked={marked} /></div>)
+                    miniDisplay.push(<div style={{ marginTop: 0, marginBottom: 0, fontSize: 0 }}><Row extraSmall={true} ySize={miniFlash.length} last={last} pdf={this.props.pdf} key={i} xSize={this.props.xSize} type={null} flashing={miniFlash[i]} cellPress={null} row={i} down={null} up={null} landscape={this.props.landscape} cellOver={null} marked={marked} /></div>)
                 else
                  miniDisplay.push(<div style={{ marginTop: 0, marginBottom: 0, fontSize: 0, minWidth: "100px", maxWidth: "100px" }}><Row ySize={miniFlash.length} last={last} pdf={this.props.pdf} key={i} xSize={this.props.xSize} type={null} flashing={miniFlash[i]} cellPress={null} row={i} down={null} up={null} landscape={this.props.landscape} cellOver={null} marked={marked} /></div>)
 
@@ -151,15 +151,15 @@ class DisplayQuote extends React.Component {
             if (this.props.id != null) {
                 this.state.id = this.props.id.toString()
                 if (this.props.mobile)
-                    var id = <p className="Segoe" style={{ fontSize: "60px" }}>{this.props.id} </p>
+                    var id = <p className="Segoe" style={{ fontSize: "18px",marginTop:"14px", marginRight:"20px" }}>{this.props.id} </p>
                 else
                     var id = <p className="Segoe" style={{ fontSize: "18px", marginRight: "30px" }}>{this.props.id} </p>
                 if (this.props.mobile)
-                    var miniD = <div id={this.state.id} style={{ marginTop: "15px", overflow: "visible" }}>
+                    var miniD = <div id={this.state.id} style={{ overflow: "visible", marginRight: "20px" }}>
                         {miniDisplay}
                     </div>
                 else
-                    var miniD = <div id={this.state.id} style={{ marginLeft: "20px", marginTop: "0px", marginBottom: "10px", minWidth: "105px", maxWidth: "105px", alignItems: "center", justifyContent: "center", overflow: "visible" }}>
+                    var miniD = <div id={this.state.id} style={{ marginLeft: "25px", marginTop: "0px", marginBottom: "10px", minWidth: "105px", maxWidth: "105px", alignItems: "center", justifyContent: "center", overflow: "visible" }}>
                         {miniDisplay}
                     </div>
                 if (!this.props.mobile) {
@@ -168,8 +168,8 @@ class DisplayQuote extends React.Component {
                     var size = "20px"
                 }
                 else {
-                    var size = "50px"
-                    var top = "15px"
+                    var size = "20px"
+                    var top = "0px"
                 }
                 var removeItem = <img style={{ marginLeft: left, width: size, marginTop: top, cursor: "pointer" }} src={bin} onClick={this.removeClick} />
             }
@@ -203,18 +203,18 @@ class DisplayQuote extends React.Component {
                 else 
                     return (
 
-                        <div style={{ alignItems: "center", justifyContent: "center", overflow: "visible", display: "flex", flexDirection: "column",marginBottom: "20px" }}>
+                        <div className="horizontal" style={{ alignItems: "center", justifyContent: "center", overflow: "visible",marginLeft:0 }}>
                             {id}
-                            <div style={{ overflow: "visible", display: "inline-block", alignItems: "center", justifyContent: "center"}}>
+                            <div style={{ overflow: "visible",width: "90px", maxWidth: "90px", minWidth: "90px" }}>
                                 {miniD}
                             </div>
 
-                            <div style={{ display: "flex", flexDirection: "column", marginTop: "40px" }}>
-                                <img style={{ width: "100px", marginBottom: "-12px", cursor: "pointer" }} src={up} onClick={() => this.quantityButton(1)} />
-                                <input type="text" style={{ border: "1px solid black", width: "60px", height: "45px", fontFamily: "Sergoe UI Light, arial", fontSize: "30px", textAlign: "center", marginLeft:"18px" }} value={this.state.quantity} onChange={this.quantityChange} />
-                                <img style={{ width: "100px",  marginTop: "-10px", cursor: "pointer" }} src={down} onClick={() => this.quantityButton(-1)} />
+                            <div style={{ display: "flex", flexDirection: "column", marginLeft: "0px",marginRight:"0px" }}>
+                                <img style={{ width: "60px", marginLeft: "-9px", marginBottom: "-5px", cursor: "pointer" }} src={up} onClick={() => this.quantityButton(1)} />
+                                <input type="text" style={{ border: "1px solid black", width: "40px", height: "30px", fontFamily: "Sergoe UI Light, arial", fontSize: "14x", marginRight: "-15px", textAlign: "center" }} value={this.state.quantity} onChange={this.quantityChange} />
+                                <img style={{ width: "60px", marginLeft: "-9px", marginTop: "-5px", cursor: "pointer" }} src={down} onClick={() => this.quantityButton(-1)} />
                             </div>
-                            <p className="Segoe" style={{ fontSize: "30px", minWidth: "100px", marginTop: "25px", textAlign: "center" }}>{currency[0]}{formatMoney((Math.round(((this.props.total * num) + Number.EPSILON) * 100) / 100).toString(), this.props.eur)}{currency[1]} </p>
+                            <p className="Segoe" style={{ fontSize: "18px", minWidth: "100px",marginTop:"14px", marginRight:"20px", float: "right", textAlign: "right" }}>{currency[0]}{formatMoney((Math.round(((this.props.total * num) + Number.EPSILON) * 100) / 100).toString(), this.props.eur)}{currency[1]} </p>
                             {removeItem}
                         </div>
                     )

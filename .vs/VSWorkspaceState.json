@@ -3,9 +3,10 @@
     "",
     "\\src",
     "\\src\\components",
+    "\\src\\Config",
     "\\src\\Functions",
     "\\src\\Imgs"
   ],
-  "SelectedNode": "\\src\\App.js",
+  "SelectedNode": "\\src\\components\\KitSection.js",
   "PreviewInSolutionExplorer": false
 }

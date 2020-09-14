@@ -2,6 +2,8 @@
 function formatMoney(formattedTotal, eur) {
     var numDP = 0
     var foundDot = false
+    if (eur == 5)
+        formattedTotal = Math.round(parseFloat(formattedTotal)).toString()
     for (var i = formattedTotal.length - 1; i >= 0; i--) {
         if (formattedTotal[i] == '.') {
             foundDot = true
@@ -46,7 +48,7 @@ function formatMoney(formattedTotal, eur) {
     }
 
     //convert to "£xx.xxx.xxx,xx format for Europeans
-    if (eur > 0) {
+    if (eur > 0 && eur < 3) {
         var temp = commaTotal
         commaTotal = ""
         for (var i = 0; i < temp.length; i++) {
@@ -58,7 +60,12 @@ function formatMoney(formattedTotal, eur) {
                 else
                     commaTotal += temp[i]
             }
-            
+
+        }
+    }
+    else {
+        if (eur == 5) {
+            var commaTotal = commaTotal.slice(0, -3);
         }
     }
 

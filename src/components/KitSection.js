@@ -2,8 +2,9 @@ import React from 'react';
 import KitList from './KitList.js'
 import { isMobile, isEdgeChromium,isChrome } from 'react-device-detect';
 import html2canvas from 'html2canvas';
-import snapShot from '.././Imgs/snapshot.svg'
 import Modal from 'react-modal';
+
+import Camera from './Camera.js'
 
 //This class is responsible for displaying the whole 'kit list' section of the webpage
 //It creates individual 'Kit Lists' and builds them into the full section
@@ -34,7 +35,6 @@ class KitSection extends React.Component {
             ]);
 
 
-            console.log("Image copied");
             this.setState({
                 showPopUp: true
             }, () => { this.popUpClose()});
@@ -66,7 +66,6 @@ class KitSection extends React.Component {
                 width = 685
         }
         var xstart = window.innerWidth*0.1
-        console.log(this.state.id)
         html2canvas(input, {
             scrollX: 0,
             scrollY: -window.scrollY, //this is a little hack because it needs to think the scollbar is at the top
@@ -180,7 +179,7 @@ class KitSection extends React.Component {
 
         //Checking for browser type
         if (isEdgeChromium || isChrome)
-            var camera = <img onClick={this.copy} src={snapShot} style={{ width: "60px", marginBottom: "-50px", marginLeft: "820px", cursor: "pointer" }} />
+            var camera = <div style={{ marginBottom: "-50px", marginLeft: "820px" }}><Camera press={this.copy}/></div>
 
         //display the lists
         if (this.props.mobile) {

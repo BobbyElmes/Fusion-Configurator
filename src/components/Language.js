@@ -29,7 +29,7 @@ class Language extends React.Component {
             options.push(<option style={{ direction: "rtl"}} value={i}>{lang[i]}</option>)
 
         if (this.props.mobile)
-            return (<select style={{ width: "110px", height:"32px", marginTop: "32px", textAlignLast: "center" }} onChange={this.handleChange}>  {options}</select>)
+            return (<select style={{ width: "110px", height:"32px", marginTop: "30px", textAlignLast: "center" }} onChange={this.handleChange}>  {options}</select>)
         else
             return (<select style={{ width:"110px" ,marginLeft: "970px", marginTop: "-40px", textAlignLast: "center" }} onChange={this.handleChange}>  {options}</select>)
     }
