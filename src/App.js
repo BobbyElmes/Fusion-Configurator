@@ -27,6 +27,7 @@ import KitSection from './components/KitSection.js'
 import KWP from './components/KWP.js'
 import Camera from './components/Camera.js'
 import CSVLoader from './Functions/CSVLoader.js'
+import binarySearch from './Functions/BinarySearch.js'
 
 //-----------------------------------------------------------------------
 
@@ -81,6 +82,7 @@ class App extends React.Component {
             panels: [[]],
             //holds the descriptions of items in different languages
             descriptions: [[]],
+            products: [],
             words:[[]],
             Ids: [[]],
             //cell coordinate mouse was previously hovered over
@@ -89,6 +91,7 @@ class App extends React.Component {
             downCell: [],
             //array of cells which turn grey when mouse drag
             marked: [[]],
+            warning:[],
 
             //whether the window box is selected
             window: false,
@@ -165,6 +168,8 @@ class App extends React.Component {
         this.popUpClose = this.popUpClose.bind(this)
         this.copyGrid = this.copyGrid.bind(this)
         this.copyToClipboard = this.copyToClipboard.bind(this)
+        this.checkWarning = this.checkWarning.bind(this)
+        this.checkWarningList = this.checkWarningList.bind(this)
     }
 
     componentWillMount() {
@@ -289,17 +294,30 @@ class App extends React.Component {
         var x =0
         if (this.state.landscape == true)
             x = 1
+
+        var sortedDesc = this.state.descriptions
+        var product = this.state.products
+        
+        
+        const sortedColumn = []
+        for (let i = 0; i < sortedDesc.length; i++) {
+            var currentCol = []
+            for (let c = 0; c < sortedDesc[i].length; c++)
+                currentCol.push(sortedDesc[i][c][0])
+            sortedColumn.push(currentCol)
+        }
+        
         for (var i = 0; i < this.state.flashings.length; i++) {
-            this.state.flashings[i][3] = descriptions[x][i][this.state.language + 1]
+            this.state.flashings[i][3] = descriptions[x][binarySearch(sortedColumn[x], product[x ][i][2], 0, sortedColumn[x].length - 1)][this.state.language + 1] 
         }
         for (var i = 0; i < this.state.secondFlashings.length; i++) {
-            this.state.secondFlashings[i][3] = descriptions[(x+1)%2][i][this.state.language + 1]
+            this.state.secondFlashings[i][3] = descriptions[(x + 1) % 2][binarySearch(sortedColumn[(x + 1) % 2], product[(x + 1) % 2][i][2], 0, sortedColumn[(x + 1) % 2].length - 1)][this.state.language + 1]  
         }
         for (var i = 0; i < this.state.packers.length; i++) {
-            this.state.packers[i][3] = descriptions[2][i][this.state.language + 1]
+            this.state.packers[i][3] = descriptions[2][binarySearch(sortedColumn[2], product[2][i][2], 0, sortedColumn[2].length - 1)][this.state.language + 1]  
         }
         for (var i = 0; i < this.state.panels.length; i++) {
-            this.state.panels[i][4] = descriptions[3][i][this.state.language + 1]
+            this.state.panels[i][4] = descriptions[3][binarySearch(sortedColumn[3], product[3][i][3], 0, sortedColumn[3].length - 1)][this.state.language + 1]  
         }
         this.state.pdfKey += 1
         this.setState({
@@ -312,6 +330,11 @@ class App extends React.Component {
         return csvRoute
     }
 
+    getDescription(sorted, productID) {
+        return binarySearch(sorted, productID, sorted.length-1,0)
+
+    }
+
     //loads in the csv files and puts them into the relevent arrays
     getProducts() {
 
@@ -321,14 +344,38 @@ class App extends React.Component {
         var words = CSVLoader("https://www.fusionconfigurator.com/static/Languages/Languages.csv", 1, 4) */
 
         var csvRoute = require("./Products/" + this.state.config.PriceList)
-        var product = CSVLoader(csvRoute, 4, 2)
+        var product = CSVLoader(csvRoute, 4, 3)
         var ViridianProd = CSVLoader(ViridianIds, 4, 2)
         var descriptions = CSVLoader(languages, 4, 5)
         var words = CSVLoader(languages2, 1, 4)
         
         //this array has the portrait, landscape and finally packer flashing
         //values & descriptions loaded into it
-        var productArr = [[],[],[]]
+        var productArr = [[], [], []]
+
+
+        var sortedDesc = []
+        //first we sort our descrptions (character by character) by the ID column in order to allow for
+        //binary search
+        for (let i = 0; i < descriptions.length; i++) {
+            sortedDesc.push(descriptions[i].sort((a, b) => {
+                if (a[0] < b[0]) return -1
+                return a[0] > b[0] ? 1 : 0
+            }))
+        }
+
+        //now we create an array with only the sorted IDs
+        //after this, we can binary search the sorted descriptions with the viridian IDs
+        //present in the product file, in order to enable different panels and stuff to be
+        //present in different versions of the configurator
+        const sortedColumn = []
+        for (let i = 0; i < sortedDesc.length; i++) {
+            var currentCol = []
+            for (let c = 0; c < sortedDesc[i].length; c++)
+                currentCol.push(sortedDesc[i][c][0])
+            sortedColumn.push(currentCol)
+        }
+
 
         for (var c = 0; c < 3; c++) {
             this.state.Ids.push(new Array(product[c].length))
@@ -336,13 +383,15 @@ class App extends React.Component {
                 if (product[c][i][0].length == 0)
                     break;
                 productArr[c].push(new Array(4))
-                productArr[c][i][0] = ViridianProd[c][i][0]
+                productArr[c][i][0] = product[c][i][2]
                 this.state.Ids[c][i] = product[c][i][0]
                 productArr[c][i][1] = 0
                 productArr[c][i][2] = parseFloat(product[c][i][1])
-                productArr[c][i][3] = descriptions[c][i][this.state.language + 1]
+                productArr[c][i][3] = descriptions[c][binarySearch(sortedColumn[c], product[c][i][2], 0, sortedColumn[c].length - 1)][this.state.language + 1]
             }
         }
+
+        
 
         //now to load the panel values
         var panelArr = []
@@ -351,20 +400,22 @@ class App extends React.Component {
             if (product[3][i][0] == "")
                 break;
             panelArr.push(new Array(5))
-            panelArr[i][0] = ViridianProd[3][i][0]
+            panelArr[i][0] = product[3][i][3]
             this.state.Ids[3][i] = product[3][i][0]
             panelArr[i][1] = 0
             panelArr[i][2] = parseFloat(product[3][i][2])
             panelArr[i][3] = parseFloat(product[3][i][1])
-            panelArr[i][4] = descriptions[3][i][this.state.language + 1]
+            panelArr[i][4] = descriptions[c][binarySearch(sortedColumn[3], product[3][i][3], 0, sortedColumn[3].length - 1)][this.state.language + 1]  
         }
 
+
         //finally, set the values
+        this.state.products = product
         this.state.flashings = productArr[0]
         this.state.secondFlashings = productArr[1]
         this.state.panels = panelArr
         this.state.packers = productArr[2]
-        this.state.descriptions = descriptions
+        this.state.descriptions = sortedDesc
         this.state.words = words[0]
     }
 
@@ -527,6 +578,7 @@ class App extends React.Component {
     //clears/resets all the cells
     clearPress() {
         this.state.unblockedCell = [-1, -1]
+        this.state.warning = []
         var flashVals = this.state.flashings
         var flashings = this.state.flashing
         var types = this.state.type
@@ -876,12 +928,176 @@ class App extends React.Component {
                         }
                     }
                 }
-
+                this.checkWarning(x+i, y+c)
             }
         }
+
+
+       
+        
+        this.checkWarningList()
+        
+
+        
         this.setState({
             flashing: tempFlash
         })
+    }
+
+
+
+
+
+     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //                                                                                      CODE FOR WORKING OUT CELL WARNINGS 
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+    //Checks whether the xy coordinate results in any warning blocks being needed
+    //a warning comes when you have 2 panels diagonal from one another with no panels
+    //either side of each.
+    checkWarning(x, y) {
+        var tempType = this.state.type
+        var warning = this.state.warning
+        var x1 = true, x2 = true, y1 = true, y2 = true
+        if (x + 1 >= tempType.length)
+            x1 = false
+        if (x - 1 < 0)
+            x2 = false
+        if (y + 1 >= tempType[1].length)
+            y1 = false
+        if (y - 1 < 0)
+            y2 = false
+
+
+
+        if (x1 && y2 && x >= 0 && y < tempType[1].length)
+            if (this.checkBlock(tempType[x][y], tempType[x + 1][y], tempType[x][y - 1], tempType[x + 1][y - 1], true)) {
+                if (!this.checkWarningExists(x + 1, y))
+                    this.state.warning.push([x + 1, y])
+                
+                if (!this.checkWarningExists(x, y-1))
+                    this.state.warning.push([x, y - 1])
+            }
+
+        if (x2 && y1 && y >= 0 && x >= tempType.length)
+            if (this.checkBlock(tempType[x - 1][y + 1], tempType[x][y + 1], tempType[x - 1][y], tempType[x][y], true)) {
+                if (!this.checkWarningExists(x, y + 1))
+                    this.state.warning.push([x, y + 1])
+
+                if (!this.checkWarningExists(x - 1, y))
+                    this.state.warning.push([x - 1, y])
+            }
+
+        if (y1 && x1 && x >= 0 && y >= 0)
+            if (this.checkBlock(tempType[x][y+1], tempType[x + 1][y+1], tempType[x][y], tempType[x + 1][y], false)) {
+                if (!this.checkWarningExists(x, y+1))
+                    this.state.warning.push([x, y + 1])
+
+                if (!this.checkWarningExists(x+1, y))
+                    this.state.warning.push([x+1, y])
+            }
+
+        if(x2 && y2)
+            if (this.checkBlock(tempType[x - 1][y], tempType[x][y], tempType[x - 1][y - 1], tempType[x][y - 1], false)) {
+                if (!this.checkWarningExists(x-1,y))
+                    this.state.warning.push([x - 1, y])
+
+                if (!this.checkWarningExists(x, y-1))
+                    this.state.warning.push([x, y - 1])
+            }
+    }
+
+    //Checks if the given coordinates already exist in the list of warning cells
+    checkWarningExists(x, y) {
+        for (var i = 0; i < this.state.warning.length; i++) {
+            if (x == this.state.warning[i][0] && y == this.state.warning[i][1])
+                return true
+        }
+        return false
+    }
+
+    //Checks if the given coordinates already exist in the list of warning cells
+    checkWarningIndex(x, y) {
+        for (var i = 0; i < this.state.warning.length; i++) {
+            if (x == this.state.warning[i][0] && y == this.state.warning[i][1])
+                return i
+        }
+        return -1
+    }
+
+    //Checks to see if any changes have happened that result in no warning necessary
+    checkWarningList() {
+        var warning = this.state.warning
+        var tempType = this.state.type
+        for (var i = 0; i < warning.length; i++) {
+            if (tempType[warning[i][0]][warning[i][1]] == 1) {
+                if (i % 2) {
+                    warning.splice(i, 1)
+                    i -= 1
+                }
+                else {
+                    warning.splice(i, 1)
+                    i -= 1
+                }
+            }
+            else {
+                let check = true
+      
+                if (warning[i][0] + 1 < tempType[0].length && warning[i][1] + 1 < tempType[1].length)
+                    if (tempType[warning[i][0] + 1][warning[i][1]] == 1 && tempType[warning[i][0]][warning[i][1] + 1] == 1 && tempType[warning[i][0] + 1][warning[i][1] + 1] != 1)
+                        check = false
+                if (warning[i][0] + 1 < tempType[0].length && warning[i][1] - 1 >= 0)
+                    if (tempType[warning[i][0] + 1][warning[i][1]] == 1 && tempType[warning[i][0]][warning[i][1] - 1] == 1 && tempType[warning[i][0] + 1][warning[i][1] - 1] != 1)
+                        check = false
+                if (warning[i][0] - 1 >=0 && warning[i][1] + 1 < tempType[1].length)
+                    if (tempType[warning[i][0] - 1][warning[i][1]] == 1 && tempType[warning[i][0]][warning[i][1] + 1] == 1 && tempType[warning[i][0] - 1][warning[i][1] + 1] != 1)
+                        check = false
+                if (warning[i][0] - 1 >= 0 && warning[i][1] - 1 >=0)
+                    if (tempType[warning[i][0] - 1][warning[i][1]] == 1 && tempType[warning[i][0]][warning[i][1] - 1] == 1 && tempType[warning[i][0]-1][warning[i][1] - 1] != 1)
+                        check = false
+                
+                if (check == true) {
+                    if (i % 2) {
+                        warning.splice(i, 1)
+                        i -= 1
+                    }
+                    else {
+                        warning.splice(i, 1)
+                        i -= 1
+                    }
+                }
+            }
+        }
+    }
+
+    //Checks to see if the given block should result in a warning
+    checkBlock(x1, x2, x3, x4, diagonal) {
+
+        if (diagonal) {
+            if (x1 == 1 && x4 == 1) {
+                if (x2 != 1 && x3 != 1) {
+                    return true
+                }
+            }
+        }
+        else {
+            if (x2 == 1 && x3 == 1) {
+                if (x1 != 1 && x4 != 1) {
+                    return true
+                }
+            }
+        }
+
+
+        return false
     }
 
 
@@ -1465,7 +1681,7 @@ class App extends React.Component {
         //create the main grid
         var grid = []
         for (var i = 0; i < this.state.yLen; i++) {
-            grid.push(<div style={{ marginTop: 0, marginBottom: 0, fontSize: 0 }}><Row initWidth={this.state.initialWidth} mobile={mobile} key={i} window={this.windowCellValid} wind={this.state.window} unblock={unblockedCell} showArrow={this.state.showArrow} expandPress={this.expandPress} ySize={this.state.yLen} xSize={this.state.xLen} type={this.state.type[i]} flashing={this.state.flashing[i]} cellPress={this.cellPress} row={i} down={this.cellDown} up={this.cellUp} landscape={this.state.landscape} cellOver={this.cellOver} marked={this.state.marked[i]} /></div>)
+            grid.push(<div style={{ marginTop: 0, marginBottom: 0, fontSize: 0 }}><Row initWidth={this.state.initialWidth} mobile={mobile} warning={this.state.warning} key={i} window={this.windowCellValid} wind={this.state.window} unblock={unblockedCell} showArrow={this.state.showArrow} expandPress={this.expandPress} ySize={this.state.yLen} xSize={this.state.xLen} type={this.state.type[i]} flashing={this.state.flashing[i]} cellPress={this.cellPress} row={i} down={this.cellDown} up={this.cellUp} landscape={this.state.landscape} cellOver={this.cellOver} marked={this.state.marked[i]} /></div>)
         }
         
           if (mobile) {
@@ -1609,7 +1825,7 @@ class App extends React.Component {
             if (this.state.send == false) {
                 return (
                     <div className="app">
-                        <p className="Segoe" style={{ position: "fixed", bottom: -15, right: 5, opacity: "50%", fontSize:"20px" }}>v1.0</p>
+                        <p className="Segoe" style={{ position: "fixed", bottom: -15, right: 5, opacity: "50%", fontSize:"20px" }}>v1.1</p>
                         <div style={{ display: "flex", flexDirection: "row" }}>
                             {logo1}
                             {logo2}

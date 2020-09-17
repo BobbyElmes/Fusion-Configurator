@@ -49,6 +49,16 @@ class Row extends React.Component {
             expand[1] = Math.floor(this.props.ySize / 2) 
         }
 
+        var warningCells = []
+        for (var i = 0; i < this.props.xSize; i++)
+            warningCells.push(false)
+        if (this.props.warning != null) {
+            for (var i = 0; i < this.props.warning.length; i++) {
+                if (this.props.warning[i][0] == this.props.row)
+                    warningCells[this.props.warning[i][1]] = true
+            }
+        }
+
         var st
         if (this.props.up == null)
             cellRow.push(<div style={{ width: "1px", background: "black" }}></div>)
@@ -66,9 +76,9 @@ class Row extends React.Component {
                 cursor = "pointer"
             //Add the cell
             if (this.props.type == null)
-                cellRow.push(<Cell key={i} initWidth={this.props.initWidth} extraSmall={this.props.extraSmall} pdf={this.props.pdf} ySize={this.props.ySize} xSize={this.props.xSize} mobile={this.props.mobile} style={{ marginRight: st }} window={this.props.window} cursor={cursor} type={false} press={this.cellClick} flashing={this.props.flashing[i]} row={this.props.row} column={i} down={this.props.down} up={this.props.up} landscape={this.props.landscape} cellOver={this.props.cellOver} marked={this.props.marked[i]} pdf={this.props.pdf} />)
+                cellRow.push(<Cell key={i} warn={warningCells[i]} initWidth={this.props.initWidth} extraSmall={this.props.extraSmall} pdf={this.props.pdf} ySize={this.props.ySize} xSize={this.props.xSize} mobile={this.props.mobile} style={{ marginRight: st }} window={this.props.window} cursor={cursor} type={false} press={this.cellClick} flashing={this.props.flashing[i]} row={this.props.row} column={i} down={this.props.down} up={this.props.up} landscape={this.props.landscape} cellOver={this.props.cellOver} marked={this.props.marked[i]} pdf={this.props.pdf} />)
             else
-                cellRow.push(<Cell key={i} initWidth={this.props.initWidth} extraSmall={this.props.extraSmall} pdf={this.props.pdf} ySize={this.props.ySize} xSize={this.props.xSize} mobile={this.props.mobile} type={this.props.type[i]} window={this.props.window} cursor={cursor} press={this.cellClick} flashing={this.props.flashing[i]} row={this.props.row} column={i} down={this.props.down} up={this.props.up} landscape={this.props.landscape} cellOver={this.props.cellOver} marked={this.props.marked[i]} />)
+                cellRow.push(<Cell key={i} warn={warningCells[i]} initWidth={this.props.initWidth} extraSmall={this.props.extraSmall} pdf={this.props.pdf} ySize={this.props.ySize} xSize={this.props.xSize} mobile={this.props.mobile} type={this.props.type[i]} window={this.props.window} cursor={cursor} press={this.cellClick} flashing={this.props.flashing[i]} row={this.props.row} column={i} down={this.props.down} up={this.props.up} landscape={this.props.landscape} cellOver={this.props.cellOver} marked={this.props.marked[i]} />)
             if (this.props.up == null)
                 cellRow.push(<div style={{ width: "1px", background: "black" }}></div>)
         }

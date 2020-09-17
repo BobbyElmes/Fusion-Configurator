@@ -1,5 +1,6 @@
 import React from 'react';
 import './Cell.css';
+import warningImg from '.././Imgs/gap-alert.svg'
 
 //This class handles/displays each individual cell you might see as part of the grid, or a mini layout display
 //They are comprised of buttons, which is what allows us to perform their necessary behaviour
@@ -218,12 +219,13 @@ class Cell extends React.Component {
                 }
             }
         }
-
+        if (this.props.warn)
+            var warn = <img src={warningImg} style={{ zIndex: "1000",width:"30px"}}/>
         //return, with some ugly inline styling (I'm no css pro)
         if (color == "Corner")
-            return (<div className="BigDiv" style={{ background: bigDiv, width: pad[0], height: pad[1], border: border }}>{cornerStyle}<button onMouseDown={this.handleClick} style={{ padding: 0, width: pad[0], height: pad[1], cursor: cursor, zIndex: "12", border: border }} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} ></button></div>)
+            return (<div className="BigDiv" style={{ background: bigDiv, width: pad[0], height: pad[1], border: border }}>{cornerStyle}<button onMouseDown={this.handleClick} style={{ padding: 0, width: pad[0], height: pad[1], cursor: cursor, zIndex: "12", border: border }} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} >{warn}</button></div>)
         if (color == "none")
-            return (<button onMouseDown={this.handleClick} style={{ padding: 0, width: pad[0], height: pad[1], cursor: cursor, backgroundColor: bigDiv, border: border,zIndex: "10" }} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} ></button>)
+            return (<button onMouseDown={this.handleClick} style={{ padding: 0, width: pad[0], height: pad[1], cursor: cursor, backgroundColor: bigDiv, border: border, zIndex: "10", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} >{warn}</button>)
         else
             return (<button onMouseDown={this.handleClick} style={{ padding: 0, width: pad[0], height: pad[1], cursor: cursor, border: border, zIndex: "10"  }} onMouseEnter={this.enter} onMouseLeave={this.leave} onMouseUp={this.upButton} className={color + ' shadow-none'} ></button>)
     }
